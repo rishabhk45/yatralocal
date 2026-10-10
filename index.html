@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="YatraLocal — Tourism for Everyone, Powered by Locals. AI-powered, local-first, inclusive travel web app for India.">
+  <title>YatraLocal — Tourism for Everyone, Powered by Locals</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Accessible Skip Link -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Shared App Header -->
+  <header class="site-header" role="banner">
+    <div class="container site-header-inner">
+      <a href="#/" class="logo-brand" aria-label="YatraLocal Home">
+        <span class="logo-icon" aria-hidden="true">यात्रा</span>
+        <span>YatraLocal</span>
+      </a>
+
+      <!-- Primary Navigation -->
+      <nav class="site-nav" id="site-nav" aria-label="Main Navigation">
+        <a href="#/" class="nav-link">Home</a>
+        <a href="#/plan" class="nav-link">Plan Trip</a>
+        <a href="#/itinerary" class="nav-link">Itinerary</a>
+        <a href="#/stays" class="nav-link">Stays & Guides</a>
+        <a href="#/booking" class="nav-link">Bookings</a>
+        <a href="#/owner" class="nav-link">Host Dashboard</a>
+        <a href="#/styleguide" class="nav-link">Style Guide</a>
+      </nav>
+
+      <!-- Header Controls: Saral Mode Toggle & Language -->
+      <div class="header-controls">
+        <button type="button" id="saral-toggle" class="saral-toggle-btn" aria-pressed="false" aria-label="Toggle Saral Easy Mode">
+          <span aria-hidden="true">☀️</span>
+          <span id="saral-btn-label">Saral Mode</span>
+        </button>
+
+        <select id="lang-select" class="lang-select-btn" aria-label="Select Language">
+          <option value="EN">EN</option>
+          <option value="HI">हिंदी</option>
+        </select>
+
+        <button type="button" class="menu-toggle-btn" id="mobile-menu-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Toggle Navigation Menu">
+          ☰
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main View Container for Router -->
+  <main id="main-content" role="main">
+    <div id="app-view">
+      <!-- Dynamic Route Content Loaded Here -->
+    </div>
+  </main>
+
+  <!-- Shared Persistent Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="flow">
+          <h3 style="color: var(--color-primary); margin-bottom: var(--space-2);">YatraLocal</h3>
+          <p>Local-first, crowd-smart travel empowering homestays, verified guides, seniors, and pilgrims across India.</p>
+        </div>
+        <div class="flow">
+          <h4>Quick Links</h4>
+          <p><a href="#/plan">AI Trip Planner</a></p>
+          <p><a href="#/stays">Verified Homestays & Guides</a></p>
+          <p><a href="#/saral">Saral Senior-Friendly Mode</a></p>
+          <p><a href="#/owner">Hotel Owner Dashboard</a></p>
+        </div>
+        <div class="flow">
+          <h4>Inclusive Tourism</h4>
+          <p>Designed for WCAG AA compliance, voice guidance, and multi-generational family bookings.</p>
+          <p><span class="badge badge-demo">Demo / Simulated Mode</span></p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 YatraLocal. Built for India with ❤️</p>
+        <p><a href="#/styleguide">Component Style Guide</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Persistent Floating Emergency SOS Button (Non-functional stub wired in Phase 8) -->
+  <button type="button" id="global-sos-btn" class="sos-fab" aria-label="Emergency SOS: Live Location Sharing">
+    <span class="sos-pulse-dot" aria-hidden="true"></span>
+    <span>SOS Emergency</span>
+  </button>
+
+  <!-- Reusable Accessible Modal Layer -->
+  <div id="app-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-box" role="document">
+      <div class="modal-header">
+        <h2 id="modal-title" class="card-title">Dialog</h2>
+        <button type="button" id="modal-close" class="modal-close-btn" aria-label="Close dialog">&times;</button>
+      </div>
+      <div id="modal-body" class="flow"></div>
+    </div>
+  </div>
+
+  <!-- Reusable Toast Notification Layer -->
+  <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- App Script Entrypoint (ES Modules) -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

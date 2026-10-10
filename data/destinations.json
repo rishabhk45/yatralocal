@@ -1,0 +1,68 @@
+[
+  {
+    "id": "manali",
+    "name": "Manali",
+    "state": "Himachal Pradesh",
+    "crowdLevel": "High",
+    "crowdBadge": "Crowded in Town • Peaceful in Hamlets",
+    "description": "Snow-capped peaks and cedar forests. While Old Manali Mall Road is crowded, villages like Naggar and Burwa offer tranquil homestays.",
+    "suggestedBudgetMin": 5000,
+    "suggestedDays": 4,
+    "offbeatAlternatives": ["Naggar Castle Hamlet", "Burwa Village", "Sojha"]
+  },
+  {
+    "id": "jaipur",
+    "name": "Jaipur",
+    "state": "Rajasthan",
+    "crowdLevel": "Moderate",
+    "crowdBadge": "Moderate • Heritage Walking Areas",
+    "description": "The historic Pink City. Step away from Hawa Mahal queues to explore artisan block-printing villages and heritage dharamsalas.",
+    "suggestedBudgetMin": 6000,
+    "suggestedDays": 3,
+    "offbeatAlternatives": ["Amer Old Town Haveli Quarter", "Bagru Artisan Enclave", "Sanganer"]
+  },
+  {
+    "id": "varanasi",
+    "name": "Varanasi",
+    "state": "Uttar Pradesh",
+    "crowdLevel": "High",
+    "crowdBadge": "Dense Ghats • Calm Morning Boats",
+    "description": "Timeless spiritual cradle on the holy Ganga. Experience serene dawn boat rides and quiet weaver mohallas away from temple bottlenecks.",
+    "suggestedBudgetMin": 4000,
+    "suggestedDays": 3,
+    "offbeatAlternatives": ["Chet Singh Ghat", "Ramnagar Rural Riverfront", "Sarnath Quiet Enclave"]
+  },
+  {
+    "id": "rishikesh",
+    "name": "Rishikesh",
+    "state": "Uttarakhand",
+    "crowdLevel": "Moderate",
+    "crowdBadge": "Moderate • Serene Upstream",
+    "description": "Yoga capital nestled in the Shivaliks. Skip congested bridge lanes for upstream eco-ashrams and slow river beaches.",
+    "suggestedBudgetMin": 4500,
+    "suggestedDays": 3,
+    "offbeatAlternatives": ["Tapovan Quiet Ridge", "Phool Chatti Ashram Trail", "Shivpuri Hamlet"]
+  },
+  {
+    "id": "hampi",
+    "name": "Hampi",
+    "state": "Karnataka",
+    "crowdLevel": "Low",
+    "crowdBadge": "Low • Expansive Ancient Ruins",
+    "description": "Boulder-strewn UNESCO world heritage site. Vast landscape where you can cycle or stroll peacefully with local artisan guides.",
+    "suggestedBudgetMin": 5000,
+    "suggestedDays": 3,
+    "offbeatAlternatives": ["Anegundi Historic Village", "Sanapur Lake Hamlet", "Daroji Scrublands"]
+  },
+  {
+    "id": "munnar",
+    "name": "Munnar",
+    "state": "Kerala",
+    "crowdLevel": "Moderate",
+    "crowdBadge": "Moderate • Tea Estates & Spice Groves",
+    "description": "Rolling emerald tea plantations and mist. Escape congested viewpoint parking for family-run plantation stays in Marayoor.",
+    "suggestedBudgetMin": 7000,
+    "suggestedDays": 4,
+    "offbeatAlternatives": ["Marayoor Sandalwood Forest", "Vattavada Farm Village", "Chinnakanal Tea Ridge"]
+  }
+]
