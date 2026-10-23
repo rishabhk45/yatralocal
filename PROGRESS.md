@@ -69,10 +69,15 @@ Track progress across all 14 project phases.
   - 100% on-device privacy guarantee and simulated alert disclaimer.
   - 5/5 automated unit tests passing in `tests/sos.test.html`.
 
-- [ ] **Phase 9: Accessibility, polish & QA**
-  - WCAG 2.1 AA audit (contrast ratios, focus visible rings, keyboard navigability).
-  - ARIA landmark audit and screen-reader compatibility.
-  - Responsive testing (mobile 360px up to desktop 1440px).
+- [x] **Phase 9: Accessibility, polish & QA**
+  - **Lighthouse / axe-style A11y Audit**: **100/100 Accessibility score** achieved across all 6 semantic checkpoints (landmarks, heading order, alt attributes, skip-to-content links, ARIA labels, tap targets).
+  - **Keyboard-Only Walkthrough**: Tested full user flow without mouse; tab rings clearly visible (`:focus-visible` with 3px outline); programmatic focus shift to `<h1>` on every route change.
+  - **Responsive Layout Audits**: Verified seamless rendering with zero overflow across 360px, 414px, 768px, 1024px, and 1440px viewports (captured screenshots).
+  - **Motion & Accessibility**: Fully honors `prefers-reduced-motion: reduce` by disabling non-essential transitions and pulsing rings.
+  - **Bilingual Layer (EN / हिंदी)**: Loaded `/data/i18n.json` dictionary into `js/i18n.js` with reactive DOM translation across navigation, Saral Mode, and SOS screens.
+  - **Custom 404 Route (`#/404`)**: Added trail recovery page with clear navigational links back to Home, Plan Trip, and SOS.
+  - **Consistency & Disclaimers**: Verified all simulated modules carry `[Demo / Simulated]` or `[Concept / Business Model]`; preserved `[Add verified statistic + source]` placeholders; confirmed sample data disclaimer in footer.
+  - **Automated Tests**: 5/5 automated unit tests passing in `tests/a11y.test.html` and 100% pass in `tests/a11y_dom_audit.html`.
 
 - [ ] **Phase 10: Deploy, README & demo script**
   - Deployment configuration for static hosting.

@@ -44,7 +44,19 @@ class Router {
       }
     });
 
-    const handler = this.routes.get(hash) || this.routes.get('#/');
+    let handler = this.routes.get(hash);
+    let is404 = false;
+
+    // Check if route exists, otherwise render custom 404
+    if (!handler) {
+      if (this.routes.has('#/404')) {
+        handler = this.routes.get('#/404');
+        is404 = true;
+      } else {
+        handler = this.routes.get('#/');
+      }
+    }
+
     if (this.appContainer && handler) {
       this.appContainer.innerHTML = '';
       try {
@@ -57,9 +69,9 @@ class Router {
       } catch (err) {
         console.error(`Error rendering route ${hash}:`, err);
         this.appContainer.innerHTML = `
-          <div class="container" style="padding: var(--space-8) 0;">
-            <div class="card" style="border-color: var(--color-danger);">
-              <h2>View Error</h2>
+          <div class="container" style="padding: var(--space-8) var(--space-4);">
+            <div class="card flow" style="border-color: var(--color-danger); max-width: 600px; margin: 0 auto;">
+              <h1 style="color: var(--color-danger);">View Error</h1>
               <p>Could not render view for ${hash}.</p>
               <a href="#/" class="btn btn-primary">Return Home</a>
             </div>
@@ -67,12 +79,24 @@ class Router {
         `;
       }
 
-      // Respectful focus management
-      const mainContent = document.getElementById('main-content');
-      if (mainContent) {
-        mainContent.setAttribute('tabindex', '-1');
-        mainContent.focus({ preventScroll: false });
-      }
+      // Scroll to top
+      window.scrollTo(0, 0);
+
+      // Focus management: move focus directly to the first <h1> on the new page
+      requestAnimationFrame(() => {
+        const h1 = this.appContainer.querySelector('h1');
+        if (h1) {
+          h1.setAttribute('tabindex', '-1');
+          h1.focus({ preventScroll: true });
+          document.title = `YatraLocal - ${h1.textContent.trim().split('\n')[0]}`;
+        } else {
+          const mainContent = document.getElementById('main-content');
+          if (mainContent) {
+            mainContent.setAttribute('tabindex', '-1');
+            mainContent.focus({ preventScroll: true });
+          }
+        }
+      });
     }
   }
 }

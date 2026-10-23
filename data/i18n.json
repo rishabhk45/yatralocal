@@ -1,0 +1,108 @@
+{
+  "EN": {
+    "nav": {
+      "home": "Home",
+      "plan": "Plan Trip",
+      "itinerary": "Itinerary",
+      "stays": "Stays & Guides",
+      "trips": "My Trips",
+      "owner": "Host Dashboard",
+      "sos": "Safety SOS",
+      "styleguide": "Style Guide",
+      "saralOn": "Saral ON ☀️",
+      "saralMode": "Saral Mode"
+    },
+    "common": {
+      "demoBadge": "Demo / Simulated",
+      "sampleDataNote": "Sample data for demonstration",
+      "back": "Back",
+      "next": "Next",
+      "cancel": "Cancel",
+      "close": "Close",
+      "save": "Save",
+      "remove": "Remove",
+      "loading": "Loading...",
+      "skipContent": "Skip to main content"
+    },
+    "sos": {
+      "fabLabel": "SOS Emergency",
+      "title": "Emergency SOS Hub",
+      "activatedTitle": "SAFETY SOS ACTIVATED",
+      "cancelCountdown": "✋ CANCEL — I AM SAFE",
+      "countdownMsg": "Sharing live GPS location and sending emergency alerts to registered contacts in",
+      "safeStop": "✓ I'm Safe — Stop Sharing",
+      "demoNotice": "SIMULATED DEMO: No real alert has been dispatched to emergency services.",
+      "liveCoords": "Live Beacon Coordinates",
+      "privacyNotice": "100% On-Device Privacy Guarantee: Your coordinates and contacts never leave this device."
+    },
+    "saral": {
+      "easyModeTitle": "Saral Easy Mode",
+      "readAloud": "🔊 Read Aloud",
+      "stopAudio": "⏹ Stop",
+      "help": "❓ Help",
+      "callFamily": "📞 Call Family",
+      "step": "Step",
+      "of": "of",
+      "bookNow": "Book This Trip"
+    },
+    "notFound": {
+      "title": "Page Not Found",
+      "desc": "The page you are looking for does not exist or has moved.",
+      "goHome": "Return to Home",
+      "planTrip": "Plan a Trip"
+    }
+  },
+  "HI": {
+    "nav": {
+      "home": "होम",
+      "plan": "यात्रा योजना",
+      "itinerary": "यात्रा विवरण",
+      "stays": "होमस्टे और गाइड",
+      "trips": "मेरी यात्राएं",
+      "owner": "मेजबान डैशबोर्ड",
+      "sos": "सुरक्षा एसओएस",
+      "styleguide": "स्टाइल गाइड",
+      "saralOn": "सरल मोड चालू ☀️",
+      "saralMode": "सरल मोड"
+    },
+    "common": {
+      "demoBadge": "डेमो / सिम्युलेटेड",
+      "sampleDataNote": "प्रदर्शन हेतु नमूना डेटा",
+      "back": "पीछे जाएं",
+      "next": "आगे बढ़ें",
+      "cancel": "रद्द करें",
+      "close": "बंद करें",
+      "save": "सुरक्षित करें",
+      "remove": "हटाएं",
+      "loading": "लोड हो रहा है...",
+      "skipContent": "मुख्य सामग्री पर जाएं"
+    },
+    "sos": {
+      "fabLabel": "एसओएस आपातकाल",
+      "title": "आपातकालीन एसओएस हब",
+      "activatedTitle": "सुरक्षा एसओएस सक्रिय",
+      "cancelCountdown": "✋ रद्द करें — मैं सुरक्षित हूँ",
+      "countdownMsg": "पंजीकृत संपर्कों को लाइव जीपीएस लोकेशन और आपातकालीन अलर्ट भेजा जा रहा है:",
+      "safeStop": "✓ मैं सुरक्षित हूँ — लोकेशन साझा करना बंद करें",
+      "demoNotice": "सिम्युलेटेड डेमो: वास्तविक आपातकालीन सेवाओं को कोई संदेश नहीं भेजा गया है।",
+      "liveCoords": "लाइव बीकन निर्देशांक",
+      "privacyNotice": "100% ऑन-डिवाइस गोपनीयता: आपकी लोकेशन और संपर्क इस डिवाइस से बाहर नहीं जाते।"
+    },
+    "saral": {
+      "easyModeTitle": "सरल यात्रा मोड",
+      "readAloud": "🔊 पढ़कर सुनाएं",
+      "stopAudio": "⏹ रोकें",
+      "help": "❓ सहायता",
+      "callFamily": "📞 परिवार को कॉल करें",
+      "step": "चरण",
+      "of": "का",
+      "bookNow": "यह यात्रा बुक करें"
+    },
+    "notFound": {
+      "title": "पेज नहीं मिला",
+      "desc": "जिस पेज को आप ढूंढ रहे हैं वह मौजूद नहीं है या बदल दिया गया है।",
+      "goHome": "मुख्य पृष्ठ पर जाएं",
+      "planTrip": "यात्रा की योजना बनाएं"
+    }
+  }
+}

@@ -14,8 +14,10 @@ import { renderBookingView } from '../pages/booking.js';
 import { renderTripsView } from '../pages/trips.js';
 import { renderOwnerView } from '../pages/owner.js';
 import { renderSosView } from '../pages/sos.js';
+import { renderNotFoundView } from '../pages/not-found.js';
 import { renderStyleGuide } from '../pages/style-guide.js';
 import { sosEngine } from './sos.js';
+import { i18n } from './i18n.js';
 
 function renderStubView(title, description, nextLink, nextLabel) {
   return () => `
@@ -97,7 +99,13 @@ document.addEventListener('DOMContentLoaded', () => {
   router.register('#/bookings', renderTripsView);
   router.register('#/owner', renderOwnerView);
   router.register('#/sos', renderSosView);
+  router.register('#/404', renderNotFoundView);
   router.register('#/styleguide', renderStyleGuide);
+
+  // Initialize i18n
+  i18n.init().then(() => {
+    i18n.translateDOM();
+  });
 
   // Initialize router
   router.init('app-view');
@@ -163,8 +171,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Language selector
   const langSelect = document.getElementById('lang-select');
+  if (langSelect) {
+    langSelect.value = store.getState().language || 'EN';
+  }
+
   langSelect?.addEventListener('change', (e) => {
-    store.setLanguage(e.target.value);
-    showToast(`Language set to ${e.target.value === 'HI' ? 'हिंदी' : 'English'}`);
+    const newLang = e.target.value;
+    store.setLanguage(newLang);
+    i18n.translateDOM();
+    router._handleRouteChange();
+    showToast(newLang === 'HI' ? 'भाषा बदलकर हिंदी कर दी गई है' : 'Language set to English');
+  });
+
+  // Re-translate whenever store language changes
+  store.subscribe((state) => {
+    if (langSelect && langSelect.value !== state.language) {
+      langSelect.value = state.language || 'EN';
+    }
+    i18n.translateDOM();
   });
 });
