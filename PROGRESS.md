@@ -97,10 +97,17 @@ Track progress across all 14 project phases.
   - **Resilience & Attribution**: Prominent OpenStreetMap attribution bar (`© OpenStreetMap contributors`); graceful offline fallback list rendering distances and direct coordinates if CDN or tiles fail.
   - **Automated Verification**: 6/6 test assertions passing in `tests/map-node-verify.js` and `tests/map.test.html`. Captured visual verification screenshots across desktop (1280px) and mobile (360px).
 
-- [ ] **Phase 12: Real AI integration**
-  - Serverless endpoint `/api/ai` connecting to Gemini API with safe proxying.
-  - Dynamic AI itinerary generation and personalized local suggestions.
-  - Seamless fallback to local deterministic itinerary engine if API keys are missing.
+- [x] **Phase 12: Real AI integration (Gemini LLM Planner & Fallback)**
+  - **Serverless LLM Endpoints**: Created `/netlify/functions/plan.js` and Vercel-compatible `/api/plan.js` proxying requests to Google Gemini API (`gemini-2.5-flash`) using environment variables `LLM_API_KEY` and `LLM_MODEL`. Never exposes API keys to client browsers. Added `.env.example` and protected secrets in `.gitignore`.
+  - **Candidate-Only Activity Constraints**: Prompt constrains the model to pick activities strictly from `data/destinations.json` candidate IDs. Rejects unknown/hallucinated IDs with automatic catalog fallbacks.
+  - **Zero Price Hallucination**: Model never sets prices; all activity costs (`cost * travellers`), stay rates (`stayCostPerNight * roomsNeeded * nights`), food, and transport are calculated deterministically in server and client code.
+  - **Pacing & Accessibility Limits**: Enforces max 3 activities per day for general itineraries and max 1-2 activities per day for senior/accessible travelers with flat terrain.
+  - **Client LLM Provider (`js/llmProvider.js`)**: Implements `planProvider` interface with 15s timeout, 1 automatic retry, and seamless fallback to deterministic rule-based generator when offline or unconfigured.
+  - **Honest Dynamic Badging**: Accurately toggles between `<span class="badge badge-verified">✨ AI-Generated (Gemini)</span>` and `<span class="badge badge-demo">Simulated AI (offline fallback)</span>`.
+  - **"Ask YatraLocal" Conversational Assistant**: Interactive chat card on `#/itinerary` allowing natural-language refinements ("Make day 2 more relaxed", "Swap temples for food", "Focus on nature"). Enforces a 600-token output cap, client/server HTML stripping, and in-memory IP rate limiting (10 req/min).
+  - **Safety & Disclaimers**: Strips HTML tags, caps input at 200 chars, and displays mandatory advisory: *"AI suggestions — verify before travelling. All candidate places and prices are cross-checked with verified local records."*
+  - **Bilingual & Saral Support**: Supports both English and Hindi (`hi-IN`), with concise reassuring sentences in Saral Mode.
+  - **Automated Test Coverage**: 6/6 assertions passing in `tests/llm-provider.test.js` and 5/5 assertions passing in `tests/llm.test.html`. Visual test results captured in `assets/screenshots/llm_test_results.png` and `assets/screenshots/llm_itinerary_chat.png`.
 
 - [ ] **Phase 13: Real SOS integration**
   - Live location beacon backend proxy `/api/sos`.

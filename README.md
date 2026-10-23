@@ -178,6 +178,37 @@ YATRALOCAL/
 └── PROGRESS.md                # Development milestone tracker & test results
 ```
 
+### 🤖 LLM Itinerary Planner & Fallback Setup
+
+YatraLocal includes a production-ready serverless LLM planner powered by Google Gemini API, with automatic fallback to our deterministic rule-based engine when API keys are unconfigured or offline.
+
+#### 1. Setup Environment Variables
+Copy `.env.example` to `.env`:
+```bash
+cp .env.example .env
+```
+Add your Google Gemini API key:
+```env
+LLM_API_KEY=AIzaSy...your_gemini_api_key
+LLM_MODEL=gemini-2.5-flash
+RATE_LIMIT_PER_MINUTE=10
+```
+> **Security Guarantee**: The API key is stored strictly on the server and is **never** exposed to client browsers. `.env` is protected by `.gitignore`.
+
+#### 2. Running Locally with Serverless Functions
+To test both the client and the serverless LLM functions together:
+```bash
+# Option A: Using Netlify CLI (Runs both static files and /netlify/functions/plan)
+npx netlify dev
+
+# Option B: Running static mode (Automatically demonstrates seamless fallback)
+npx serve -l 4173 .
+```
+
+#### 3. Deploying to Netlify or Vercel
+- **Netlify**: Connect your GitHub repository. In **Site Configuration > Environment Variables**, add `LLM_API_KEY` and `LLM_MODEL`. The serverless function will automatically deploy at `/.netlify/functions/plan`.
+- **Vercel**: In **Settings > Environment Variables**, add `LLM_API_KEY`. The Vercel function will deploy at `/api/plan`.
+
 ---
 
 ## 🚀 How to Run Locally
@@ -204,6 +235,10 @@ Open your browser at `http://localhost:4173`.
 
 All unit tests run directly in your browser without requiring test runners or heavy dependencies:
 
+- **Map Engine & Coordinates Tests**: `http://localhost:4173/tests/map.test.html`
+- **LLM Planner & Fallback Tests**: `http://localhost:4173/tests/llm.test.html`
+- **Node.js LLM Verification**: `node tests/llm-provider.test.js`
+- **Node.js Map Verification**: `node tests/map-node-verify.js`
 - **Itinerary Engine Tests**: `http://localhost:4173/tests/itinerary.test.html`
 - **Saral Mode Tests**: `http://localhost:4173/tests/saral.test.html`
 - **Booking & Family Flow Tests**: `http://localhost:4173/tests/booking.test.html`

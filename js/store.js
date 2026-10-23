@@ -47,6 +47,7 @@ class Store {
 
   _loadState() {
     try {
+      if (typeof localStorage === 'undefined') return defaultState;
       const saved = localStorage.getItem(STORAGE_KEY);
       if (!saved) return defaultState;
       return { ...defaultState, ...JSON.parse(saved) };
@@ -58,6 +59,7 @@ class Store {
 
   _saveState() {
     try {
+      if (typeof localStorage === 'undefined') return;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
     } catch (err) {
       console.warn('Failed to save state to localStorage:', err);

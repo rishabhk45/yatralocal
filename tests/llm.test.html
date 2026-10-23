@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>YatraLocal - LLM Itinerary Planner & Fallback Test Suite</title>
+  <style>
+    body { font-family: system-ui, sans-serif; padding: 24px; background: #FAF7F2; color: #1A252C; }
+    h1 { color: #0D5C5B; }
+    .test-box { background: white; border: 1px solid #E2D9CC; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+    .pass { color: #1B7955; font-weight: 700; }
+    .fail { color: #C5221F; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <h1>✨ YatraLocal LLM Planner & Fallback Browser Test Suite</h1>
+  <p>Testing client-side fallback, schema validation, cost recomputation, and conversational refinement.</p>
+  
+  <div id="results">Running tests...</div>
+
+  <script type="module">
+    import { llmPlanProvider, sanitizeClientInput } from '../js/llmProvider.js';
+    import { store } from '../js/store.js';
+
+    async function runTests() {
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '';
+
+      let passedCount = 0;
+      let totalTests = 0;
+
+      function assert(title, condition, detail = '') {
+        totalTests++;
+        const el = document.createElement('div');
+        el.className = 'test-box';
+        if (condition) {
+          passedCount++;
+          console.log(`[PASS] ${title}`);
+          el.innerHTML = `<span class="pass">✓ PASS:</span> <strong>${title}</strong> ${detail ? `<br><small>${detail}</small>` : ''}`;
+        } else {
+          console.error(`[FAIL] ${title}: ${detail}`);
+          el.innerHTML = `<span class="fail">✗ FAIL:</span> <strong>${title}</strong><br><small style="color: #C5221F;">${detail}</small>`;
+        }
+        resultsDiv.appendChild(el);
+      }
+
+      console.log('--- STARTING BROWSER LLM PLANNER TESTS ---');
+
+      // Test 1: Fallback generation when no serverless function is running (static web host)
+      const prefs = {
+        destination: 'manali',
+        budget: 9000,
+        days: 3,
+        travellers: 2,
+        moods: ['Relaxed'],
+        accessibility: {}
+      };
+
+      const plan = await llmPlanProvider.getItinerary(prefs);
+      assert(
+        'Automatic Fallback to Deterministic Engine on Static Host',
+        plan !== null && plan.days.length === 3 && plan.isLlmGenerated === false && plan.providerName === 'rule-based',
+        `Plan generated with ${plan.days.length} days, marked isLlmGenerated: ${plan.isLlmGenerated}, provider: ${plan.providerName}`
+      );
+
+      // Test 2: Honest Badge State in returned plan
+      const badgeText = plan.isLlmGenerated ? '✨ AI-Generated (Gemini)' : 'Simulated AI (offline fallback)';
+      assert(
+        'Honest Badge Rendering Condition',
+        badgeText === 'Simulated AI (offline fallback)',
+        `Badge correctly evaluates to: "${badgeText}"`
+      );
+
+      // Test 3: Cost Recalculation Integrity
+      const sumActivitiesCost = plan.days.reduce((acc, d) => acc + d.estCost, 0);
+      const totalCostIntegrity = plan.totalCost === (sumActivitiesCost + plan.breakdown.stay + plan.breakdown.food + plan.breakdown.transport);
+      assert(
+        'Strict Cost Calculation Integrity (Activities + Stay + Food + Transport)',
+        totalCostIntegrity,
+        `Calculated Total ₹${plan.totalCost.toLocaleString('en-IN')} matches sum of components (Activities: ₹${sumActivitiesCost}, Stay: ₹${plan.breakdown.stay}, Food: ₹${plan.breakdown.food}, Transport: ₹${plan.breakdown.transport})`
+      );
+
+      // Test 4: Input Sanitization strips tags and limits length
+      const dirty = '<script>bad()</script><b>Make it relaxed</b>' + 'x'.repeat(250);
+      const clean = sanitizeClientInput(dirty, 200);
+      assert(
+        'Client-Side Input Sanitization',
+        !clean.includes('<script>') && !clean.includes('<b>') && clean.length <= 200,
+        `Sanitized string length: ${clean.length}`
+      );
+
+      // Test 5: Conversational Refinement ("Ask YatraLocal")
+      const refinedPlan = await llmPlanProvider.refineItinerary('Make Day 2 more relaxed with fewer stops', plan, prefs);
+      assert(
+        'Ask YatraLocal Conversational Refinement Fallback',
+        refinedPlan !== null && Array.isArray(refinedPlan.days) && refinedPlan.days.length === 3,
+        `Refined plan created with ${refinedPlan.days.length} days and updated local tips`
+      );
+
+      // Final summary
+      const summaryEl = document.createElement('div');
+      summaryEl.id = 'test-summary';
+      summaryEl.style.marginTop = '20px';
+      summaryEl.style.padding = '16px';
+      summaryEl.style.borderRadius = '8px';
+      summaryEl.style.fontWeight = 'bold';
+      summaryEl.style.background = passedCount === totalTests ? '#E6F4EA' : '#FCE8E6';
+      summaryEl.style.color = passedCount === totalTests ? '#137333' : '#C5221F';
+      summaryEl.textContent = `All Tests Completed: ${passedCount}/${totalTests} Passed (${passedCount === totalTests ? 'SUCCESS' : 'FAILURE'})`;
+      resultsDiv.prepend(summaryEl);
+    }
+
+    window.addEventListener('load', runTests);
+  </script>
+</body>
+</html>

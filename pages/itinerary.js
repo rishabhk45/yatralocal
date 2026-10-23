@@ -5,7 +5,7 @@
  */
 
 import { store } from '../js/store.js';
-import { planProvider } from '../js/itinerary.js';
+import { llmPlanProvider } from '../js/llmProvider.js';
 import { YatraMap } from '../js/map.js';
 
 export function renderItineraryView() {
@@ -71,7 +71,7 @@ export function renderItineraryView() {
         accessibility: {}
       };
 
-      const itineraryData = currentState.itinerary || await planProvider.getItinerary(prefs);
+      const itineraryData = currentState.itinerary || await llmPlanProvider.getItinerary(prefs);
       store.setState({ itinerary: itineraryData });
 
       // Render actual itinerary content
@@ -132,7 +132,10 @@ function buildItineraryHTML(data) {
     <div class="flex-between" style="flex-wrap: wrap; gap: var(--space-3); margin-bottom: var(--space-6);">
       <div>
         <div class="flex gap-2" style="align-items: center; margin-bottom: var(--space-2);">
-          <span class="badge badge-demo">Simulated AI Planner</span>
+          ${data.isLlmGenerated 
+            ? '<span class="badge badge-verified" id="ai-planner-badge" style="background-color: #E6F4EA; color: #137333; border: 1px solid #CEEAD6;">✨ AI-Generated (Gemini)</span>' 
+            : '<span class="badge badge-demo" id="ai-planner-badge">Simulated AI (offline fallback)</span>'
+          }
           <span class="badge badge-verified">Crowd-Smart Route</span>
         </div>
         <h1 style="margin: 0; font-size: clamp(1.75rem, 3.5vw, 2.4rem);">
@@ -148,6 +151,48 @@ function buildItineraryHTML(data) {
         <a href="#/stays" class="btn btn-primary btn-sm">Choose Local Stay & Guide ➔</a>
       </div>
     </div>
+
+    <!-- Ask YatraLocal (AI Planner Assistant) -->
+    <section class="ask-yatra-card flow" aria-label="Ask YatraLocal AI Assistant">
+      <div class="flex-between" style="align-items: center; flex-wrap: wrap; gap: var(--space-2);">
+        <div class="flex gap-2" style="align-items: center;">
+          <span style="font-size: 1.3rem;">💬</span>
+          <div>
+            <strong style="color: var(--color-primary); font-size: var(--font-size-base);">Ask YatraLocal (AI Trip Assistant)</strong>
+            <span style="font-size: var(--font-size-xs); color: var(--color-text-muted); margin-left: 6px;">Refine your plan with natural language</span>
+          </div>
+        </div>
+        <span class="badge badge-outline" style="font-size: 0.72rem;">600-Token Output Cap • Rate-limited</span>
+      </div>
+
+      <form id="form-ask-yatra" class="flex gap-2" style="margin-top: var(--space-3); flex-wrap: wrap;">
+        <input 
+          type="text" 
+          id="input-ask-yatra" 
+          class="form-control" 
+          placeholder="e.g. Make Day 2 more relaxed, swap temples for food, or focus on nature walks..."
+          maxlength="200"
+          style="flex: 1; min-width: 260px;"
+          required
+        />
+        <button type="submit" class="btn btn-primary btn-sm" id="btn-submit-ask-yatra" style="white-space: nowrap;">
+          <span>✨ Refine Plan</span>
+        </button>
+      </form>
+
+      <!-- Quick suggestion pills -->
+      <div class="flex gap-2" style="flex-wrap: wrap; margin-top: var(--space-2);" id="ask-suggestions">
+        <button type="button" class="ask-suggestion-chip" data-prompt="Make Day 2 more relaxed with fewer stops">🧘 Relax Day 2</button>
+        <button type="button" class="ask-suggestion-chip" data-prompt="Swap crowded temples for authentic local food spots">🍲 Authentic Food</button>
+        <button type="button" class="ask-suggestion-chip" data-prompt="Focus on nature walks and village forest trails">🌲 Nature & Trails</button>
+        <button type="button" class="ask-suggestion-chip" data-prompt="Ensure flat walking and zero steep steps for elders">🚶 Senior Accessible</button>
+      </div>
+
+      <div class="ask-disclaimer">
+        <span>ℹ️</span>
+        <span><strong>AI suggestions — verify before travelling.</strong> All candidate places, activities, and prices are verified against authentic local records.</span>
+      </div>
+    </section>
 
     <!-- "Why This Plan" Explanation Callout -->
     <section class="card flow" style="margin-bottom: var(--space-8); background: linear-gradient(135deg, #FAF7F2 0%, var(--color-bg-surface) 100%); border-left: 5px solid var(--color-primary);">
@@ -384,6 +429,54 @@ function bindItineraryInteractions(container, itineraryData) {
   };
   updateLayout();
   window.addEventListener('resize', updateLayout);
+
+  // Ask YatraLocal LLM Assistant Handlers
+  const askForm = container.querySelector('#form-ask-yatra');
+  const askInput = container.querySelector('#input-ask-yatra');
+  const askSubmitBtn = container.querySelector('#btn-submit-ask-yatra');
+  const suggestionChips = container.querySelectorAll('.ask-suggestion-chip');
+
+  const handleRefineRequest = async (userPrompt) => {
+    const cleanPrompt = (userPrompt || '').trim();
+    if (!cleanPrompt) return;
+
+    if (askInput) askInput.value = cleanPrompt;
+    if (askSubmitBtn) {
+      askSubmitBtn.disabled = true;
+      askSubmitBtn.innerHTML = '<span>⏳ Planning with AI...</span>';
+    }
+    if (askInput) askInput.disabled = true;
+
+    try {
+      const prefs = store.getState().preferences || { destination: 'manali' };
+      const refinedPlan = await llmPlanProvider.refineItinerary(cleanPrompt, itineraryData, prefs);
+      store.setState({ itinerary: refinedPlan });
+      container.innerHTML = buildItineraryHTML(refinedPlan);
+      bindItineraryInteractions(container, refinedPlan);
+      window.YatraApp.showToast('✨ Itinerary updated with your preferences!');
+    } catch (err) {
+      console.error('Refinement error:', err);
+      window.YatraApp.showToast(err.message || 'Unable to update itinerary', 'error');
+      if (askSubmitBtn) {
+        askSubmitBtn.disabled = false;
+        askSubmitBtn.innerHTML = '<span>✨ Refine Plan</span>';
+      }
+      if (askInput) askInput.disabled = false;
+    }
+  };
+
+  if (askForm) {
+    askForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      handleRefineRequest(askInput?.value);
+    });
+  }
+
+  suggestionChips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      handleRefineRequest(chip.dataset.prompt);
+    });
+  });
 
   // Swap Activity Handlers
   const swapButtons = container.querySelectorAll('.btn-swap-activity');
