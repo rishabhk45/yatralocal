@@ -11,7 +11,7 @@
  */
 
 import { store } from '../js/store.js';
-import { sosEngine } from '../js/sos.js';
+import { sosEngine, normalizeToE164, maskPhone } from '../js/sos.js';
 
 export function renderSosView() {
   const container = document.createElement('div');
@@ -54,22 +54,40 @@ export function renderSosView() {
 
     <!-- Send Test Alert to Myself Card -->
     <div class="card" style="border: 1.5px solid #0284C7; background-color: #F0F9FF; margin-bottom: var(--space-6); padding: var(--space-5);">
-      <div class="flex-between" style="align-items: center; flex-wrap: wrap; gap: var(--space-3);">
-        <div>
-          <div class="flex gap-2" style="align-items: center; margin-bottom: 4px;">
-            <span class="badge" style="background: #0284C7; color: #FFFFFF; font-weight: 800; font-size: 0.72rem;">TEST ALERT MODE</span>
-            <h3 style="color: #0369A1; margin: 0; font-size: 1.15rem;">Send Test Alert to Myself</h3>
+      <div class="flow" style="gap: var(--space-3);">
+        <div class="flex-between" style="align-items: center; flex-wrap: wrap; gap: var(--space-3);">
+          <div>
+            <div class="flex gap-2" style="align-items: center; margin-bottom: 4px;">
+              <span class="badge" style="background: #0284C7; color: #FFFFFF; font-weight: 800; font-size: 0.72rem;">TEST ALERT MODE</span>
+              <h3 style="color: #0369A1; margin: 0; font-size: 1.15rem;">Send Test Alert to Myself</h3>
+            </div>
+            <p style="color: #075985; font-size: var(--font-size-xs); margin: 0;">
+              Verify real alert delivery and test live tracking without disturbing your emergency contacts.
+            </p>
           </div>
-          <p style="color: #075985; font-size: var(--font-size-xs); margin: 0;">
-            Verify delivery of SMS alerts and preview live tracking without panicking your contacts.
-          </p>
+
+          <!-- Channel Selection for Test -->
+          <div class="flex gap-3" style="align-items: center; background: #E0F2FE; padding: 6px 12px; border-radius: var(--radius-sm); border: 1px solid #BAE6FD;">
+            <label class="flex gap-1" style="align-items: center; font-size: var(--font-size-xs); font-weight: 600; cursor: pointer; color: #0369A1;">
+              <input type="radio" name="test-channel-choice" value="sms" ${settings.channel !== 'whatsapp' ? 'checked' : ''} />
+              📱 SMS
+            </label>
+            <label class="flex gap-1" style="align-items: center; font-size: var(--font-size-xs); font-weight: 600; cursor: pointer; color: #0369A1;">
+              <input type="radio" name="test-channel-choice" value="whatsapp" ${settings.channel === 'whatsapp' ? 'checked' : ''} />
+              🟢 WhatsApp (Sandbox)
+            </label>
+          </div>
         </div>
+
         <div class="flex gap-2" style="align-items: center; flex-wrap: wrap;">
-          <input type="tel" id="input-test-phone" placeholder="Your phone (+91...)" value="${contacts[0]?.phone || ''}" style="padding: 8px 12px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-size: var(--font-size-xs); min-width: 170px;" />
+          <input type="tel" id="input-test-phone" placeholder="Your phone (e.g. 9876543210 or +91...)" value="${contacts[0]?.phone || ''}" style="padding: 8px 12px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-size: var(--font-size-xs); min-width: 220px; flex-grow: 1;" />
           <button type="button" class="btn btn-primary btn-sm" id="btn-send-test-alert" style="background-color: #0284C7; border-color: #0284C7; font-weight: 700; min-height: 38px;">
             🧪 Send Test Alert (TEST)
           </button>
         </div>
+
+        <!-- Dynamic Test Results Output -->
+        <div id="test-alert-output" style="display: none; margin-top: var(--space-2);"></div>
       </div>
     </div>
 
@@ -80,9 +98,29 @@ export function renderSosView() {
         <h2 id="contacts-heading" style="font-size: 1.35rem; margin-bottom: var(--space-2);">
           👨‍👩‍👦 Emergency Contacts (Max 3)
         </h2>
-        <p style="font-size: var(--font-size-xs); color: var(--color-text-muted); margin-bottom: var(--space-4);">
-          These contacts receive simulated emergency SMS & WhatsApp location links when you activate SOS.
+        <p style="font-size: var(--font-size-xs); color: var(--color-text-muted); margin-bottom: var(--space-3);">
+          These contacts receive emergency alerts and your live tracking link when SOS is triggered.
         </p>
+
+        <!-- Delivery Channel Preference -->
+        <div style="background: var(--color-bg-subtle); border-radius: var(--radius-sm); padding: var(--space-3); margin-bottom: var(--space-4); border: 1px solid var(--color-border);">
+          <label style="font-weight: 700; font-size: var(--font-size-xs); text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-muted); display: block; margin-bottom: 6px;">
+            Preferred Emergency Channel:
+          </label>
+          <div class="flex gap-4" style="flex-wrap: wrap;">
+            <label class="flex gap-2" style="align-items: center; cursor: pointer; font-size: var(--font-size-xs);">
+              <input type="radio" name="global-sos-channel" value="sms" ${settings.channel !== 'whatsapp' ? 'checked' : ''} />
+              <span>📱 <strong>SMS Text Message</strong></span>
+            </label>
+            <label class="flex gap-2" style="align-items: center; cursor: pointer; font-size: var(--font-size-xs);">
+              <input type="radio" name="global-sos-channel" value="whatsapp" ${settings.channel === 'whatsapp' ? 'checked' : ''} />
+              <span>🟢 <strong>WhatsApp</strong> (Twilio Sandbox)</span>
+            </label>
+          </div>
+          <p style="font-size: 0.72rem; color: var(--color-text-muted); margin: 6px 0 0 0;">
+            WhatsApp Sandbox delivers instantly without DLT templates. Recipient can join via <code>join &lt;code&gt;</code>.
+          </p>
+        </div>
 
         <!-- Current Contacts List -->
         <div id="contacts-list" class="flow" style="margin-bottom: var(--space-4);">
@@ -91,7 +129,7 @@ export function renderSosView() {
               <div>
                 <strong style="color: var(--color-text-main);">${c.name}</strong> 
                 <span style="font-size: var(--font-size-xs); color: var(--color-text-muted);">(${c.relation})</span>
-                <div style="font-family: monospace; font-size: var(--font-size-xs); color: var(--color-primary);">${c.phone}</div>
+                <div style="font-family: monospace; font-size: var(--font-size-xs); color: var(--color-primary);">${c.phone} <span style="color: var(--color-text-muted); font-size: 0.7rem;">(${maskPhone(c.phone)})</span></div>
               </div>
               <button type="button" class="btn btn-outline btn-sm btn-delete-contact" data-idx="${idx}" style="color: var(--color-danger); border-color: #FCA5A5; padding: 4px 10px;" aria-label="Remove ${c.name}">
                 Remove
@@ -114,10 +152,11 @@ export function renderSosView() {
                 <input type="text" id="contact-relation" placeholder="e.g. Daughter" style="width: 100%; margin-top: 4px; padding: 8px 12px; border: 1px solid var(--color-border); border-radius: var(--radius-sm);" />
               </div>
               <div>
-                <label for="contact-phone" style="font-size: var(--font-size-xs); font-weight: 600;">Phone Number *</label>
-                <input type="tel" id="contact-phone" required placeholder="+91 98765 00000" style="width: 100%; margin-top: 4px; padding: 8px 12px; border: 1px solid var(--color-border); border-radius: var(--radius-sm);" />
+                <label for="contact-phone" style="font-size: var(--font-size-xs); font-weight: 600;">Phone Number (E.164 / Indian) *</label>
+                <input type="tel" id="contact-phone" required placeholder="98765 43210 or +91..." style="width: 100%; margin-top: 4px; padding: 8px 12px; border: 1px solid var(--color-border); border-radius: var(--radius-sm);" />
               </div>
             </div>
+            <div id="contact-phone-error" style="display: none; color: #DC2626; font-size: var(--font-size-xs); font-weight: 600; margin-top: 4px;"></div>
             <button type="submit" class="btn btn-outline btn-sm" style="width: 100%; margin-top: var(--space-2); font-weight: 600;">
               Save Contact
             </button>

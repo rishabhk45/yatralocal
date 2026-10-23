@@ -1,0 +1,15 @@
+{
+  "name": "yatralocal",
+  "version": "1.0.0",
+  "description": "Local-first, crowd-smart ethical travel platform for India",
+  "private": true,
+  "scripts": {
+    "test:season": "node tests/season.test.js",
+    "test:places": "node tests/places.test.js",
+    "test:supabase": "node tests/supabase.test.js",
+    "test:sos": "node tests/sos-twilio.test.js"
+  },
+  "dependencies": {
+    "twilio": "^5.4.0"
+  }
+}

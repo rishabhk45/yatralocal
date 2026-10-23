@@ -395,6 +395,7 @@ class ReviewsManager {
   }
 }
 
+export const createReviewCardDOM = renderReviewCard;
 export const reviewsManager = new ReviewsManager();
 
 /**
@@ -512,7 +513,7 @@ export async function renderReviewsContainer(containerEl, targetId, targetType, 
   containerEl.appendChild(listContainer);
 }
 
-function renderReviewCard(review, onDeleteCallback) {
+export function renderReviewCard(review, onDeleteCallback) {
   const card = document.createElement('div');
   card.className = 'card review-card';
   card.style.padding = 'var(--space-4)';

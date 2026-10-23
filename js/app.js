@@ -89,7 +89,7 @@ window.YatraApp = {
 };
 
 // Initialize App
-document.addEventListener('DOMContentLoaded', () => {
+function init() {
   // Register Routes
   router.register('#/', renderLandingView);
   router.register('#/plan', renderPlanView);
@@ -196,4 +196,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     i18n.translateDOM();
   });
-});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
