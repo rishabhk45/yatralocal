@@ -95,6 +95,20 @@
       "alternativeTitle": "Consider a Quieter Alternative",
       "saralBusy": "This is a busy season. Book early.",
       "saralQuiet": "This is a quiet season. Good time to visit."
+    },
+    "places": {
+      "searchPlaceholder": "Search any place in India (e.g. Harsil, Belur, Orchha, Kaza...)",
+      "communityBadge": "Community / OpenStreetMap Data",
+      "communityNotice": "Community Open Data: Sourced live from OpenStreetMap. Details may be incomplete.",
+      "nearbyAttractions": "Nearby Things to See (Within 10 km)",
+      "planTripHere": "Plan a Trip Here"
+    },
+    "auth": {
+      "login": "Log In",
+      "signup": "Sign Up",
+      "logout": "Log Out",
+      "verifiedAccount": "Verified account",
+      "loginToWriteReview": "Log in to Write a Review"
     }
   },
   "HI": {
@@ -193,6 +207,20 @@
       "alternativeTitle": "कम भीड़-भाड़ वाले शांत विकल्प",
       "saralBusy": "यह भीड़-भाड़ वाला समय है। पहले से बुकिंग करें।",
       "saralQuiet": "यह शांत समय है। घूमने के लिए अच्छा अवसर है।"
+    },
+    "places": {
+      "searchPlaceholder": "भारत का कोई भी स्थान खोजें (जैसे हरसिल, बेलूर, ओरछा, काज़ा...)",
+      "communityBadge": "सामुदायिक / ओपनस्ट्रीटमैप डेटा",
+      "communityNotice": "सामुदायिक ओपन डेटा: ओपनस्ट्रीटमैप से प्राप्त। स्थानीय विवरण भिन्न हो सकते हैं।",
+      "nearbyAttractions": "निकटवर्ती दर्शनीय स्थल (10 किमी के भीतर)",
+      "planTripHere": "यहाँ की यात्रा बनाएं"
+    },
+    "auth": {
+      "login": "लॉग इन",
+      "signup": "नया खाता",
+      "logout": "लॉग आउट",
+      "verifiedAccount": "सत्यापित खाता",
+      "loginToWriteReview": "समीक्षा लिखने के लिए लॉग इन करें"
     }
   }
 }

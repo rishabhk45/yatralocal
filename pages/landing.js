@@ -5,6 +5,7 @@
  */
 
 import { store } from '../js/store.js';
+import { searchPlacesInIndia } from '../js/places.js';
 
 export function renderLandingView() {
   const container = document.createElement('div');
@@ -23,9 +24,26 @@ export function renderLandingView() {
         <p style="font-size: clamp(1.1rem, 2.5vw, 1.35rem); color: var(--color-text-muted); font-weight: 500; margin-bottom: var(--space-6);">
           AI-powered • Local-first • Inclusive travel
         </p>
-        <p style="font-size: var(--font-size-base); color: var(--color-text-main); max-width: 680px; margin: 0 auto var(--space-8);">
+        <p style="font-size: var(--font-size-base); color: var(--color-text-main); max-width: 680px; margin: 0 auto var(--space-6);">
           Connect directly with small homestays, boutique stays, and verified local guides while steering clear of overwhelming tourist choke points. Designed for elders, pilgrims, and families alike.
         </p>
+
+        <!-- India-Wide Place Search Box (Phase 17) -->
+        <div class="hero-search-wrapper" style="max-width: 640px; margin: 0 auto var(--space-6); position: relative; text-align: left;">
+          <label for="hero-place-input" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0;">Search any place in India</label>
+          <div style="display: flex; background: #FFFFFF; border: 2.5px solid var(--color-primary); border-radius: 9999px; box-shadow: 0 4px 16px rgba(13, 92, 91, 0.12); padding: 4px; align-items: center;">
+            <span style="font-size: 1.25rem; margin-left: 14px; margin-right: 8px;" aria-hidden="true">🔍</span>
+            <input type="text" id="hero-place-input" placeholder="Search any place in India (e.g. Harsil, Belur, Orchha, Kaza...)" autocomplete="off" style="flex: 1; border: none; outline: none; font-size: 0.98rem; padding: 10px 4px; background: transparent; font-family: inherit;">
+            <button type="button" id="hero-place-search-btn" class="btn btn-primary" style="border-radius: 9999px; padding: 10px 22px; font-weight: bold; font-size: 0.95rem;">
+              Explore
+            </button>
+          </div>
+          <div id="hero-place-dropdown" class="place-autocomplete-dropdown" style="display: none; position: absolute; top: calc(100% + 6px); left: 0; right: 0; background: #FFFFFF; border: 1.5px solid var(--color-border); border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); z-index: 1000; max-height: 280px; overflow-y: auto;"></div>
+          <div style="font-size: 0.72rem; color: var(--color-text-muted); margin-top: 6px; padding-left: 16px;">
+            Map & places: OpenStreetMap contributors via Photon & Nominatim
+          </div>
+        </div>
+
         <div class="flex-center gap-4" style="flex-wrap: wrap;">
           <a href="#/plan" class="btn btn-primary" style="font-size: var(--font-size-md); padding: var(--space-3) var(--space-8);">
             Plan my trip ➔
@@ -256,5 +274,99 @@ export function renderLandingView() {
     });
   }
 
+  // India-Wide Place Search Input Interaction (Phase 17)
+  const placeInput = container.querySelector('#hero-place-input');
+  const dropdown = container.querySelector('#hero-place-dropdown');
+  const searchBtn = container.querySelector('#hero-place-search-btn');
+
+  if (placeInput && dropdown) {
+    let debounceTimer = null;
+    let abortCtrl = null;
+
+    const performSearch = () => {
+      const q = placeInput.value.trim();
+      if (q.length < 3) {
+        dropdown.style.display = 'none';
+        return;
+      }
+
+      if (abortCtrl) abortCtrl.abort();
+      abortCtrl = new AbortController();
+
+      dropdown.innerHTML = '<div style="padding: 12px; text-align: center; color: var(--color-text-muted); font-size: 0.85rem;">Searching India across OpenStreetMap...</div>';
+      dropdown.style.display = 'block';
+
+      searchPlacesInIndia(q, { signal: abortCtrl.signal, timeoutMs: 5000 })
+        .then(results => {
+          if (!results || results.length === 0) {
+            dropdown.innerHTML = '<div style="padding: 12px; text-align: center; color: var(--color-text-muted); font-size: 0.85rem;">No matching places found. Try a town, village, or district name.</div>';
+            return;
+          }
+
+          dropdown.innerHTML = '';
+          results.forEach(place => {
+            const item = document.createElement('div');
+            item.className = 'place-autocomplete-item';
+            item.style.padding = '10px 14px';
+            item.style.cursor = 'pointer';
+            item.style.borderBottom = '1px solid #F3F4F6';
+            item.style.display = 'flex';
+            item.style.justifyContent = 'space-between';
+            item.style.alignItems = 'center';
+
+            item.innerHTML = `
+              <div>
+                <strong style="color: var(--color-primary); font-size: 0.95rem;">${escapeHTML(place.name)}</strong>
+                <div style="font-size: 0.75rem; color: var(--color-text-muted);">${escapeHTML(place.displayName)}</div>
+              </div>
+              <span class="badge badge-outline" style="font-size: 0.7rem;">${escapeHTML(place.category)}</span>
+            `;
+
+            item.addEventListener('mouseenter', () => { item.style.backgroundColor = '#F0FDF4'; });
+            item.addEventListener('mouseleave', () => { item.style.backgroundColor = 'transparent'; });
+
+            item.addEventListener('click', () => {
+              store.setState({ activePlace: place });
+              sessionStorage.setItem(`yl_place_cache_${place.placeKey}`, JSON.stringify(place));
+              dropdown.style.display = 'none';
+              window.location.hash = `#/place/${encodeURIComponent(place.placeKey)}`;
+            });
+
+            dropdown.appendChild(item);
+          });
+        })
+        .catch(err => {
+          if (err.name !== 'AbortError') {
+            dropdown.innerHTML = '<div style="padding: 12px; text-align: center; color: var(--color-text-muted); font-size: 0.85rem;">Search unavailable right now.</div>';
+          }
+        });
+    };
+
+    placeInput.addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(performSearch, 400);
+    });
+
+    if (searchBtn) {
+      searchBtn.addEventListener('click', () => {
+        clearTimeout(debounceTimer);
+        performSearch();
+      });
+    }
+
+    document.addEventListener('click', (e) => {
+      if (!container.contains(e.target)) {
+        dropdown.style.display = 'none';
+      }
+    });
+  }
+
   return container;
+}
+
+function escapeHTML(str) {
+  if (!str) return '';
+  return String(str).replace(/[&<>"']/g, m => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  })[m]);
 }

@@ -159,3 +159,45 @@ Track progress across all 14 project phases.
   - **Saral Mode Guidance (`#/saral`)**: 1-sentence plain-language seasonal advice (*"This is a busy season. Book early."* / *"This is a quiet season. Good time to visit."*) with read-aloud button via `speechAssistant.speak()` in English and Hindi (`hi-IN`).
   - **Bilingual Support**: Full English and Hindi translations added to `data/i18n.json` for seasonality labels, demand levels, and advice.
   - **Automated Test Coverage**: 11/11 assertions passing in `tests/season.test.js` and 10/10 interactive DOM tests in `tests/season.test.html`. Visual test artifacts captured in `assets/screenshots/season_test_results.png`, `assets/screenshots/season_demand_bar_1280.png`, `assets/screenshots/season_weather_onseason.png`, `assets/screenshots/season_owner_outlook.png`, and `assets/screenshots/season_saral_360.png`.
+
+- [x] **Phase 17: India-Wide Place Search + Supabase (Login & Shared Reviews)**
+  - **India-Wide Place Search (`js/places.js`)**:
+    - **Photon API Typeahead**: Fast autocomplete geocoding querying `photon.komoot.io` bounded by India's geographic extent (`[68.1, 6.7, 97.4, 35.7]`) with country filtering (`country === 'India'`).
+    - **Nominatim Fair-Use Fallback**: Nominatim fallback adhering to the OpenStreetMap 1 request/second usage policy with mandatory `© OpenStreetMap contributors` attribution.
+    - **Performance & Guardrails**: 400ms debounce, minimum 3 characters, `AbortController` cancellation for in-flight requests, 5-second timeout, and 30-minute `sessionStorage` caching.
+    - **Place Object Standardization**: Standardized shape `{ placeKey: "osm:<type>:<id>", name, state, district, lat, lng, source: "osm", category }`. Curated destinations retain `source: "curated"`.
+  - **Open Data Enrichment**:
+    - **Wikipedia Extracts API**: Fetches plain-text cultural, religious, and geographic overviews via MediaWiki REST API (stripped of all HTML tags) with source links.
+    - **Overpass API Nearby Query**: Radius 10 km live Overpass interpreter query identifying authentic heritage landmarks, viewpoints, local museums, and waterfalls (limit 15, 6-second timeout, cached).
+    - **Open-Meteo Weather**: Integrated 7-day live weather forecasts for any searched place coordinates.
+  - **Honesty & Transparency Disclaimers**:
+    - Clearly marked non-curated destinations with `<span class="badge badge-demo">🌐 Community / OpenStreetMap Data</span>` and notice: *"Community Open Data: Sourced live from OpenStreetMap. Details may be incomplete. We do not invent mock hosts, commercial prices, or unverified claims."*
+  - **Dedicated Place Detail Route (`#/place/:placeKey`)**:
+    - Interactive Leaflet map with place pin and secondary Overpass attraction markers.
+    - Wikipedia overview, Open-Meteo 7-day weather strip, and 10km attractions grid with directions deep links (Google Maps / OpenStreetMap).
+    - "Plan a Trip Here" CTA seeding state store preferences and routing to `#/plan` or `#/itinerary`.
+  - **Supabase Authentication & Database Integration (`js/supabase.js`, `js/auth.js`, `sql/supabase_schema.sql`)**:
+    - Pinned `@supabase/supabase-js@2.48.1` client loaded via ESM CDN. Uses only the public anon key (`SUPABASE_ANON_KEY`) in `js/config.js`; security is enforced at the database layer via PostgreSQL Row Level Security (RLS).
+    - Table `public.reviews` with foreign key to `auth.users(id) ON DELETE CASCADE`, UUID primary keys, and unique constraint `(user_id, place_key, target_type)` preventing duplicate reviews.
+    - Row Level Security (RLS) policies: public `SELECT` for all visitors; authenticated-only `INSERT` (`auth.uid() = user_id`); author-only `UPDATE` and `DELETE`.
+    - Performance indexes on `place_key`, `target_type`, `created_at`, and `user_id`.
+    - View `public.place_rating_summary` for fast aggregate star averages and rating breakdowns.
+    - Tabbed accessible auth modal (Email/Password Login & Sign Up) with focus trapping, ESC support, and English/Hindi error translations.
+    - Header account status badge: dynamic `[👤 Name | Log Out]` or `[🔑 Log In]`.
+  - **Shared Community Reviews (`js/reviews.js`)**:
+    - Migrated from local device storage to Supabase PostgreSQL backend.
+    - Unauthenticated users can read all reviews; writing requires logging in.
+    - Authors can delete their own reviews with live UI updates.
+    - Author `<span class="badge badge-verified">✓ Verified account</span>` badge indicating authenticated user (no false stay claims).
+    - Resilient offline fallback: when Supabase is offline or unconfigured, app falls back to `localStorage` and bundled seed sample reviews (`[Sample review]`) without crashing.
+  - **Saral Mode & Planner Integration**:
+    - Added high-contrast India place search box in Saral Mode step 1 with audio readout.
+    - Accessible big-button Saral Login modal.
+    - Home page Hero search bar with typeahead dropdown.
+    - Planner form India-wide search input with selected place badge.
+    - LLM Planner accepts Overpass attractions as candidate pool for non-curated places, preventing hallucinations.
+  - **Automated Test Coverage**:
+    - `tests/places.test.js`: 8/8 assertions passing (Photon/Nominatim typeahead, Place object structure, Wikipedia text extracts, Overpass query, caching, invalid coordinate fallbacks).
+    - `tests/supabase.test.js`: 10/10 assertions passing (Supabase initialization, unauth write blocking, signup/login session, review publishing, duplicate review constraint, XSS sanitization, first name privacy, author deletion).
+    - Interactive DOM test suite in `tests/places.test.html`.
+    - Visual artifacts captured in `assets/screenshots/places_search_autocomplete.png`, `assets/screenshots/places_detail_page_1280.png`, `assets/screenshots/supabase_auth_modal.png`, and `assets/screenshots/places_test_results.png`.

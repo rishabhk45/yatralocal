@@ -20,6 +20,8 @@ import { speechAssistant } from '../js/speech.js';
 import { YatraMap, getDirectionsUrl } from '../js/map.js';
 import { reviewsManager, openWriteReviewModal } from '../js/reviews.js';
 import { loadSeasonsData, getSeason } from '../js/season.js';
+import { showAuthModal, getCurrentUser } from '../js/auth.js';
+import { searchPlacesInIndia } from '../js/places.js';
 
 export function renderSaralView() {
   const container = document.createElement('div');
@@ -124,6 +126,9 @@ export function renderSaralView() {
         </div>
 
         <div class="flex gap-2" style="align-items: center; flex-wrap: wrap;">
+          <button type="button" class="btn btn-outline btn-sm" id="saral-auth-btn" style="min-height: 48px; font-size: 1rem; border-color: #0B4F4A; color: #0B4F4A; font-weight: 700;">
+            ${getCurrentUser() ? `👤 ${getCurrentUser().name}` : '🔑 ' + (currentLang === 'HI' ? 'लॉग इन' : 'Log In')}
+          </button>
           <button type="button" class="btn btn-ghost btn-sm" id="saral-help-btn" style="min-height: 48px; font-size: 1rem; border-color: #0B4F4A; color: #0B4F4A; font-weight: 700;">
             ${getT().helpBtn}
           </button>
@@ -214,6 +219,15 @@ export function renderSaralView() {
                 </div>
               </button>
             `).join('')}
+          </div>
+
+          <!-- Saral Custom Place Search (Phase 17) -->
+          <div style="margin-top: var(--space-6); background: white; border: 2.5px solid #0B4F4A; border-radius: 12px; padding: 16px;">
+            <label for="saral-custom-search-input" style="display: block; font-size: 1.15rem; font-weight: bold; color: #0B4F4A; margin-bottom: 8px;">
+              🔍 ${currentLang === 'HI' ? 'या भारत का कोई भी शहर, तीर्थ या गाँव खोजें:' : 'Or search ANY village, town or temple in India:'}
+            </label>
+            <input type="text" id="saral-custom-search-input" placeholder="${currentLang === 'HI' ? 'स्थान का नाम लिखें (जैसे हरसिल, बेलूर...)' : 'Type place name (e.g. Harsil, Belur, Orchha...)'}" style="width: 100%; min-height: 54px; font-size: 1.15rem; padding: 10px 14px; border: 2px solid #D1D5DB; border-radius: 8px; font-family: inherit;">
+            <div id="saral-place-dropdown" style="display: none; background: white; border: 2px solid #0B4F4A; border-radius: 8px; margin-top: 6px; max-height: 220px; overflow-y: auto;"></div>
           </div>
         </div>
       `;
@@ -366,9 +380,73 @@ export function renderSaralView() {
       openSaralHelpModal(currentStep, currentLang);
     });
 
+    const authBtn = container.querySelector('#saral-auth-btn');
+    authBtn?.addEventListener('click', () => {
+      speechAssistant.speak(currentLang === 'HI' ? 'खाता लॉग इन करें' : 'Opening login screen');
+      showAuthModal({
+        initialMode: 'login',
+        onAuthSuccess: (u) => {
+          authBtn.textContent = u ? `👤 ${u.name}` : '🔑 Log In';
+          speechAssistant.speak(currentLang === 'HI' ? `नमस्ते ${u.name}` : `Welcome back ${u.name}`);
+        }
+      });
+    });
+
     callFamilyBtn?.addEventListener('click', () => {
       openCallFamilyModal(wizardData);
     });
+
+    // Custom India Place Search for Saral Mode
+    const saralInput = container.querySelector('#saral-custom-search-input');
+    const saralDropdown = container.querySelector('#saral-place-dropdown');
+    if (saralInput && saralDropdown) {
+      let saralTimer = null;
+      saralInput.addEventListener('input', () => {
+        clearTimeout(saralTimer);
+        const q = saralInput.value.trim();
+        if (q.length < 3) {
+          saralDropdown.style.display = 'none';
+          return;
+        }
+        saralTimer = setTimeout(async () => {
+          saralDropdown.innerHTML = '<div style="padding: 12px; font-size: 1.1rem; color: #4B5563;">खोज रहे हैं / Searching...</div>';
+          saralDropdown.style.display = 'block';
+          try {
+            const results = await searchPlacesInIndia(q, { timeoutMs: 5000 });
+            if (!results || results.length === 0) {
+              saralDropdown.innerHTML = '<div style="padding: 12px; font-size: 1.1rem; color: #6B7280;">कोई स्थान नहीं मिला / No places found</div>';
+              return;
+            }
+            saralDropdown.innerHTML = '';
+            results.slice(0, 5).forEach(place => {
+              const b = document.createElement('button');
+              b.type = 'button';
+              b.style.width = '100%';
+              b.style.textAlign = 'left';
+              b.style.padding = '12px 16px';
+              b.style.fontSize = '1.15rem';
+              b.style.background = 'none';
+              b.style.border = 'none';
+              b.style.borderBottom = '1px solid #E5E7EB';
+              b.style.cursor = 'pointer';
+              b.innerHTML = `<strong>📍 ${place.name}</strong> <span style="font-size: 0.95rem; color: #6B7280;">(${place.state || 'India'})</span>`;
+              b.addEventListener('click', () => {
+                wizardData.destination = place.name;
+                wizardData.destinationId = place.placeKey;
+                wizardData.customPlace = place;
+                store.setState({ activePlace: place });
+                confirmSelection(`${getT().youChose} ${place.name}`);
+                saralDropdown.style.display = 'none';
+                saralInput.value = place.name;
+              });
+              saralDropdown.appendChild(b);
+            });
+          } catch (_) {
+            saralDropdown.innerHTML = '<div style="padding: 12px; font-size: 1.1rem;">Search unavailable right now.</div>';
+          }
+        }, 400);
+      });
+    }
 
     // Voice input mic for step 1
     const micBtn = container.querySelector('#btn-voice-mic');

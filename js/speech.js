@@ -6,15 +6,15 @@
 
 class SpeechAssistant {
   constructor() {
-    this.synth = window.speechSynthesis || null;
+    this.synth = typeof window !== 'undefined' ? (window.speechSynthesis || null) : null;
     this.voices = [];
     this.isSupported = Boolean(this.synth);
     this.currentUtterance = null;
     this.onStatusChange = null;
 
-    if (this.isSupported) {
+    if (this.isSupported && typeof window !== 'undefined') {
       this._loadVoices();
-      if (typeof window.speechSynthesis.onvoiceschanged !== 'undefined') {
+      if (typeof window.speechSynthesis !== 'undefined' && typeof window.speechSynthesis.onvoiceschanged !== 'undefined') {
         window.speechSynthesis.onvoiceschanged = () => this._loadVoices();
       }
     }

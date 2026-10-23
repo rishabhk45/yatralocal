@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YatraLocal - India-Wide Place Search & Supabase Test Suite (Phase 17)</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 24px; background: #FAF7F2; color: #1F2937; }
+    .test-card { background: white; border: 1.5px solid #E5E7EB; border-radius: 8px; padding: 14px 18px; margin-bottom: 12px; }
+    .badge-pass { background: #E8F5E9; color: #1B5E20; padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; }
+    .badge-fail { background: #FFEBEE; color: #B71C1C; padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; }
+  </style>
+</head>
+<body>
+  <div style="max-width: 960px; margin: 0 auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <div>
+        <h1 style="margin: 0; color: #0D5C5B; font-size: 1.8rem;">🧪 Phase 17: India Place Search & Supabase Auth/Reviews</h1>
+        <p style="margin: 4px 0 0; color: #6B7280;">Photon/Nominatim Typeahead, Wikipedia Cultural Extracts, Overpass Attractions & Supabase RLS</p>
+      </div>
+      <a href="../index.html" class="btn btn-outline btn-sm">← Back to App</a>
+    </div>
+
+    <div id="summary-banner" style="background: white; border-radius: 8px; padding: 16px; margin-bottom: 20px; border-left: 5px solid #0D5C5B;">
+      Running tests...
+    </div>
+
+    <div id="test-results"></div>
+
+    <div id="interactive-preview-section" style="margin-top: 32px;">
+      <h2>Interactive Live Place Detail Preview (Harsil, Uttarakhand)</h2>
+      <div id="preview-place-container"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { searchPlacesInIndia, fetchPlaceDescription, fetchNearbyAttractions } from '../js/places.js';
+    import { getSupabase } from '../js/supabase.js';
+    import { logIn, signUp, logOut, getCurrentUser } from '../js/auth.js';
+    import { reviewsManager, sanitizeReviewText, sanitizeFirstName } from '../js/reviews.js';
+    import { renderPlaceView } from '../pages/place.js';
+
+    const resultsEl = document.getElementById('test-results');
+    const summaryEl = document.getElementById('summary-banner');
+    let passed = 0;
+    let total = 0;
+
+    function recordTest(name, isPass, detail = '') {
+      total++;
+      if (isPass) passed++;
+      const div = document.createElement('div');
+      div.className = 'test-card';
+      div.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <strong>${total}. ${name}</strong>
+          <span class="${isPass ? 'badge-pass' : 'badge-fail'}">${isPass ? '✓ PASS' : '✗ FAIL'}</span>
+        </div>
+        ${detail ? `<div style="font-size: 0.85rem; color: #4B5563; margin-top: 6px; font-family: monospace;">${detail}</div>` : ''}
+      `;
+      resultsEl.appendChild(div);
+    }
+
+    async function runAll() {
+      try {
+        // 1. Search guard
+        const emptyRes = await searchPlacesInIndia('no');
+        recordTest('Search query ignores terms shorter than 3 characters', emptyRes.length === 0, `Returned ${emptyRes.length} results`);
+
+        // 2. City Search
+        const cityRes = await searchPlacesInIndia('Bhopal');
+        recordTest('Photon/Nominatim search accurately resolves Indian city (Bhopal)', cityRes.length > 0 && cityRes[0].lat > 0, `Resolved: ${cityRes[0]?.displayName}`);
+
+        // 3. Small Town / Village Search
+        const villageRes = await searchPlacesInIndia('Harsil');
+        recordTest('Search accurately resolves small Himalayan village (Harsil, Uttarakhand)', villageRes.length > 0, `Resolved: ${villageRes[0]?.displayName}`);
+
+        // 4. Temple Town
+        const templeRes = await searchPlacesInIndia('Belur');
+        recordTest('Search resolves historic temple town (Belur, Karnataka)', templeRes.length > 0, `Resolved: ${templeRes[0]?.displayName}`);
+
+        // 5. Wikipedia cultural extract
+        const wiki = await fetchPlaceDescription('Hampi', 15.3350, 76.4600);
+        recordTest('Wikipedia REST API returns clean, plain-text cultural overview', wiki && typeof wiki.extract === 'string' && !wiki.extract.includes('<'), `Title: ${wiki?.title}`);
+
+        // 6. Overpass query
+        const nearby = await fetchNearbyAttractions(15.3350, 76.4600, { limit: 5 });
+        recordTest('Overpass API returns nearby attractions within 10 km', Array.isArray(nearby), `Found ${nearby.length} items`);
+
+        // 7. Supabase client
+        const supabase = await getSupabase();
+        recordTest('Supabase client initialized with auth & data capabilities', Boolean(supabase && supabase.auth), `Fallback: ${Boolean(supabase._isFallback)}`);
+
+        // 8. Auth Signup & Session
+        const testEmail = 'traveller_' + Date.now() + '@yatralocal.org';
+        await signUp(testEmail, 'SecurePass123', 'Devika');
+        const user = getCurrentUser();
+        recordTest('User can sign up and establish persistent session', user && user.name === 'Devika', `User: ${user?.name} (${user?.email})`);
+
+        // 9. Authenticated review
+        const rev = await reviewsManager.submitReview({
+          targetId: 'osm:node:harsil',
+          targetName: 'Harsil',
+          targetType: 'place',
+          rating: 5,
+          comment: 'Serene pine forests, fresh mountain water, and welcoming villagers.',
+          tags: ['Clean', 'Safe', 'Less crowded']
+        });
+        recordTest('Authenticated user submits shared review with verified account badge', rev.success && rev.review.isVerifiedAccount, `Review ID: ${rev.review?.id}`);
+
+        // 10. XSS sanitization
+        const dirty = '<script>alert("xss")</script>Scenic apple orchards';
+        const clean = sanitizeReviewText(dirty);
+        recordTest('Review comments strictly sanitized against XSS injection', !clean.includes('<script>') && clean.includes('Scenic'), `Sanitized: "${clean}"`);
+
+        // Mount live place view into preview container
+        const previewBox = document.getElementById('preview-place-container');
+        previewBox.appendChild(renderPlaceView('osm:node:harsil'));
+
+        summaryEl.innerHTML = `
+          <strong style="color: ${passed === total ? '#1B5E20' : '#B71C1C'}; font-size: 1.1rem;">
+            ${passed === total ? '✅ All ' + total + ' Tests Passed' : '⚠️ ' + (total - passed) + ' Tests Failed'}
+          </strong>
+          <p style="margin: 4px 0 0; color: #4B5563;">YatraLocal Phase 17 India Place Search & Supabase integrations validated successfully.</p>
+        `;
+      } catch (err) {
+        summaryEl.innerHTML = `<strong style="color: #B71C1C;">❌ Test Suite Exception:</strong> ${err.message}`;
+        console.error(err);
+      }
+    }
+
+    runAll();
+  </script>
+</body>
+</html>

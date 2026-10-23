@@ -45,7 +45,14 @@ class Router {
     });
 
     let handler = this.routes.get(hash);
+    let routeParam = null;
     let is404 = false;
+
+    // Dynamic parameterized routes (e.g. #/place/:placeKey)
+    if (!handler && hash.startsWith('#/place/')) {
+      handler = this.routes.get('#/place');
+      routeParam = decodeURIComponent(hash.substring('#/place/'.length));
+    }
 
     // Check if route exists, otherwise render custom 404
     if (!handler) {
@@ -60,7 +67,7 @@ class Router {
     if (this.appContainer && handler) {
       this.appContainer.innerHTML = '';
       try {
-        const content = handler();
+        const content = handler(routeParam);
         if (typeof content === 'string') {
           this.appContainer.innerHTML = content;
         } else if (content instanceof Node) {

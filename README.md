@@ -82,8 +82,39 @@ To ensure absolute transparency for hackathon evaluators, here is our full audit
 | **Verified Host Listings** | **Sample Data** | 12 curated homestays and 8 local guides across 6 destinations (`/data/hosts.json`), marked "Sample data for demonstration". | Government ID / Aadhaar verification, local tourism board registration, and on-ground field audits. |
 | **Voice Guidance (TTS)** | **Real Browser API** | Fully functional Web Speech API (`SpeechSynthesis`) in English and Hindi (`hi-IN`). | Cloud Neural TTS (Google Cloud Speech-to-Text & Text-to-Speech) for low-end device consistency. |
 | **State Persistence** | **Real Client Storage** | Reactive client store (`js/store.js`) backed by browser `localStorage`. Persists trips, offers, and settings across refreshes. | Distributed cloud database (Cloud Firestore / PostgreSQL). |
-| **User Reviews & Feedback** | **Real Client Storage + Sample Seed** | Reviews engine (`js/reviews.js`) with input validation, XSS sanitization, 1-per-browser rate limiting, and `localStorage` persistence. Seed data (25 reviews across stays, guides, destinations) marked with `[Sample review]` badges. | Distributed backend database with verified booking receipts, spam filters, and photo uploads. |
+| **User Reviews & Feedback** | **Real Supabase Backend + Fallback** | Shared community reviews stored in Supabase PostgreSQL `reviews` table with strict Row Level Security (RLS). Public read, authenticated-only submit/update/delete. Seed reviews marked `[Sample review]`. Local storage fallback for offline mode. | Automated spam detection, sentiment analytics, and photo uploads. |
 | **Seasonal Demand & Weather** | **Real Live API (Open-Meteo) + General Estimate** | Open-Meteo 7-day live forecast (no API key, 5s timeout, 1 retry, 15-min `sessionStorage` cache, graceful offline fallback) for on-season travel. 12-month demand levels (`data/seasons.json`) honestly tagged as general estimates with zero fabricated numbers. | Direct integration with state tourism board footfall telemetry and live hotel PMS occupancy APIs. |
+| **India-Wide Place Search** | **Real Production APIs (Photon + Nominatim)** | Search any town, village, temple, or hill station across India. Typeahead via Photon API (India bbox `[68.1,6.7,97.4,35.7]`) with Nominatim fallback (1 req/sec rate limit). Wikipedia extracts & Overpass 10km nearby attractions. | Localized offline vector gazetteer for zero-connectivity Himalayan zones. |
+
+---
+
+## ⚡ Supabase Setup & Row Level Security (Phase 17)
+
+YatraLocal uses Supabase for user authentication and shared community reviews. The application uses only the public anon key (`SUPABASE_ANON_KEY`); security is enforced entirely at the database layer via Row Level Security (RLS).
+
+### 1. Database Setup (SQL Script)
+Copy and run the contents of [`sql/supabase_schema.sql`](file:///e:/Desktop/YATRALOCAL/sql/supabase_schema.sql) in your **Supabase Dashboard ➔ SQL Editor**:
+- Creates `public.reviews` table with UUID primary key, foreign key to `auth.users`, and unique constraint `(user_id, place_key, target_type)` to prevent review stuffing.
+- Creates `idx_reviews_place_key` and `idx_reviews_created_at` performance indexes.
+- Enables **Row Level Security (RLS)**:
+  - `SELECT`: Public access (anyone can read reviews).
+  - `INSERT`: `to authenticated with check (auth.uid() = user_id)`.
+  - `UPDATE`: `to authenticated using (auth.uid() = user_id)`.
+  - `DELETE`: `to authenticated using (auth.uid() = user_id)`.
+- Creates `public.place_rating_summary` aggregate view for high-speed rating averages.
+
+### 2. Client Configuration
+Set your Supabase project credentials in [`js/config.js`](file:///e:/Desktop/YATRALOCAL/js/config.js) or via browser localStorage:
+```javascript
+localStorage.setItem('yl_supabase_url', 'https://your-project.supabase.co');
+localStorage.setItem('yl_supabase_anon_key', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...');
+```
+*Note: If unconfigured, YatraLocal runs in offline fallback mode with local storage persistence and bundled seed reviews — never crashing.*
+
+### 3. Privacy & Account Data Deletion
+- **Zero Sensitive Data in Cloud**: YatraLocal never stores phone numbers, credit card info, or live emergency GPS coordinates in Supabase.
+- **Review Deletion**: Authors can delete their own reviews directly via the "🗑️ Delete my review" button on any place page.
+- **Full Account Purge**: Deleting a user in the Supabase Auth dashboard automatically cascades and purges all their submitted reviews via `ON DELETE CASCADE`.
 
 ---
 
@@ -93,8 +124,9 @@ To ensure absolute transparency for hackathon evaluators, here is our full audit
 2. **Mock Host Verification**: The "Verified Local" badge is simulated based on static mock criteria. Production requires formal KYC and physical property verification.
 3. **Emergency SOS Disclaimer**: SOS broadcasts generate prefilled messages on the user's device and do not connect directly to emergency services. Production requires official integrations with Ministry of Home Affairs ERSS 112 endpoints.
 4. **Browser Speech Support**: Web Speech API capabilities vary depending on the host OS and browser vendor (e.g., availability of Hindi voice models).
-5. **Local Device Review Scope**: Reviews submitted by users are stored locally in the current browser device (`localStorage['yl_reviews']`) and merged with seed data. Production deployment requires centralized backend persistence and verified-stay receipt validation.
-6. **Seasonality Is An Estimate**: Demand levels (`low`, `medium`, `high`) are derived from general historical tourism patterns rather than live hotel booking census feeds. All seasonal charts carry explicit disclaimers: *"Seasonality is an estimate based on general travel patterns, not live booking data."* Live forecasts are fetched via Open-Meteo.
+5. **Community OpenStreetMap Data**: Places outside our 6 curated destinations are fetched live from OpenStreetMap. Small hamlets may have incomplete trail or amenity metadata. All community listings carry visible disclaimers.
+6. **Public API Fair-Use Limits**: Photon, Nominatim, Wikipedia, and Overpass are shared community services. Nominatim requests are throttled to 1 per second with 15-minute client caching.
+7. **Seasonality Is An Estimate**: Demand levels (`low`, `medium`, `high`) are derived from general historical tourism patterns rather than live hotel booking census feeds. All seasonal charts carry explicit disclaimers: *"Seasonality is an estimate based on general travel patterns, not live booking data."* Live forecasts are fetched via Open-Meteo.
 
 ---
 

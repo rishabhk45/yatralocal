@@ -12,7 +12,47 @@
  */
 export function generateItinerary(preferences, destinationsData) {
   const destId = (preferences.destination || 'manali').toLowerCase();
-  const dest = destinationsData.find((d) => d.id === destId) || destinationsData[0];
+  let dest = destinationsData.find((d) => d.id === destId);
+
+  // Support custom searched place from OpenStreetMap
+  if (!dest && preferences.customPlace) {
+    const cp = preferences.customPlace;
+    const rawActs = (preferences.nearbyAttractions && preferences.nearbyAttractions.length > 0)
+      ? preferences.nearbyAttractions
+      : [
+          { id: 'act_walk', name: `Historic village walk in ${cp.name}`, category: 'Heritage', icon: '🏛️' },
+          { id: 'act_nature', name: `Scenic nature trail around ${cp.name}`, category: 'Nature', icon: '🌲' },
+          { id: 'act_bazaar', name: `Local community market & crafts`, category: 'Cultural', icon: '🛍️' }
+        ];
+
+    dest = {
+      id: cp.placeKey || `osm:${cp.name.toLowerCase()}`,
+      name: cp.name,
+      state: cp.state || 'India',
+      crowdBadge: 'Community Destination (OpenStreetMap)',
+      lat: cp.lat || 20.5937,
+      lng: cp.lng || 78.9629,
+      activities: rawActs.map((a, i) => ({
+        id: a.id || `act_${i}`,
+        name: a.name,
+        timeSlot: i % 2 === 0 ? 'Morning' : 'Afternoon',
+        duration: '2 hours',
+        cost: 0, // No fabricated commercial prices
+        walkingLevel: 'flat/minimal',
+        seniorFriendly: true,
+        crowdLevel: 'low',
+        isHiddenGem: true,
+        categories: ['Cultural', 'Nature', 'Relaxed'],
+        description: `Community attraction documented in OpenStreetMap near ${cp.name}.`,
+        localTip: 'Community verified location. Check local transport union times.'
+      }))
+    };
+  }
+
+  if (!dest) {
+    dest = destinationsData[0];
+  }
+
   const allActivities = [...(dest.activities || [])];
 
   const daysCount = Math.max(1, Math.min(10, parseInt(preferences.days, 10) || 3));

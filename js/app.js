@@ -16,8 +16,10 @@ import { renderOwnerView } from '../pages/owner.js';
 import { renderSosView } from '../pages/sos.js';
 import { renderNotFoundView } from '../pages/not-found.js';
 import { renderStyleGuide } from '../pages/style-guide.js';
+import { renderPlaceView } from '../pages/place.js';
 import { sosEngine } from './sos.js';
 import { i18n } from './i18n.js';
+import { initAuth } from './auth.js';
 
 function renderStubView(title, description, nextLink, nextLabel) {
   return () => `
@@ -99,8 +101,12 @@ document.addEventListener('DOMContentLoaded', () => {
   router.register('#/bookings', renderTripsView);
   router.register('#/owner', renderOwnerView);
   router.register('#/sos', renderSosView);
+  router.register('#/place', renderPlaceView);
   router.register('#/404', renderNotFoundView);
   router.register('#/styleguide', renderStyleGuide);
+
+  // Initialize Supabase Auth & Header status
+  initAuth();
 
   // Initialize i18n
   i18n.init().then(() => {

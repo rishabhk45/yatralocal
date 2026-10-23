@@ -8,6 +8,7 @@
 
 import { store } from '../js/store.js';
 import { loadSeasonsData, getSeason, renderSeasonBadgeHTML } from '../js/season.js';
+import { searchPlacesInIndia } from '../js/places.js';
 
 export function renderPlanView() {
   const container = document.createElement('div');
@@ -51,10 +52,14 @@ export function renderPlanView() {
         <form id="trip-plan-form" novalidate style="margin-top: var(--space-6);" class="flow">
           <!-- 1. Destination Selection with Crowd Level -->
           <div class="form-group">
-            <label class="form-label" for="plan-destination">
-              <strong>Select Destination</strong>
-              <span style="color: var(--color-danger);">*</span>
-            </label>
+            <div class="flex-between" style="align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 4px;">
+              <label class="form-label" for="plan-destination" style="margin: 0;">
+                <strong>Select Destination</strong>
+                <span style="color: var(--color-danger);">*</span>
+              </label>
+              <span style="font-size: var(--font-size-xs); color: var(--color-text-muted);">6 Curated Cultural Gems</span>
+            </div>
+
             <select id="plan-destination" class="form-select" required aria-describedby="destination-crowd-hint">
               <option value="manali" data-crowd="High">Manali, Himachal Pradesh (High Crowd in Town • Peaceful Hamlets)</option>
               <option value="jaipur" data-crowd="Moderate">Jaipur, Rajasthan (Moderate Crowd • Heritage Walking)</option>
@@ -63,7 +68,23 @@ export function renderPlanView() {
               <option value="hampi" data-crowd="Low">Hampi, Karnataka (Low Crowd • Expansive Ruins)</option>
               <option value="munnar" data-crowd="Moderate">Munnar, Kerala (Moderate • Tea Estates & Spice Groves)</option>
             </select>
-            <div id="destination-crowd-hint" class="flex gap-2" style="align-items: center; margin-top: var(--space-1);">
+
+            <!-- Search ANY Place in India Autocomplete (Phase 17) -->
+            <div style="margin-top: var(--space-3); position: relative;">
+              <label for="plan-custom-place-input" style="font-size: var(--font-size-xs); font-weight: 700; color: var(--color-primary); display: block; margin-bottom: 4px;">
+                🔍 Or Search ANY Place, Village, or Hill Station in India:
+              </label>
+              <div style="display: flex; gap: 6px; align-items: center;">
+                <input type="text" id="plan-custom-place-input" class="form-input" placeholder="Type 3+ letters (e.g. Harsil, Belur, Orchha, Kaza...)" autocomplete="off" style="flex: 1;" />
+              </div>
+              <div id="plan-place-dropdown" class="place-autocomplete-dropdown" style="display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: #FFFFFF; border: 1.5px solid var(--color-border); border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); z-index: 1000; max-height: 240px; overflow-y: auto;"></div>
+              <div id="plan-selected-custom-badge" style="display: none; margin-top: 8px; background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 6px; padding: 6px 12px; font-size: var(--font-size-xs); color: #1E40AF; display: none; align-items: center; justify-content: space-between;">
+                <span>📍 <strong id="plan-selected-custom-name">Custom Place</strong> (Community OpenStreetMap data)</span>
+                <button type="button" id="btn-clear-custom-place" class="btn btn-ghost btn-sm" style="padding: 2px 6px; font-size: 0.75rem;">Clear ✕</button>
+              </div>
+            </div>
+
+            <div id="destination-crowd-hint" class="flex gap-2" style="align-items: center; margin-top: var(--space-2);">
               <span id="crowd-badge-pill" class="badge badge-local">📍 High Crowd in Town • Peaceful Hamlets</span>
               <span style="font-size: var(--font-size-xs); color: var(--color-text-muted);">We suggest calm offbeat hamlets 5-15km away.</span>
             </div>
@@ -222,6 +243,109 @@ function bindPlanFormInteractions(container) {
   const moodContainer = container.querySelector('#mood-chips-container');
   const moodCounter = container.querySelector('#mood-counter');
   let selectedDays = parseInt(displayDays.textContent, 10) || 3;
+  let selectedCustomPlace = currentPrefs.customPlace || null;
+
+  // Custom Place Search Interactions (Phase 17)
+  const customInput = container.querySelector('#plan-custom-place-input');
+  const customDropdown = container.querySelector('#plan-place-dropdown');
+  const customBadge = container.querySelector('#plan-selected-custom-badge');
+  const customBadgeName = container.querySelector('#plan-selected-custom-name');
+  const clearCustomBtn = container.querySelector('#btn-clear-custom-place');
+
+  if (selectedCustomPlace && customBadge && customBadgeName) {
+    customBadgeName.textContent = selectedCustomPlace.displayName || selectedCustomPlace.name;
+    customBadge.style.display = 'flex';
+  }
+
+  if (customInput && customDropdown) {
+    let debounceTimer = null;
+    let abortCtrl = null;
+
+    customInput.addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      const q = customInput.value.trim();
+      if (q.length < 3) {
+        customDropdown.style.display = 'none';
+        return;
+      }
+
+      debounceTimer = setTimeout(() => {
+        if (abortCtrl) abortCtrl.abort();
+        abortCtrl = new AbortController();
+
+        customDropdown.innerHTML = '<div style="padding: 10px; text-align: center; color: var(--color-text-muted); font-size: 0.8rem;">Searching India via OpenStreetMap...</div>';
+        customDropdown.style.display = 'block';
+
+        searchPlacesInIndia(q, { signal: abortCtrl.signal, timeoutMs: 5000 })
+          .then(results => {
+            if (!results || results.length === 0) {
+              customDropdown.innerHTML = '<div style="padding: 10px; text-align: center; color: var(--color-text-muted); font-size: 0.8rem;">No matching places found. Try another town or district.</div>';
+              return;
+            }
+
+            customDropdown.innerHTML = '';
+            results.forEach(place => {
+              const item = document.createElement('div');
+              item.style.padding = '8px 12px';
+              item.style.cursor = 'pointer';
+              item.style.borderBottom = '1px solid #F3F4F6';
+              item.style.display = 'flex';
+              item.style.justifyContent = 'space-between';
+              item.style.alignItems = 'center';
+
+              item.innerHTML = `
+                <div>
+                  <strong style="color: var(--color-primary); font-size: 0.9rem;">${escapeHTML(place.name)}</strong>
+                  <div style="font-size: 0.72rem; color: var(--color-text-muted);">${escapeHTML(place.displayName)}</div>
+                </div>
+                <span class="badge badge-outline" style="font-size: 0.68rem;">${escapeHTML(place.category)}</span>
+              `;
+
+              item.addEventListener('mouseenter', () => { item.style.backgroundColor = '#F0FDF4'; });
+              item.addEventListener('mouseleave', () => { item.style.backgroundColor = 'transparent'; });
+
+              item.addEventListener('click', () => {
+                selectedCustomPlace = place;
+                store.setState({ activePlace: place });
+                sessionStorage.setItem(`yl_place_cache_${place.placeKey}`, JSON.stringify(place));
+
+                customBadgeName.textContent = place.displayName;
+                customBadge.style.display = 'flex';
+                customDropdown.style.display = 'none';
+                customInput.value = '';
+
+                // Update crowd pill
+                crowdPill.className = 'badge badge-local';
+                crowdPill.textContent = '🌐 Community Destination (OpenStreetMap)';
+              });
+
+              customDropdown.appendChild(item);
+            });
+          })
+          .catch(err => {
+            if (err.name !== 'AbortError') {
+              customDropdown.innerHTML = '<div style="padding: 10px; text-align: center; color: var(--color-text-muted); font-size: 0.8rem;">Search unavailable.</div>';
+            }
+          });
+      }, 400);
+    });
+
+    if (clearCustomBtn) {
+      clearCustomBtn.addEventListener('click', () => {
+        selectedCustomPlace = null;
+        customBadge.style.display = 'none';
+        // restore curated destination status
+        const selectedOption = destSelect.options[destSelect.selectedIndex];
+        crowdPill.textContent = selectedOption.textContent.includes('High') ? '⚠️ High Crowd in Town' : '📍 Curated Destination';
+      });
+    }
+
+    document.addEventListener('click', (e) => {
+      if (!container.contains(e.target)) {
+        customDropdown.style.display = 'none';
+      }
+    });
+  }
 
   // Destination crowd pill update
   destSelect.addEventListener('change', () => {
@@ -344,8 +468,9 @@ function bindPlanFormInteractions(container) {
 
     // Save preferences to state store
     const preferences = {
-      destination: destSelect.value,
-      destinationName: destSelect.options[destSelect.selectedIndex].text.split('(')[0].trim(),
+      destination: selectedCustomPlace ? selectedCustomPlace.name : destSelect.value,
+      destinationName: selectedCustomPlace ? selectedCustomPlace.displayName : destSelect.options[destSelect.selectedIndex].text.split('(')[0].trim(),
+      customPlace: selectedCustomPlace,
       travelMonth: parseInt(monthSelect.value, 10),
       travelMonthName: monthSelect.options[monthSelect.selectedIndex].text.split('(')[0].trim(),
       budget: budgetVal,
@@ -363,4 +488,11 @@ function bindPlanFormInteractions(container) {
       window.location.hash = '#/itinerary';
     }, 300);
   });
+}
+
+function escapeHTML(str) {
+  if (!str) return '';
+  return String(str).replace(/[&<>"']/g, m => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  })[m]);
 }

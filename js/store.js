@@ -36,7 +36,9 @@ const defaultState = {
     medicalNotes: 'Senior traveller: Hypertension, blood pressure medication daily. Carries inhaler.',
     shareLiveLocation: true
   },
-  sosLogs: []
+  sosLogs: [],
+  currentUser: null,
+  activePlace: null
 };
 
 class Store {
