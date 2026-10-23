@@ -14,8 +14,8 @@ const STORAGE_URL = typeof localStorage !== 'undefined' ? localStorage.getItem('
 const STORAGE_KEY = typeof localStorage !== 'undefined' ? localStorage.getItem('yl_supabase_anon_key') : null;
 
 export const SUPABASE_CONFIG = {
-  url: STORAGE_URL || 'https://yatralocal-demo.supabase.co',
-  anonKey: STORAGE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.demo-anon-key-placeholder',
+  url: STORAGE_URL || 'https://jigklgcbttmmvrfevini.supabase.co',
+  anonKey: STORAGE_KEY || 'sb_publishable_jT4AgY5-o0KH24KyQdR-4g_ADSZrS7P',
   isConfigured: function() {
     return Boolean(
       this.url && 

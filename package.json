@@ -10,6 +10,7 @@
     "test:sos": "node tests/sos-twilio.test.js"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.118.0",
     "twilio": "^5.4.0"
   }
 }

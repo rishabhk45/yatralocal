@@ -29,9 +29,13 @@ export async function getSupabase() {
     if (typeof window !== 'undefined' && window.supabase && window.supabase.createClient) {
       createClient = window.supabase.createClient;
     } else {
-      // Dynamic import from pinned CDN
-      const mod = await import(CDN_URL);
-      createClient = mod.createClient;
+      try {
+        const mod = await import('@supabase/supabase-js');
+        createClient = mod.createClient;
+      } catch (_) {
+        const mod = await import(CDN_URL);
+        createClient = mod.createClient;
+      }
     }
 
     if (createClient) {
