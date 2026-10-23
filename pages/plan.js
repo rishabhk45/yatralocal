@@ -225,13 +225,13 @@ export function renderPlanView() {
 
   // Bind Interactions & Validation after render
   setTimeout(() => {
-    bindPlanFormInteractions(container);
+    bindPlanFormInteractions(container, currentPrefs);
   }, 0);
 
   return container;
 }
 
-function bindPlanFormInteractions(container) {
+function bindPlanFormInteractions(container, currentPrefs = {}) {
   const form = container.querySelector('#trip-plan-form');
   const destSelect = container.querySelector('#plan-destination');
   const crowdPill = container.querySelector('#crowd-badge-pill');
@@ -242,8 +242,9 @@ function bindPlanFormInteractions(container) {
   const btnIncDays = container.querySelector('#btn-increase-days');
   const moodContainer = container.querySelector('#mood-chips-container');
   const moodCounter = container.querySelector('#mood-counter');
+  const activePrefs = Object.keys(currentPrefs).length > 0 ? currentPrefs : (store.getState().preferences || {});
   let selectedDays = parseInt(displayDays.textContent, 10) || 3;
-  let selectedCustomPlace = currentPrefs.customPlace || null;
+  let selectedCustomPlace = activePrefs.customPlace || null;
 
   // Custom Place Search Interactions (Phase 17)
   const customInput = container.querySelector('#plan-custom-place-input');
@@ -466,7 +467,7 @@ function bindPlanFormInteractions(container) {
       wheelchairAccess: container.querySelector('#acc-wheelchair').checked
     };
 
-    // Save preferences to state store
+    // Save preferences to state store and reset stale itinerary
     const preferences = {
       destination: selectedCustomPlace ? selectedCustomPlace.name : destSelect.value,
       destinationName: selectedCustomPlace ? selectedCustomPlace.displayName : destSelect.options[destSelect.selectedIndex].text.split('(')[0].trim(),
@@ -480,13 +481,19 @@ function bindPlanFormInteractions(container) {
       accessibility: accessibilityNeeds
     };
 
-    store.setState({ preferences });
+    const submitBtn = container.querySelector('#btn-submit-plan');
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span>⏳ Crafting Itinerary...</span>';
+    }
+
+    store.setState({ preferences, itinerary: null });
     window.YatraApp.showToast('Preferences saved! Crafting your crowd-smart itinerary...');
 
     // Route to itinerary view
     setTimeout(() => {
       window.location.hash = '#/itinerary';
-    }, 300);
+    }, 250);
   });
 }
 

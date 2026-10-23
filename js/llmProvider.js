@@ -35,7 +35,22 @@ async function fetchDestinationsCatalog() {
       }
     } catch (_) {}
   }
-  throw new Error('Unable to load destinations catalog');
+  // Resilient fallback catalog so trip generation never crashes
+  return [
+    {
+      id: 'manali',
+      name: 'Manali',
+      state: 'Himachal Pradesh',
+      crowdBadge: 'Crowded in Town • Peaceful in Hamlets',
+      lat: 32.2432,
+      lng: 77.1892,
+      activities: [
+        { id: 'manali-1', name: 'Burwa Apple Orchard Stroll & Local Jam Tasting', categories: ['Nature', 'Relaxed'], durationHours: 2.5, cost: 250, crowdLevel: 'low', isHiddenGem: true, seniorFriendly: true, walkingLevel: 'flat/minimal', area: 'Burwa Hamlet', description: 'Walk through family-tended apple orchards with scenic mountain views.', lat: 32.2742, lng: 77.1648 },
+        { id: 'manali-2', name: 'Naggar Castle Heritage Walk & Roerich Art Gallery', categories: ['Cultural', 'Relaxed'], durationHours: 3, cost: 300, crowdLevel: 'low', isHiddenGem: true, seniorFriendly: true, walkingLevel: 'flat/minimal', area: 'Naggar Heritage Village', description: 'Wood-and-stone Himalayan architecture with quiet viewpoints.', lat: 32.1465, lng: 77.1706 },
+        { id: 'manali-3', name: 'Jogini Waterfall Forest Trail', categories: ['Adventure', 'Nature'], durationHours: 3.5, cost: 100, crowdLevel: 'medium', isHiddenGem: false, seniorFriendly: false, walkingLevel: 'moderate', area: 'Vashisht Upper Trail', description: 'Pleasant cedar forest trek from Vashisht leading to natural springs.', lat: 32.2685, lng: 77.1952 }
+      ]
+    }
+  ];
 }
 
 // Strict Client-Side Validation and Cost Recalculation
@@ -119,8 +134,8 @@ function validateAndRecalculatePlan(planData, catalog, preferences) {
 }
 
 // Low-level fetcher with timeout and fallback endpoints
-async function callServerlessPlanApi(payload, timeoutMs = 15000) {
-  const endpoints = ['/.netlify/functions/plan', '/api/plan', 'http://localhost:8888/.netlify/functions/plan'];
+async function callServerlessPlanApi(payload, timeoutMs = 6000) {
+  const endpoints = ['/.netlify/functions/plan', '/api/plan'];
   let lastError = null;
 
   for (const url of endpoints) {
@@ -148,7 +163,7 @@ async function callServerlessPlanApi(payload, timeoutMs = 15000) {
       }
       if (response.status === 503) {
         console.info('[LLM Provider] LLM_API_KEY not configured on server. Transitioning to deterministic fallback.');
-        return null; // Signals fallback
+        return { fallback: true }; // Immediate signal to use local engine without retries
       }
 
       lastError = new Error(errJson?.message || `Endpoint ${url} failed with status ${response.status}`);
@@ -169,7 +184,7 @@ export const llmPlanProvider = {
   isSimulated: false,
 
   /**
-   * Generates a new itinerary via LLM with 1 retry and fallback to deterministic engine
+   * Generates a new itinerary via LLM with fallback to deterministic engine
    */
   async getItinerary(preferences) {
     const catalog = await fetchDestinationsCatalog();
@@ -189,21 +204,13 @@ export const llmPlanProvider = {
     };
 
     let serverResult = null;
-    let attempts = 0;
-    const maxAttempts = 2; // Initial + 1 retry
-
-    while (attempts < maxAttempts && !serverResult) {
-      attempts++;
-      try {
-        serverResult = await callServerlessPlanApi(payload, 15000);
-        if (serverResult) break;
-      } catch (err) {
-        console.warn(`[LLM Provider] Attempt ${attempts} failed:`, err.message);
-        if (attempts >= maxAttempts) break;
-      }
+    try {
+      serverResult = await callServerlessPlanApi(payload, 6000);
+    } catch (err) {
+      console.warn('[LLM Provider] Serverless plan call error:', err.message);
     }
 
-    if (serverResult && serverResult.isLlmGenerated && Array.isArray(serverResult.days)) {
+    if (serverResult && !serverResult.fallback && serverResult.isLlmGenerated && Array.isArray(serverResult.days)) {
       const validated = validateAndRecalculatePlan(serverResult, catalog, preferences);
       return {
         ...validated,

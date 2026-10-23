@@ -73,8 +73,17 @@ export function renderItineraryView() {
         accessibility: {}
       };
 
-      await loadSeasonsData();
-      const itineraryData = currentState.itinerary || await llmPlanProvider.getItinerary(prefs);
+      await loadSeasonsData().catch(e => console.warn('[SeasonData] Warning:', e));
+      let itineraryData = currentState.itinerary;
+      if (!itineraryData) {
+        try {
+          itineraryData = await llmPlanProvider.getItinerary(prefs);
+        } catch (genErr) {
+          console.warn('[ItineraryView] LLM plan provider error, using fallback generator:', genErr);
+          const { generateItinerary } = await import('../js/itinerary.js');
+          itineraryData = generateItinerary(prefs, []);
+        }
+      }
       store.setState({ itinerary: itineraryData });
 
       // Render actual itinerary content
