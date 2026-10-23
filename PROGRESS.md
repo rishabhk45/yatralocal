@@ -40,10 +40,12 @@ Track progress across all 14 project phases.
     - [x] Selection audio feedback: announces confirmation ("You chose Varanasi").
     - [x] Family Call modal: opens on click, simulates companion direct call & WhatsApp dispatch.
 
-- [ ] **Phase 6: Booking + family-assisted flow**
-  - Simulated booking modal with instant confirmation and QR code/voucher generation.
-  - "Book for Family Member / Elder" flow with companion contact details, special assistance requests, and WhatsApp shareable summary.
-  - Booking history persistence in `localStorage`.
+- [x] **Phase 6: Booking + family-assisted flow**
+  - 5-step stepper: 1 Review trip (90% local-income retention calculation) → 2 Traveller details → 3 Who is booking? → 4 Confirm (demo payment & cancellation policy) → 5 Confirmation voucher.
+  - "Book for Family Member / Elder" flow with companion contact details, clear authorization consent, simulated SMS approval dispatch, and mirrored updates.
+  - Digital voucher with SVG QR placeholder, downloadable standard `.ics` iCalendar file, WhatsApp deep link, and copy link shortcut.
+  - Persistent booking ledger in `localStorage` with "My Trips" dashboard at `#/trips`.
+  - Full Saral Mode compatibility with voice prompts (`SpeechSynthesis`).
 
 - [ ] **Phase 7: Hotel Owner Dashboard**
   - Portal for local homestay/hotel hosts.

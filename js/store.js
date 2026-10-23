@@ -18,6 +18,7 @@ const defaultState = {
   selectedStay: null,
   selectedGuide: null,
   bookings: [],
+  draftBooking: null,
   saralMode: false,
   language: 'EN' // 'EN' | 'HI'
 };
@@ -55,6 +56,43 @@ class Store {
     this.state = { ...this.state, ...partialState };
     this._saveState();
     this._notify();
+  }
+
+  addBooking(bookingData) {
+    const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+    const year = new Date().getFullYear();
+    const newBooking = {
+      id: `YL-${year}-${randomSuffix}`,
+      createdAt: new Date().toISOString(),
+      status: 'Confirmed (Simulated)',
+      ...bookingData
+    };
+
+    const currentBookings = this.state.bookings || [];
+    const updatedBookings = [newBooking, ...currentBookings];
+
+    this.setState({
+      bookings: updatedBookings,
+      draftBooking: null
+    });
+
+    return newBooking;
+  }
+
+  getBookings() {
+    return this.state.bookings || [];
+  }
+
+  saveDraftBooking(draft) {
+    this.setState({ draftBooking: draft });
+  }
+
+  getDraftBooking() {
+    return this.state.draftBooking;
+  }
+
+  clearDraftBooking() {
+    this.setState({ draftBooking: null });
   }
 
   setSaralMode(enabled) {

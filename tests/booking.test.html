@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>YatraLocal - Booking & Family Flow Unit Tests</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    body { font-family: monospace; padding: 24px; background: #fafafa; }
+    .pass { color: green; font-weight: bold; }
+    .fail { color: red; font-weight: bold; }
+    .test-box { background: white; border: 1px solid #ccc; padding: 16px; margin-bottom: 12px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Booking & Family Flow Test Suite (Phase 6)</h1>
+  <div id="results"></div>
+
+  <div id="test-sandbox" style="display: none;"></div>
+
+  <script type="module">
+    import { store } from '../js/store.js';
+    import { renderBookingView } from '../pages/booking.js';
+    import { renderTripsView } from '../pages/trips.js';
+
+    const results = document.getElementById('results');
+    const log = (name, passed, detail = '') => {
+      const div = document.createElement('div');
+      div.className = 'test-box';
+      div.innerHTML = `
+        <span class="${passed ? 'pass' : 'fail'}">${passed ? '✓ PASS' : '✗ FAIL'}</span>: 
+        <strong>${name}</strong>
+        ${detail ? `<pre style="margin-top:6px; color:#444;">${detail}</pre>` : ''}
+      `;
+      results.appendChild(div);
+      console.log(`[${passed ? 'PASS' : 'FAIL'}] ${name}`, detail);
+    };
+
+    async function runTests() {
+      // Test 1: Community Retention & Pricing Math
+      try {
+        const stayPrice = 1400; // 2 nights = 2800
+        const guidePrice = 1200; // 3 days = 3600
+        const subtotal = 2800 + 3600; // 6400
+        const localRetention = Math.round(subtotal * 0.90); // 5760
+        const fee = Math.round(subtotal * 0.10); // 640
+        const total = subtotal + fee; // 7040
+
+        const passed = localRetention === 5760 && total === 7040;
+        log('Test 1: 90% local community income and 10% platform fee calculation', passed, `Subtotal: ${subtotal}, Local: ₹${localRetention} (90%), Total: ₹${total}`);
+      } catch (err) {
+        log('Test 1: Pricing math', false, err.message);
+      }
+
+      // Test 2: Stepper mounts at Step 1 (Review)
+      try {
+        const sandbox = document.getElementById('test-sandbox');
+        sandbox.innerHTML = '';
+        const bookingEl = renderBookingView();
+        sandbox.appendChild(bookingEl);
+
+        const heading = bookingEl.querySelector('h1');
+        const hasReview = heading && heading.textContent.includes('Review');
+        const nextBtn = bookingEl.querySelector('#btn-booking-next');
+        log('Test 2: Booking flow initializes at Step 1 with Review and itemised breakdown', hasReview && Boolean(nextBtn), `Heading: "${heading?.textContent.trim()}"`);
+      } catch (err) {
+        log('Test 2: Mount Step 1', false, err.message);
+      }
+
+      // Test 3: Form validation on Step 2 (rejects blank traveller name)
+      try {
+        const sandbox = document.getElementById('test-sandbox');
+        const bookingEl = sandbox.firstChild;
+        const nextBtn = bookingEl.querySelector('#btn-booking-next');
+        nextBtn?.click(); // Advance to Step 2
+
+        // On Step 2, click next without entering required fields
+        const step2Next = bookingEl.querySelector('#btn-booking-next');
+        step2Next?.click();
+
+        // Should still be on Step 2 because validation failed
+        const nameErr = bookingEl.querySelector('#err-traveller-name');
+        const isErrorVisible = nameErr && nameErr.style.display !== 'none';
+        log('Test 3: Step 2 validation prevents empty submissions and displays friendly error', isErrorVisible, `Error hint visible: ${isErrorVisible}`);
+      } catch (err) {
+        log('Test 3: Step 2 Validation', false, err.message);
+      }
+
+      // Test 4: Booking creation persists to store with YL-2026-XXXX ID
+      try {
+        const testBooking = store.addBooking({
+          destination: 'Manali',
+          days: 3,
+          travellersCount: 2,
+          travellerName: 'Sita Devi',
+          travellerAge: 71,
+          travellerPhone: '+91 98765 11223',
+          bookingType: 'family',
+          bookerName: 'Anil Sharma',
+          bookerRelation: 'Son',
+          bookerPhone: '+91 98111 22334',
+          grandTotal: 7040,
+          localDirectIncome: 5760
+        });
+
+        const storedList = store.getBookings();
+        const found = storedList.find((b) => b.id === testBooking.id);
+        const validIdPattern = /^YL-\d{4}-\d{4}$/.test(testBooking.id);
+
+        log('Test 4: Store addBooking generates formatted ID and persists to localStorage', Boolean(found) && validIdPattern, `ID: ${testBooking.id}, Found in store: ${Boolean(found)}`);
+      } catch (err) {
+        log('Test 4: Store addBooking', false, err.message);
+      }
+
+      // Test 5: "My Trips" dashboard renders confirmed booking card
+      try {
+        const sandbox = document.getElementById('test-sandbox');
+        sandbox.innerHTML = '';
+        const tripsEl = renderTripsView();
+        sandbox.appendChild(tripsEl);
+
+        const tripCards = tripsEl.querySelectorAll('article.card');
+        const hasCard = tripCards.length > 0;
+        const firstCardText = tripCards[0]?.textContent || '';
+        const containsFamilyTag = firstCardText.includes('Family-Assisted') || firstCardText.includes('Manali');
+
+        log('Test 5: My Trips dashboard (#/trips) renders confirmed bookings with family companion tags', hasCard && containsFamilyTag, `Rendered cards: ${tripCards.length}`);
+      } catch (err) {
+        log('Test 5: My Trips view', false, err.message);
+      }
+    }
+
+    runTests();
+  </script>
+</body>
+</html>

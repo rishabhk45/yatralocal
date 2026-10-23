@@ -10,6 +10,8 @@ import { renderPlanView } from '../pages/plan.js';
 import { renderItineraryView } from '../pages/itinerary.js';
 import { renderStaysView } from '../pages/stays.js';
 import { renderSaralView } from '../pages/saral.js';
+import { renderBookingView } from '../pages/booking.js';
+import { renderTripsView } from '../pages/trips.js';
 import { renderStyleGuide } from '../pages/style-guide.js';
 
 function renderStubView(title, description, nextLink, nextLabel) {
@@ -87,7 +89,9 @@ document.addEventListener('DOMContentLoaded', () => {
   router.register('#/itinerary', renderItineraryView);
   router.register('#/stays', renderStaysView);
   router.register('#/saral', renderSaralView);
-  router.register('#/booking', renderStubView('Bookings & Family Assistance', 'Simulated booking details and family-assisted confirmation.', '#/', 'Home'));
+  router.register('#/booking', renderBookingView);
+  router.register('#/trips', renderTripsView);
+  router.register('#/bookings', renderTripsView);
   router.register('#/owner', renderStubView('Hotel Owner Dashboard', 'Occupancy tracker and off-season demand booster.', '#/', 'Home'));
   router.register('#/styleguide', renderStyleGuide);
 
