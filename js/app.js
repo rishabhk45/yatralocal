@@ -13,7 +13,9 @@ import { renderSaralView } from '../pages/saral.js';
 import { renderBookingView } from '../pages/booking.js';
 import { renderTripsView } from '../pages/trips.js';
 import { renderOwnerView } from '../pages/owner.js';
+import { renderSosView } from '../pages/sos.js';
 import { renderStyleGuide } from '../pages/style-guide.js';
+import { sosEngine } from './sos.js';
 
 function renderStubView(title, description, nextLink, nextLabel) {
   return () => `
@@ -94,6 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
   router.register('#/trips', renderTripsView);
   router.register('#/bookings', renderTripsView);
   router.register('#/owner', renderOwnerView);
+  router.register('#/sos', renderSosView);
   router.register('#/styleguide', renderStyleGuide);
 
   // Initialize router
@@ -108,10 +111,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'Escape') closeModal();
   });
 
-  // Floating SOS Button (stub for Phase 8)
-  document.getElementById('global-sos-btn')?.addEventListener('click', () => {
-    showToast('🚨 Safety SOS triggered: Emergency location beacon wired in Phase 8 (Demo).');
-  });
+  // Initialize Floating SOS Engine with 2s hold + progress ring
+  sosEngine.initGlobalButton('#global-sos-btn');
 
   // Saral Mode Global Sync & Toggle
   const saralToggleBtn = document.getElementById('saral-toggle');

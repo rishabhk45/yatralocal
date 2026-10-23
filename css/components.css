@@ -472,7 +472,7 @@
   color: var(--color-text-inverse);
   border: 2px solid #FFFFFF;
   border-radius: var(--radius-full);
-  min-height: 52px;
+  min-height: 54px;
   padding: var(--space-2) var(--space-5);
   display: flex;
   align-items: center;
@@ -482,12 +482,30 @@
   box-shadow: var(--shadow-sos);
   cursor: pointer;
   text-decoration: none;
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
+  user-select: none;
+  touch-action: manipulation;
 }
 
 .sos-fab:hover {
   transform: scale(1.05);
   background-color: #A31B18;
+}
+
+.sos-fab:active,
+.sos-fab.holding {
+  transform: scale(0.96);
+  background-color: #7F1D1D;
+}
+
+.sos-progress-ring {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+.sos-progress-ring .ring-bar {
+  transition: stroke-dashoffset 0.05s linear;
 }
 
 .sos-pulse-dot {
@@ -502,6 +520,147 @@
   0% { opacity: 1; transform: scale(0.9); }
   50% { opacity: 0.4; transform: scale(1.3); }
   100% { opacity: 1; transform: scale(0.9); }
+}
+
+/* Fullscreen Emergency SOS Overlay */
+.sos-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: var(--space-4);
+  overflow-y: auto;
+  animation: sos-fade-in 0.25s ease-out;
+}
+
+@keyframes sos-fade-in {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.sos-overlay.countdown-state {
+  background: radial-gradient(circle at center, #991B1B 0%, #450A0A 100%);
+  color: #FFFFFF;
+}
+
+.sos-overlay.dispatched-state {
+  background: radial-gradient(circle at top, #7F1D1D 0%, #1E1B4B 100%);
+  color: #FFFFFF;
+  justify-content: flex-start;
+  padding-top: var(--space-8);
+  padding-bottom: var(--space-8);
+}
+
+.sos-countdown-circle {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  border: 6px solid #FFFFFF;
+  background-color: rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--space-4) auto;
+  font-size: 4rem;
+  font-weight: 900;
+  color: #FFFFFF;
+  box-shadow: 0 0 40px rgba(239, 68, 68, 0.8);
+  animation: sos-pulse-circle 1s infinite alternate;
+}
+
+@keyframes sos-pulse-circle {
+  0% { transform: scale(0.95); box-shadow: 0 0 20px rgba(255, 255, 255, 0.5); }
+  100% { transform: scale(1.05); box-shadow: 0 0 50px rgba(255, 255, 255, 0.9); }
+}
+
+.sos-dispatched-container {
+  max-width: 720px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.sos-banner-demo {
+  background-color: #FFFBEB;
+  color: #92400E;
+  border: 2px solid #F59E0B;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.sos-dialers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--space-3);
+}
+
+.sos-dial-card {
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--color-text-main);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: transform var(--transition-fast), background-color var(--transition-fast);
+  border: 2px solid transparent;
+}
+
+.sos-dial-card:hover {
+  transform: translateY(-2px);
+  background: #FFFFFF;
+}
+
+.sos-dial-card.primary-dial {
+  background-color: #FEE2E2;
+  border-color: #EF4444;
+}
+
+.sos-dial-card .dial-icon {
+  font-size: 1.8rem;
+}
+
+.sos-dial-card .dial-info strong {
+  display: block;
+  font-size: 1.05rem;
+  color: #991B1B;
+}
+
+.sos-dial-card .dial-info small {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.sos-section-card {
+  background-color: #FFFFFF !important;
+  color: var(--color-text-main) !important;
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+}
+
+.sos-live-pulse {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #EF4444;
+  box-shadow: 0 0 0 rgba(239, 68, 68, 0.7);
+  animation: beacon-pulse 1.2s infinite;
+}
+
+@keyframes beacon-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+  70% { box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
 }
 
 /* --------------------------------------------------------------------------

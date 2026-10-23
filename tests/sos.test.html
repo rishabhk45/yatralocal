@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>YatraLocal - Safety SOS Test Suite (Phase 8)</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 24px; background: #fafafa; }
+    .pass { color: green; font-weight: bold; }
+    .fail { color: red; font-weight: bold; }
+    .test-box { background: white; border: 1px solid #ccc; padding: 16px; margin-bottom: 12px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Safety SOS Test Suite (Phase 8)</h1>
+  <div id="results"></div>
+
+  <div id="test-sandbox" style="display: none;"></div>
+
+  <script type="module">
+    import { store } from '../js/store.js';
+    import { sosEngine } from '../js/sos.js';
+    import { renderSosView } from '../pages/sos.js';
+
+    const results = document.getElementById('results');
+    const log = (name, passed, detail = '') => {
+      const div = document.createElement('div');
+      div.className = 'test-box';
+      div.innerHTML = `
+        <span class="${passed ? 'pass' : 'fail'}">${passed ? '✓ PASS' : '✗ FAIL'}</span>: 
+        <strong>${name}</strong>
+        ${detail ? `<pre style="margin-top:6px; color:#444;">${detail}</pre>` : ''}
+      `;
+      results.appendChild(div);
+      console.log(`[${passed ? 'PASS' : 'FAIL'}] ${name}`, detail);
+    };
+
+    async function runTests() {
+      // Test 1: Emergency Contacts & Medical Notes Store Persistence
+      try {
+        const initialSettings = store.getSosSettings();
+        store.updateSosSettings({
+          medicalNotes: 'Senior test patient with asthma inhaler',
+          shareLiveLocation: true,
+          emergencyContacts: [
+            { id: 't1', name: 'Dr. Verma', phone: '+91 98000 11111', relation: 'Family Physician' }
+          ]
+        });
+
+        const reloaded = store.getSosSettings();
+        const contactSaved = reloaded.emergencyContacts.some(c => c.name === 'Dr. Verma');
+        const notesSaved = reloaded.medicalNotes.includes('asthma inhaler');
+
+        log('Test 1: Emergency contacts and medical notes persist to store', contactSaved && notesSaved, `Doctor saved: ${contactSaved}, Notes: "${reloaded.medicalNotes}"`);
+      } catch (err) {
+        log('Test 1: Emergency settings store', false, err.message);
+      }
+
+      // Test 2: Geolocation Fallback provides valid coordinates and Maps URL
+      try {
+        const fallback = sosEngine.fallbackCoords;
+        const validLat = typeof fallback.latitude === 'number' && fallback.latitude > 0;
+        const validLng = typeof fallback.longitude === 'number' && fallback.longitude > 0;
+        const mapsLink = `https://maps.google.com/?q=${fallback.latitude},${fallback.longitude}`;
+        const hasGoogleUrl = mapsLink.includes('https://maps.google.com/?q=32.2396,77.1887');
+
+        log('Test 2: Geolocation Fallback provides valid coordinates and Google Maps link', validLat && validLng && hasGoogleUrl, `Lat: ${fallback.latitude}, Lng: ${fallback.longitude}, Maps: ${mapsLink}`);
+      } catch (err) {
+        log('Test 2: Geolocation fallback', false, err.message);
+      }
+
+      // Test 3: Accidental Trigger Prevention (Countdown cancellation stops dispatch)
+      try {
+        sosEngine.triggerCountdown();
+        const overlayBefore = document.getElementById('sos-fullscreen-overlay');
+        const isCountdownActive = Boolean(overlayBefore && overlayBefore.classList.contains('countdown-state'));
+
+        // Cancel alert
+        sosEngine.cancelAlert('Unit test cancellation');
+        const overlayAfter = document.getElementById('sos-fullscreen-overlay');
+
+        log('Test 3: 5-second countdown overlay mounts and cancels cleanly without firing dispatch', isCountdownActive && !overlayAfter, `Countdown mounted: ${isCountdownActive}, Cleaned after cancel: ${!overlayAfter}`);
+      } catch (err) {
+        log('Test 3: Countdown cancel', false, err.message);
+      }
+
+      // Test 4: SOS Activation Logs Incident Event in localStorage
+      try {
+        const testLog = store.addSosLog({
+          eventType: 'DISPATCH',
+          coords: { lat: 32.2396, lng: 77.1887 },
+          locationLabel: 'Burwa Hamlet, Manali',
+          simulatedResponseTimeSeconds: 42
+        });
+
+        const logs = store.getSosLogs();
+        const found = logs.find(l => l.id === testLog.id);
+        const validId = /^SOS-\d+$/.test(testLog.id);
+
+        log('Test 4: SOS Activation logs incident with ID and response time in localStorage', Boolean(found) && validId, `Logged ID: ${testLog.id}, Found in logs: ${Boolean(found)}`);
+      } catch (err) {
+        log('Test 4: SOS logging', false, err.message);
+      }
+
+      // Test 5: Direct tel: dialer links for 112, 100, 108, 1363 are present and valid
+      try {
+        const sandbox = document.getElementById('test-sandbox');
+        sandbox.innerHTML = '';
+        const sosViewEl = renderSosView();
+        sandbox.appendChild(sosViewEl);
+
+        const link112 = sosViewEl.querySelector('a[href="tel:112"]');
+        const link100 = sosViewEl.querySelector('a[href="tel:100"]');
+        const link108 = sosViewEl.querySelector('a[href="tel:108"]');
+        const link1363 = sosViewEl.querySelector('a[href="tel:1363"]');
+
+        const allPresent = Boolean(link112 && link100 && link108 && link1363);
+
+        log('Test 5: Official emergency directory renders direct tel: links (112, 100, 108, 1363)', allPresent, `112: ${Boolean(link112)}, 100: ${Boolean(link100)}, 108: ${Boolean(link108)}, 1363: ${Boolean(link1363)}`);
+      } catch (err) {
+        log('Test 5: Helpline directory', false, err.message);
+      }
+    }
+
+    runTests();
+  </script>
+</body>
+</html>

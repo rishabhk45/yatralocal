@@ -186,3 +186,21 @@ html.saral input {
   min-height: 56px;
   border-width: 2.5px;
 }
+
+/* Extra-large Floating SOS button in Saral Mode */
+html.saral .sos-fab {
+  min-height: 68px;
+  padding: var(--space-3) var(--space-6);
+  font-size: 1.35rem;
+  font-weight: 800;
+  border: 3.5px solid #FFFFFF;
+  box-shadow: 0 8px 30px rgba(220, 38, 38, 0.7);
+  bottom: var(--space-4);
+  right: var(--space-4);
+}
+
+html.saral .sos-fab .sos-progress-ring {
+  width: 36px;
+  height: 36px;
+}
+

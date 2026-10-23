@@ -57,10 +57,17 @@ Track progress across all 14 project phases.
   - Fair tourism monetization & subscription teaser card marked `[Concept / Business Model]`.
   - 5/5 automated unit tests passing in `tests/owner.test.html`.
 
-- [ ] **Phase 8: Safety SOS**
-  - Prominent emergency SOS floating button & panel.
-  - Geolocation capture (`navigator.geolocation`) with one-click WhatsApp/SMS emergency dispatch format.
-  - Local emergency helpline directory (Police 112, Women Helpline 1091, Tourist Helpline 1363).
+- [x] **Phase 8: Safety SOS**
+  - Global floating button `#global-sos-btn` with 2-second press-and-hold circular SVG progress ring and accidental trigger confirmation modal.
+  - Extra-large 68px touch target with high contrast in Saral Mode.
+  - 5-second countdown cancel overlay with sound cues and Web Speech audio alert ("SOS activated" in English and Hindi).
+  - Safety SOS Hub (`#/sos`) with contact manager (up to 3 emergency contacts), medical conditions editor, and live GPS sharing toggle.
+  - Live geolocation beacon tracking via `navigator.geolocation.watchPosition` with battery-friendly throttling and safe fallback to Burwa, Manali coordinates.
+  - One-touch emergency dispatch triggers: prefilled WhatsApp location message, SMS format, and Google Maps deep links.
+  - Official National Emergency Directory with direct `tel:` hotlines: 112 (All India), 100 (Police), 108 (Ambulance), 1091 (Women Helpline), 1363 (Tourist Helpline).
+  - Incident event logger storing simulated dispatch and resolution timestamps in `localStorage` for impact metrics.
+  - 100% on-device privacy guarantee and simulated alert disclaimer.
+  - 5/5 automated unit tests passing in `tests/sos.test.html`.
 
 - [ ] **Phase 9: Accessibility, polish & QA**
   - WCAG 2.1 AA audit (contrast ratios, focus visible rings, keyboard navigability).

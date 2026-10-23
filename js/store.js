@@ -27,7 +27,16 @@ const defaultState = {
   },
   hostOffers: {},
   saralMode: false,
-  language: 'EN' // 'EN' | 'HI'
+  language: 'EN', // 'EN' | 'HI'
+  sosSettings: {
+    emergencyContacts: [
+      { id: 'c1', name: 'Papa (Rajesh Sharma)', phone: '+91 98765 43210', relation: 'Father' },
+      { id: 'c2', name: 'Pooja (Sister)', phone: '+91 98111 22334', relation: 'Sister' }
+    ],
+    medicalNotes: 'Senior traveller: Hypertension, blood pressure medication daily. Carries inhaler.',
+    shareLiveLocation: true
+  },
+  sosLogs: []
 };
 
 class Store {
@@ -147,6 +156,40 @@ class Store {
 
   setLanguage(lang) {
     this.setState({ language: lang === 'HI' ? 'HI' : 'EN' });
+  }
+
+  getSosSettings() {
+    return this.state.sosSettings || {
+      emergencyContacts: [],
+      medicalNotes: '',
+      shareLiveLocation: true
+    };
+  }
+
+  updateSosSettings(newSettings) {
+    const updated = {
+      ...(this.state.sosSettings || {}),
+      ...newSettings
+    };
+    this.setState({ sosSettings: updated });
+    return updated;
+  }
+
+  addSosLog(logData) {
+    const logs = this.state.sosLogs || [];
+    const newEntry = {
+      id: `SOS-${Date.now().toString().slice(-6)}`,
+      timestamp: new Date().toISOString(),
+      status: 'simulated_dispatch',
+      ...logData
+    };
+    const updated = [newEntry, ...logs].slice(0, 20); // Keep last 20 logs
+    this.setState({ sosLogs: updated });
+    return newEntry;
+  }
+
+  getSosLogs() {
+    return this.state.sosLogs || [];
   }
 
   subscribe(listener) {
