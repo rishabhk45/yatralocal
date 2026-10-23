@@ -12,6 +12,7 @@
  */
 
 import { store } from '../js/store.js';
+import { reviewsManager, createReviewCardDOM } from '../js/reviews.js';
 
 export function renderOwnerView() {
   const container = document.createElement('div');
@@ -110,6 +111,9 @@ export function renderOwnerView() {
   }
 
   function renderOwnerDashboard() {
+    const revMetrics = reviewsManager.getMetricsForTarget(hostInfo.id);
+    const hostReviews = reviewsManager.getReviewsForTarget(hostInfo.id);
+
     container.innerHTML = `
       <!-- Top Host Profile & Session Banner -->
       <div class="card flex-between" style="flex-wrap: wrap; gap: var(--space-3); padding: var(--space-4) var(--space-6); background: linear-gradient(135deg, #F0FDF4 0%, #FFFFFF 100%); border-left: 5px solid var(--color-primary); margin-bottom: var(--space-6);">
@@ -462,6 +466,77 @@ export function renderOwnerView() {
         </div>
       </section>
 
+      <!-- Guest Reviews & Reputation Section (Phase 15) -->
+      <section style="margin-bottom: var(--space-8);">
+        <div class="card flow" style="padding: var(--space-6); border: 2px solid var(--color-border);">
+          <div class="flex-between" style="flex-wrap: wrap; gap: var(--space-2); align-items: flex-start;">
+            <div>
+              <div class="flex gap-2" style="align-items: center; margin-bottom: var(--space-1);">
+                <span class="badge badge-verified">Community Trust Score</span>
+                <span class="badge badge-demo">Sample & Verified Guest Data</span>
+              </div>
+              <h3 style="margin: 0; font-size: 1.35rem;">Guest Feedback & Reputation</h3>
+              <p style="color: var(--color-text-muted); font-size: var(--font-size-xs); margin: 2px 0 0;">
+                All ratings are submitted by travelers. Host dashboard is strictly read-only to preserve guest trust.
+              </p>
+            </div>
+            
+            <div style="text-align: right;">
+              <div style="font-size: 2.2rem; font-weight: 800; color: #D97706; line-height: 1;">
+                ★ ${revMetrics.averageRating || '4.9'}
+              </div>
+              <span style="font-size: var(--font-size-xs); color: var(--color-text-muted);">
+                Based on ${revMetrics.totalReviews || 4} guest reviews
+              </span>
+            </div>
+          </div>
+
+          <!-- Breakdown & Sentiment Tags Grid -->
+          <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-5); margin-top: var(--space-4); padding: var(--space-4); background-color: var(--color-bg); border-radius: var(--radius-md);">
+            <!-- Star breakdown -->
+            <div>
+              <strong style="font-size: var(--font-size-xs); text-transform: uppercase; color: var(--color-text-muted);">Star Breakdown</strong>
+              <div class="rating-breakdown-bars" style="margin-top: var(--space-2);">
+                ${[5, 4, 3, 2, 1].map((star) => {
+                  const count = revMetrics.breakdown?.[star] || 0;
+                  const pct = revMetrics.totalReviews > 0 ? Math.round((count / revMetrics.totalReviews) * 100) : 0;
+                  return `
+                    <div class="breakdown-bar-row">
+                      <span class="breakdown-star-label">${star}★</span>
+                      <div class="breakdown-bar-track">
+                        <div class="breakdown-bar-fill" style="width: ${pct}%;"></div>
+                      </div>
+                      <span class="breakdown-count-label">${count}</span>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+
+            <!-- Sentiment Highlights / Tags -->
+            <div>
+              <strong style="font-size: var(--font-size-xs); text-transform: uppercase; color: var(--color-text-muted);">Guest Sentiment & Tag Highlights</strong>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: var(--space-2);">
+                ${Object.entries(revMetrics.tagsSummary || {}).length > 0 ? Object.entries(revMetrics.tagsSummary).map(([tag, count]) => `
+                  <span class="badge" style="background-color: var(--color-bg-surface); border: 1.5px solid var(--color-primary); color: var(--color-primary); font-size: var(--font-size-xs); font-weight: 600;">
+                    ✓ ${tag} (${count})
+                  </span>
+                `).join('') : '<p style="color: var(--color-text-muted); font-size: var(--font-size-xs);">No tags recorded yet.</p>'}
+              </div>
+              <div style="margin-top: var(--space-3); font-size: var(--font-size-xs); color: var(--color-text-muted); background: var(--color-bg-surface); padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); border: 1px solid var(--color-border);">
+                💬 <strong>Host summary:</strong> High praise for Cleanliness, Authentic Food, and Warm Hospitality.
+              </div>
+            </div>
+          </div>
+
+          <!-- Reviews list -->
+          <div style="margin-top: var(--space-4);">
+            <strong style="font-size: var(--font-size-sm); color: var(--color-text-main);">Recent Guest Reviews (Read-Only):</strong>
+            <div class="flow" style="margin-top: var(--space-3); gap: var(--space-3);" id="owner-reviews-list"></div>
+          </div>
+        </div>
+      </section>
+
       <!-- Monetization & Subscription Teaser Card -->
       <section>
         <div class="card flow" style="border: 2px dashed #0D5C5B; background: linear-gradient(135deg, #F8FAFC 0%, #FFFFFF 100%); padding: var(--space-6);">
@@ -504,6 +579,17 @@ export function renderOwnerView() {
     `;
 
     bindDashboardListeners();
+
+    const reviewsListEl = container.querySelector('#owner-reviews-list');
+    if (reviewsListEl) {
+      if (hostReviews.length === 0) {
+        reviewsListEl.innerHTML = '<p style="color: var(--color-text-muted); font-size: var(--font-size-sm);">No reviews yet.</p>';
+      } else {
+        hostReviews.forEach((rev) => {
+          reviewsListEl.appendChild(createReviewCardDOM(rev, false));
+        });
+      }
+    }
   }
 
   function renderPreviewCard(draft, host) {
@@ -600,8 +686,12 @@ export function renderOwnerView() {
     });
   }
 
-  // Initial mount
-  renderView();
+  // Initial mount with preloaded seed reviews
+  reviewsManager.loadSeedReviews().then(() => {
+    renderView();
+  }).catch(() => {
+    renderView();
+  });
 
   return container;
 }

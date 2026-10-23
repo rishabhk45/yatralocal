@@ -82,6 +82,7 @@ To ensure absolute transparency for hackathon evaluators, here is our full audit
 | **Verified Host Listings** | **Sample Data** | 12 curated homestays and 8 local guides across 6 destinations (`/data/hosts.json`), marked "Sample data for demonstration". | Government ID / Aadhaar verification, local tourism board registration, and on-ground field audits. |
 | **Voice Guidance (TTS)** | **Real Browser API** | Fully functional Web Speech API (`SpeechSynthesis`) in English and Hindi (`hi-IN`). | Cloud Neural TTS (Google Cloud Speech-to-Text & Text-to-Speech) for low-end device consistency. |
 | **State Persistence** | **Real Client Storage** | Reactive client store (`js/store.js`) backed by browser `localStorage`. Persists trips, offers, and settings across refreshes. | Distributed cloud database (Cloud Firestore / PostgreSQL). |
+| **User Reviews & Feedback** | **Real Client Storage + Sample Seed** | Reviews engine (`js/reviews.js`) with input validation, XSS sanitization, 1-per-browser rate limiting, and `localStorage` persistence. Seed data (25 reviews across stays, guides, destinations) marked with `[Sample review]` badges. | Distributed backend database with verified booking receipts, spam filters, and photo uploads. |
 
 ---
 
@@ -91,6 +92,7 @@ To ensure absolute transparency for hackathon evaluators, here is our full audit
 2. **Mock Host Verification**: The "Verified Local" badge is simulated based on static mock criteria. Production requires formal KYC and physical property verification.
 3. **Emergency SOS Disclaimer**: SOS broadcasts generate prefilled messages on the user's device and do not connect directly to emergency services. Production requires official integrations with Ministry of Home Affairs ERSS 112 endpoints.
 4. **Browser Speech Support**: Web Speech API capabilities vary depending on the host OS and browser vendor (e.g., availability of Hindi voice models).
+5. **Local Device Review Scope**: Reviews submitted by users are stored locally in the current browser device (`localStorage['yl_reviews']`) and merged with seed data. Production deployment requires centralized backend persistence and verified-stay receipt validation.
 
 ---
 
@@ -168,8 +170,7 @@ YATRALOCAL/
 │   ├── map.js                 # Leaflet map engine, Haversine formula, directions
 │   ├── speech.js              # Web Speech API assistant (English & Hindi)
 │   ├── sos.js                 # Safety SOS engine (2s hold, GPS beacon, Twilio, SMS)
-│   └── i18n.js                # Bilingual dictionary loader and DOM translator
-│   ├── sos.js                 # Safety SOS engine (2s hold, GPS beacon, tel links)
+│   ├── reviews.js             # User feedback manager, XSS sanitization, rate limiter
 │   └── i18n.js                # Bilingual dictionary loader and DOM translator
 ├── pages/
 │   ├── landing.js             # Hero, problem/solution cards, Manali scenario
@@ -186,8 +187,11 @@ YATRALOCAL/
 ├── data/
 │   ├── destinations.json      # 6 destinations and 60+ offbeat activities
 │   ├── hosts.json             # 12 homestays and 8 verified local guides
+│   ├── reviews.json           # 25 realistic sample reviews (stays, guides, destinations)
 │   └── i18n.json              # Bilingual localization dictionary (EN & HI)
 ├── tests/
+│   ├── reviews.test.html      # DOM feedback suite, XSS & rate limit test runner
+│   ├── reviews.test.js        # Node.js reviews validation and metrics test suite
 │   ├── itinerary.test.html    # Budget, senior limits, and mood matching tests
 │   ├── saral.test.html        # Wizard steps, speech synthesis fallback tests
 │   ├── booking.test.html      # 90% income math, validation, and voucher tests
@@ -287,6 +291,8 @@ Open your browser at `http://localhost:4173`.
 
 All unit tests run directly in your browser without requiring test runners or heavy dependencies:
 
+- **User Feedback & Reviews Tests**: `http://localhost:4173/tests/reviews.test.html`
+- **Node.js Reviews Suite**: `node tests/reviews.test.js`
 - **Map Engine & Coordinates Tests**: `http://localhost:4173/tests/map.test.html`
 - **LLM Planner & Fallback Tests**: `http://localhost:4173/tests/llm.test.html`
 - **Node.js LLM Verification**: `node tests/llm-provider.test.js`

@@ -5,6 +5,7 @@
  */
 
 import { store } from '../js/store.js';
+import { openWriteReviewModal } from '../js/reviews.js';
 
 export function renderTripsView() {
   const container = document.createElement('div');
@@ -134,13 +135,16 @@ function renderTripCard(b) {
 
       <!-- Action Buttons Row -->
       <div class="flex-between" style="border-top: 1px solid var(--color-border); padding-top: var(--space-4); margin-top: var(--space-4); flex-wrap: wrap; gap: var(--space-2);">
-        <div class="flex gap-2">
+        <div class="flex gap-2" style="flex-wrap: wrap;">
           <button type="button" class="btn btn-ghost btn-sm btn-download-ics" data-id="${b.id}">
             📅 Download .ics
           </button>
           <a href="https://api.whatsapp.com/send?text=${shareText}" target="_blank" rel="noopener noreferrer" class="btn btn-ghost btn-sm" style="color: #128C7E; border-color: #25D366;">
             💬 WhatsApp
           </a>
+          <button type="button" class="btn btn-primary btn-sm btn-trip-review" data-stay-id="${b.stay?.id || b.stayId || 'stay-manali-1'}" data-stay-name="${stayName}">
+            ★ Leave Feedback
+          </button>
         </div>
 
         <div>
@@ -169,6 +173,17 @@ function bindTripsListeners(container, bookings) {
       const id = btn.dataset.id;
       const b = bookings.find((x) => x.id === id);
       if (b) openVoucherModal(b);
+    });
+  });
+
+  // Leave feedback modal
+  container.querySelectorAll('.btn-trip-review').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const stayId = btn.dataset.stayId;
+      const stayName = btn.dataset.stayName;
+      openWriteReviewModal(stayId, 'stay', stayName, () => {
+        window.YatraApp.showToast('Thank you for rating your stay!');
+      });
     });
   });
 }

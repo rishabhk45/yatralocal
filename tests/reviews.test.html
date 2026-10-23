@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YatraLocal - User Feedback & Reviews Test Suite (Phase 15)</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 24px; background: #FAF7F2; color: #1F2937; }
+    .test-card { background: white; border: 1.5px solid #E5E7EB; border-radius: 8px; padding: 14px 18px; margin-bottom: 12px; }
+    .badge-pass { background: #E8F5E9; color: #1B5E20; padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; }
+    .badge-fail { background: #FFEBEE; color: #B71C1C; padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; }
+  </style>
+</head>
+<body>
+  <div style="max-width: 900px; margin: 0 auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <div>
+        <h1 style="margin: 0; color: #0D5C5B; font-size: 1.8rem;">🧪 Phase 15: User Feedback & Reviews Test Suite</h1>
+        <p style="margin: 4px 0 0; color: #6B7280;">Validation, XSS Sanitization, Rate Limiter, Average Rating Recalculation & Saral Feedback</p>
+      </div>
+      <a href="../index.html" class="btn btn-outline btn-sm">← Back to App</a>
+    </div>
+
+    <div id="summary-banner" style="background: white; border-radius: 8px; padding: 16px; margin-bottom: 20px; border-left: 5px solid #0D5C5B;">
+      Running tests...
+    </div>
+
+    <div id="test-results"></div>
+
+    <div id="interactive-preview-section" style="margin-top: 32px;">
+      <h2>Interactive Live Preview Container</h2>
+      <div id="live-reviews-container" class="card" style="padding: 24px;"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { reviewsManager, sanitizeReviewText, sanitizeFirstName, renderStars, renderReviewsContainer } from '../js/reviews.js';
+
+    const resultsEl = document.getElementById('test-results');
+    const summaryEl = document.getElementById('summary-banner');
+    let passed = 0;
+    let total = 0;
+
+    function recordTest(name, isPass, detail = '') {
+      total++;
+      if (isPass) passed++;
+      const div = document.createElement('div');
+      div.className = 'test-card';
+      div.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <strong>${total}. ${name}</strong>
+          <span class="${isPass ? 'badge-pass' : 'badge-fail'}">${isPass ? '✓ PASS' : '✗ FAIL'}</span>
+        </div>
+        ${detail ? `<div style="font-size: 0.85rem; color: #4B5563; margin-top: 6px; font-family: monospace;">${detail}</div>` : ''}
+      `;
+      resultsEl.appendChild(div);
+    }
+
+    async function runSuite() {
+      await reviewsManager.loadSeedReviews();
+
+      // 1. Seed reviews count & sample flag
+      const all = reviewsManager.getAllReviews();
+      const sampleReviews = all.filter(r => r.isSample === true);
+      recordTest(
+        'Seed reviews loaded and verified 100% sample attribution',
+        all.length >= 24 && sampleReviews.length === all.length,
+        `Total seed reviews: ${all.length}, sample attributed: ${sampleReviews.length}`
+      );
+
+      // 2. XSS stripping
+      const dirty = '<script>alert("hacked")</script><p>Serene morning walk</p>';
+      const clean = sanitizeReviewText(dirty);
+      recordTest(
+        'XSS Sanitization strips <script> and HTML tags',
+        !clean.includes('<script>') && !clean.includes('<p>') && clean.includes('Serene morning walk'),
+        `Input: ${dirty} ➔ Sanitized: ${clean}`
+      );
+
+      // 3. First name privacy
+      const name = 'Vikramaditya Sharma';
+      const cleanName = sanitizeFirstName(name);
+      recordTest(
+        'First name extraction limits surname leakage',
+        cleanName === 'Vikramaditya',
+        `Input: "${name}" ➔ Output: "${cleanName}"`
+      );
+
+      // 4. Short comment rejection (< 10 chars)
+      const shortRes = reviewsManager.submitReview({
+        targetId: 'stay-manali-1',
+        targetType: 'stay',
+        rating: 5,
+        comment: 'Nice',
+        name: 'Arjun'
+      });
+      recordTest(
+        'Validation rejects comments shorter than 10 chars',
+        shortRes.success === false && shortRes.field === 'comment',
+        `Error: "${shortRes.message}"`
+      );
+
+      // 5. Rate limit enforcement
+      const testTarget = 'stay-manali-1';
+      const validRes = reviewsManager.submitReview({
+        targetId: testTarget,
+        targetType: 'stay',
+        rating: 5,
+        comment: 'Ground floor room was extremely easy for my grandmother to access. Uncle Ramesh prepared warm local meals.',
+        tags: ['Clean', 'Senior-friendly', 'Friendly host'],
+        name: 'Arjun'
+      });
+      recordTest(
+        'Valid review submitted and saved to localStorage',
+        validRes.success === true && validRes.review.id.startsWith('rev-user-'),
+        `New Review ID: ${validRes.review.id}`
+      );
+
+      const dupRes = reviewsManager.submitReview({
+        targetId: testTarget,
+        targetType: 'stay',
+        rating: 4,
+        comment: 'Attempting second submission from same browser session.',
+        name: 'Arjun'
+      });
+      recordTest(
+        'Rate limiter rejects second review for same target ID',
+        dupRes.success === false && dupRes.field === 'rateLimit',
+        `Response: "${dupRes.message}"`
+      );
+
+      // 6. Metrics recalculation
+      const metrics = reviewsManager.getMetricsForTarget(testTarget);
+      recordTest(
+        'Metrics calculation correctly aggregates count and average',
+        metrics.count >= 5 && metrics.average >= 4.0,
+        `Count: ${metrics.count}, Average: ${metrics.averageRating}★`
+      );
+
+      // 7. Render interactive container into preview
+      const previewContainer = document.getElementById('live-reviews-container');
+      if (previewContainer) {
+        renderReviewsContainer(previewContainer, testTarget, 'stay', 'Burwa Apple Woods Homestay');
+        recordTest(
+          'Live interactive reviews container rendered into DOM',
+          previewContainer.querySelectorAll('.review-card').length > 0,
+          `Rendered cards: ${previewContainer.querySelectorAll('.review-card').length}`
+        );
+      }
+
+      // Summary
+      summaryEl.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <strong style="font-size: 1.2rem; color: ${passed === total ? '#15803D' : '#B91C1C'};">
+              ${passed === total ? '✓ ALL TESTS PASSED' : '⚠️ SOME TESTS FAILED'}
+            </strong>
+            <div style="font-size: 0.9rem; color: #4B5563; margin-top: 4px;">
+              ${passed} of ${total} tests verified (${Math.round((passed / total) * 100)}%)
+            </div>
+          </div>
+          <span style="font-size: 2rem;">${passed === total ? '🎉' : '⚠️'}</span>
+        </div>
+      `;
+    }
+
+    runSuite();
+  </script>
+</body>
+</html>

@@ -7,6 +7,7 @@
 
 import { store } from '../js/store.js';
 import { YatraMap, calculateDistanceKm } from '../js/map.js';
+import { reviewsManager, renderReviewsContainer } from '../js/reviews.js';
 
 export function renderStaysView() {
   const container = document.createElement('div');
@@ -217,13 +218,15 @@ export function renderStaysView() {
     </div>
   `;
 
-  // Fetch host data and initialize interactions immediately
-  fetch('data/hosts.json')
-    .then((resp) => {
+  // Fetch host data and seed reviews, then initialize interactions immediately
+  Promise.all([
+    fetch('data/hosts.json').then((resp) => {
       if (!resp.ok) throw new Error('Could not load hosts dataset');
       return resp.json();
-    })
-    .then((hostsData) => {
+    }),
+    reviewsManager.loadSeedReviews()
+  ])
+    .then(([hostsData]) => {
       setupStaysAndGuidesApp(container, hostsData, currentDest, currentDays, currentTravellers, userBudget);
     })
     .catch((err) => {
@@ -520,6 +523,11 @@ function buildHostCardHTML(item, type, anchorCoord = null) {
   const activePrice = hostOffer?.discountedPrice || (isStay ? item.pricePerNight : item.pricePerDay);
   const activeRoomsEmpty = hostOffer?.roomsOffered !== undefined ? hostOffer.roomsOffered : item.roomsAvailableOffSeason;
 
+  // Reviews metrics from reviewsManager
+  const revMetrics = reviewsManager.getMetricsForTarget(item.id);
+  const displayRating = revMetrics.totalReviews > 0 ? revMetrics.averageRating : (item.rating || 4.8);
+  const displayCount = revMetrics.totalReviews > 0 ? revMetrics.totalReviews : (item.reviewsCount || 12);
+
   // Haversine distance calculation from Day 1 activity start
   let distanceBadge = '';
   if (anchorCoord && anchorCoord[0] && anchorCoord[1] && item.lat && item.lng) {
@@ -566,8 +574,8 @@ function buildHostCardHTML(item, type, anchorCoord = null) {
 
         <!-- Rating & Reviews -->
         <div class="flex gap-2" style="align-items: center; font-size: var(--font-size-xs); margin-bottom: var(--space-3);">
-          <span style="font-weight: 700; color: #D97706;">★ ${item.rating}</span>
-          <span style="color: var(--color-text-muted);">(${item.reviewsCount} verified traveler reviews)</span>
+          <span style="font-weight: 700; color: #D97706;">★ ${displayRating}</span>
+          <span style="color: var(--color-text-muted);">(${displayCount} verified traveler reviews)</span>
         </div>
 
         <!-- Rooms Left Indicator for Stays -->
@@ -683,23 +691,8 @@ function openHostDetailModal(item, type) {
         </div>
       </div>
 
-      <!-- Sample Community Reviews -->
-      ${item.reviews ? `
-        <div>
-          <strong>Verified Traveler Feedback:</strong>
-          <div class="flow" style="margin-top: var(--space-2);">
-            ${item.reviews.map((r) => `
-              <div style="background-color: var(--color-bg-surface); border: 1px solid var(--color-border); padding: var(--space-3); border-radius: var(--radius-md);">
-                <div class="flex-between">
-                  <strong>${r.author}</strong>
-                  <span style="color: #D97706;">★ ${r.rating}</span>
-                </div>
-                <p style="margin: var(--space-1) 0 0; color: var(--color-text-muted); font-size: var(--font-size-xs);">"${r.comment}"</p>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-      ` : ''}
+      <!-- Community Reviews Section (Phase 15) -->
+      <div id="modal-host-reviews-container" style="margin-top: var(--space-4);"></div>
 
       <div style="padding-top: var(--space-4); border-top: 1px solid var(--color-border); text-align: right;">
         <button type="button" class="btn btn-primary" onclick="window.YatraApp.closeModal()">Close Details</button>
@@ -711,4 +704,10 @@ function openHostDetailModal(item, type) {
     title: item.name,
     content
   });
+
+  // Mount reviews container into modal
+  const revContainer = document.getElementById('modal-host-reviews-container');
+  if (revContainer) {
+    renderReviewsContainer(revContainer, item.id, isStay ? 'stay' : 'guide', item.name);
+  }
 }

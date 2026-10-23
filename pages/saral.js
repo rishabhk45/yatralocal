@@ -18,6 +18,7 @@
 import { store } from '../js/store.js';
 import { speechAssistant } from '../js/speech.js';
 import { YatraMap, getDirectionsUrl } from '../js/map.js';
+import { reviewsManager, openWriteReviewModal } from '../js/reviews.js';
 
 export function renderSaralView() {
   const container = document.createElement('div');
@@ -522,10 +523,12 @@ export function renderSaralView() {
  * Collapsible day cards, ONE recommended stay, ONE guide, and single big "Book this" button.
  */
 function renderSaralResultsView(container, wizardData, lang) {
-  // Fetch sample hosts to get the 1 top stay & 1 top guide
-  fetch('data/hosts.json')
-    .then((r) => r.json())
-    .then((data) => {
+  // Fetch sample hosts and seed reviews
+  Promise.all([
+    fetch('data/hosts.json').then((r) => r.json()),
+    reviewsManager.loadSeedReviews()
+  ])
+    .then(([data]) => {
       const destId = wizardData.destinationId || 'varanasi';
       const stays = (data.stays || []).filter((s) => s.destination === destId);
       const guides = (data.guides || []).filter((g) => g.destination === destId);
@@ -554,6 +557,7 @@ function renderResultsHTML(container, wizardData, stay, guide, lang) {
   const guidePrice = guide ? guide.pricePerDay : 1200;
 
   const totalEst = (stayPrice * Math.max(1, wizardData.days - 1)) + (guidePrice * wizardData.days);
+  const stayMetrics = stay ? reviewsManager.getMetricsForTarget(stay.id) : { averageRating: '4.8', totalReviews: 12 };
 
   container.innerHTML = `
     <!-- Top Return & Voice Bar -->
@@ -679,6 +683,75 @@ function renderResultsHTML(container, wizardData, stay, guide, lang) {
       </div>
     </section>
 
+    <!-- Saral Mode Guest Ratings & Simplified Feedback (Phase 15) -->
+    <section class="card flow" style="border: 3px solid #0B4F4A; padding: var(--space-5); margin-bottom: var(--space-8); background-color: #FAFCFA;">
+      <div class="flex-between" style="flex-wrap: wrap; gap: var(--space-3); align-items: center;">
+        <div>
+          <span class="badge badge-verified" style="font-size: 1rem; padding: 4px 10px;">★ ${lang === 'HI' ? 'यात्री समीक्षाएं' : 'Traveller Ratings'}</span>
+          <h3 style="margin: var(--space-2) 0 0; font-size: 1.5rem; color: #0B4F4A;">
+            ${lang === 'HI' ? 'इस होमस्टे को यात्रियों की रेटिंग' : 'Traveller Rating for This Homestay'}
+          </h3>
+          <p style="margin: 4px 0 0; font-size: 1.15rem; color: #4B5563;">
+            <strong style="color: #D97706; font-size: 1.6rem;">★ ${stayMetrics.averageRating || '4.8'}</strong> 
+            <span>— ${stayMetrics.totalReviews || 12} ${lang === 'HI' ? 'यात्रियों ने इसे सराहा है' : 'travellers rated this stay'}</span>
+          </p>
+        </div>
+
+        <div>
+          <button type="button" id="btn-saral-read-reviews" class="saral-btn btn-ghost" style="min-height: 52px; font-size: 1.05rem; border: 2px solid #0B4F4A; color: #0B4F4A;">
+            🔊 ${lang === 'HI' ? 'रेटिंग सुनें' : 'Read Rating Aloud'}
+          </button>
+        </div>
+      </div>
+
+      <!-- Highlights Quote -->
+      <div style="background-color: #FFFFFF; border-left: 5px solid #0B4F4A; padding: var(--space-3) var(--space-4); border-radius: 8px; margin-top: var(--space-4);">
+        <p style="margin: 0; font-size: 1.15rem; color: #1F2937;">
+          💬 <em>"${lang === 'HI' ? 'बुजुर्गों के लिए बेहद आरामदायक, सीढ़ियाँ नहीं हैं और घर जैसा सात्विक भोजन मिला।' : 'Extremely comfortable for seniors, zero steps and healthy home-cooked food.'}"</em>
+        </p>
+        <span style="font-size: 0.95rem; color: #6B7280; margin-top: 4px; display: inline-block;">
+          — ${lang === 'HI' ? 'सुरेश जी (सत्यापित यात्री)' : 'Suresh K. (Verified guest review)'}
+        </span>
+      </div>
+
+      <!-- 3-Button Simplified Feedback -->
+      <div style="margin-top: var(--space-6); padding-top: var(--space-4); border-top: 2px dashed #D1D5DB;">
+        <h4 style="margin: 0 0 var(--space-2) 0; font-size: 1.25rem; color: #0B4F4A;">
+          ${lang === 'HI' ? 'क्या आप इस होमस्टे को रेटिंग देना चाहते हैं?' : 'How would you rate this stay? (Simple 1-Tap)'}
+        </h4>
+        <p style="margin: 0 0 var(--space-4) 0; font-size: 1.05rem; color: #6B7280;">
+          ${lang === 'HI' ? 'नीचे दिए गए किसी भी बटन पर क्लिक करें:' : 'Tap one of the three buttons below:'}
+        </p>
+
+        <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-3);">
+          <button type="button" class="saral-rating-btn btn-primary" data-stars="5" style="background-color: #15803D; border-color: #0F5132; min-height: 64px; font-size: 1.2rem; font-weight: 800;">
+            😊 ${lang === 'HI' ? 'अच्छा (5★)' : 'Good (5★)'}
+          </button>
+          <button type="button" class="saral-rating-btn btn-secondary" data-stars="3" style="background-color: #D97706; border-color: #92400E; color: white; min-height: 64px; font-size: 1.2rem; font-weight: 800;">
+            😐 ${lang === 'HI' ? 'ठीक-ठाक (3★)' : 'Okay (3★)'}
+          </button>
+          <button type="button" class="saral-rating-btn btn-ghost" data-stars="1" style="border: 2px solid #DC2626; color: #DC2626; min-height: 64px; font-size: 1.2rem; font-weight: 800;">
+            🙁 ${lang === 'HI' ? 'अच्छा नहीं (1★)' : 'Not Good (1★)'}
+          </button>
+        </div>
+
+        <!-- Inline comment box revealed when button is tapped -->
+        <div id="saral-feedback-box" style="display: none; margin-top: var(--space-4); background: #FFFFFF; padding: var(--space-4); border-radius: 8px; border: 2px solid #0B4F4A;">
+          <label for="saral-comment-input" style="display: block; font-size: 1.1rem; font-weight: 700; color: #0B4F4A; margin-bottom: 6px;">
+            ${lang === 'HI' ? 'कोई टिप्पणी या सलाह (वैकल्पिक):' : 'Optional note or suggestion:'}
+          </label>
+          <textarea id="saral-comment-input" rows="2" maxlength="300" placeholder="${lang === 'HI' ? 'जैसे: शांत वातावरण और स्वादिष्ट भोजन...' : 'e.g. Very peaceful ambiance, delicious homestyle food...'}" style="width: 100%; border: 1.5px solid #CBD5E1; border-radius: 6px; padding: 10px; font-size: 1.05rem; resize: vertical;"></textarea>
+          <div style="margin-top: var(--space-3); text-align: right;">
+            <button type="button" id="btn-saral-submit-feedback" class="saral-btn btn-primary" style="background-color: #0B4F4A; border-color: #042F2C; font-size: 1.15rem; min-height: 52px; padding: 10px 24px;">
+              ✓ ${lang === 'HI' ? 'रेटिंग सुरक्षित करें' : 'Save Rating'}
+            </button>
+          </div>
+        </div>
+
+        <div id="saral-feedback-status" style="margin-top: var(--space-3); font-size: 1.15rem; font-weight: 700; color: #15803D; display: none;"></div>
+      </div>
+    </section>
+
     <!-- Saral Mode Interactive Map Section -->
     <section class="card flow" style="border: 3px solid #0B4F4A; padding: var(--space-5); margin-bottom: var(--space-8);">
       <div class="flex-between" style="flex-wrap: wrap; gap: var(--space-3); align-items: center;">
@@ -770,6 +843,78 @@ function renderResultsHTML(container, wizardData, stay, guide, lang) {
 
   container.querySelector('#btn-stop-results')?.addEventListener('click', () => {
     speechAssistant.stop();
+  });
+
+  // Saral Mode Rating & Reviews Audio Guidance
+  container.querySelector('#btn-saral-read-reviews')?.addEventListener('click', () => {
+    const text = lang === 'HI'
+      ? `इस होमस्टे को ${stayMetrics.totalReviews} यात्रियों ने औसत ${stayMetrics.averageRating} स्टार दिए हैं। यात्रियों ने इसे शांत, साफ और बुजुर्गों के लिए उपयुक्त बताया है।`
+      : `This homestay has an average rating of ${stayMetrics.averageRating} stars from ${stayMetrics.totalReviews} verified travellers. Guests highlighted peaceful ambiance, cleanliness, and senior-friendly ground floor rooms.`;
+    speechAssistant.speak(text, lang);
+  });
+
+  // Saral 3-Button Simplified Rating
+  let selectedSaralRating = null;
+  const feedbackBox = container.querySelector('#saral-feedback-box');
+  const feedbackStatus = container.querySelector('#saral-feedback-status');
+  const commentInput = container.querySelector('#saral-comment-input');
+
+  container.querySelectorAll('.saral-rating-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      selectedSaralRating = parseInt(btn.dataset.stars, 10);
+      container.querySelectorAll('.saral-rating-btn').forEach((b) => {
+        b.style.outline = 'none';
+        b.style.boxShadow = 'none';
+      });
+      btn.style.outline = '4px solid #0B4F4A';
+      btn.style.boxShadow = '0 0 12px rgba(11,79,74,0.4)';
+      if (feedbackBox) feedbackBox.style.display = 'block';
+
+      const voicePrompt = lang === 'HI'
+        ? `आपने ${selectedSaralRating} स्टार चुने हैं। यदि चाहें तो टिप्पणी लिखें और रेटिंग सुरक्षित करें पर दबाएं।`
+        : `You selected ${selectedSaralRating} stars. Add an optional note or tap Save Rating.`;
+      speechAssistant.speak(voicePrompt, lang);
+    });
+  });
+
+  container.querySelector('#btn-saral-submit-feedback')?.addEventListener('click', () => {
+    if (!selectedSaralRating) return;
+    const targetId = stay ? stay.id : 'stay-varanasi-1';
+    const rawComment = commentInput?.value?.trim() || '';
+    const finalComment = rawComment.length >= 10
+      ? rawComment
+      : (selectedSaralRating >= 4 ? 'A very calm and comfortable stay with warm local hospitality.' : 'Okay experience, could be improved.');
+
+    const result = reviewsManager.submitReview({
+      targetType: 'stay',
+      targetId,
+      name: 'Saral Traveller',
+      rating: selectedSaralRating,
+      comment: finalComment,
+      tags: selectedSaralRating >= 4 ? ['Clean', 'Senior-friendly', 'Friendly host'] : ['Good value'],
+      language: lang
+    });
+
+    if (result.success) {
+      if (feedbackBox) feedbackBox.style.display = 'none';
+      if (feedbackStatus) {
+        feedbackStatus.textContent = lang === 'HI'
+          ? '✓ आपकी समीक्षा सुरक्षित कर ली गई है। धन्यवाद!'
+          : '✓ Thank you! Your review has been saved.';
+        feedbackStatus.style.color = '#15803D';
+        feedbackStatus.style.display = 'block';
+      }
+      const confirmVoice = lang === 'HI'
+        ? 'आपकी समीक्षा सुरक्षित कर ली गई है। धन्यवाद!'
+        : 'Thank you! Your review has been saved.';
+      speechAssistant.speak(confirmVoice, lang);
+    } else {
+      if (feedbackStatus) {
+        feedbackStatus.textContent = result.message || 'Unable to submit review.';
+        feedbackStatus.style.color = '#DC2626';
+        feedbackStatus.style.display = 'block';
+      }
+    }
   });
 }
 

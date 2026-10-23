@@ -13,6 +13,7 @@
 
 import { store } from '../js/store.js';
 import { speechAssistant } from '../js/speech.js';
+import { openWriteReviewModal } from '../js/reviews.js';
 
 export function renderBookingView() {
   const container = document.createElement('div');
@@ -611,7 +612,10 @@ export function renderBookingView() {
             </div>
           </div>
 
-          <div style="margin-top: var(--space-8);">
+          <div style="margin-top: var(--space-8); display: flex; gap: var(--space-3); justify-content: center; flex-wrap: wrap;">
+            <button type="button" id="btn-booking-leave-review" class="btn btn-primary btn-lg" style="font-weight: 700;">
+              ★ Rate Your Homestay (${stay.name})
+            </button>
             <a href="#/trips" class="btn btn-ghost btn-lg" style="font-weight: 700;">
               View in My Trips List (#/trips) ➔
             </a>
@@ -787,6 +791,13 @@ export function renderBookingView() {
         const url = `${window.location.origin}/#/trips`;
         navigator.clipboard?.writeText(url);
         window.YatraApp.showToast('📋 Trip link copied to clipboard!');
+      });
+
+      // Leave review modal (Phase 15)
+      container.querySelector('#btn-booking-leave-review')?.addEventListener('click', () => {
+        openWriteReviewModal(stay.id, 'stay', stay.name, () => {
+          window.YatraApp.showToast('Thank you for rating your homestay!');
+        });
       });
     }
   }
