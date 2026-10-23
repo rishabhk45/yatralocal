@@ -7,6 +7,7 @@
  */
 
 import { store } from '../js/store.js';
+import { loadSeasonsData, getSeason, renderSeasonBadgeHTML } from '../js/season.js';
 
 export function renderPlanView() {
   const container = document.createElement('div');
@@ -67,6 +68,27 @@ export function renderPlanView() {
               <span style="font-size: var(--font-size-xs); color: var(--color-text-muted);">We suggest calm offbeat hamlets 5-15km away.</span>
             </div>
             <div class="form-error-msg" id="err-destination" style="display: none; color: var(--color-danger); font-size: var(--font-size-xs);"></div>
+          </div>
+
+          <!-- 1B. Travel Month & Seasonal Demand Insights -->
+          <div class="form-group" style="background-color: var(--color-bg); padding: var(--space-4); border-radius: var(--radius-md); border: 1px solid var(--color-border);">
+            <div class="flex-between" style="flex-wrap: wrap; gap: var(--space-2); align-items: center; margin-bottom: 6px;">
+              <label class="form-label" for="plan-month" style="margin: 0;">
+                <strong>🗓️ Travel Month (Best time to avoid crowds)</strong>
+              </label>
+              <div id="plan-season-badge-container"></div>
+            </div>
+            <select id="plan-month" class="form-select" style="width: 100%; max-width: 340px;">
+              ${[
+                'January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'
+              ].map((mName, idx) => `
+                <option value="${idx}" ${idx === (currentPrefs.travelMonth !== undefined ? currentPrefs.travelMonth : new Date().getMonth()) ? 'selected' : ''}>
+                  ${mName} ${idx === new Date().getMonth() ? '(Current Month)' : ''}
+                </option>
+              `).join('')}
+            </select>
+            <div id="plan-season-reason-text" style="font-size: var(--font-size-xs); color: var(--color-text-muted); margin-top: 6px; line-height: 1.4;"></div>
           </div>
 
           <!-- 2. Dual Budget Input (Slider + Number) -->
@@ -217,6 +239,26 @@ function bindPlanFormInteractions(container) {
     }
   });
 
+  // Seasonality & Travel Month Live Updates
+  const monthSelect = container.querySelector('#plan-month');
+  const badgeContainer = container.querySelector('#plan-season-badge-container');
+  const reasonText = container.querySelector('#plan-season-reason-text');
+
+  const updateSeasonUI = () => {
+    const destId = destSelect.value;
+    const mIdx = parseInt(monthSelect.value, 10);
+    const season = getSeason(destId, mIdx);
+    const lang = store.getState().language || 'EN';
+    if (badgeContainer) badgeContainer.innerHTML = renderSeasonBadgeHTML(season.demandLevel, lang);
+    if (reasonText) {
+      reasonText.innerHTML = `<strong>${season.monthName} in ${season.destinationName}:</strong> ${season.reason}. <em>(Estimate)</em>`;
+    }
+  };
+
+  loadSeasonsData().then(() => updateSeasonUI());
+  destSelect.addEventListener('change', updateSeasonUI);
+  monthSelect.addEventListener('change', updateSeasonUI);
+
   // Sync budget slider and numeric input
   budgetSlider.addEventListener('input', () => {
     budgetInput.value = budgetSlider.value;
@@ -304,6 +346,8 @@ function bindPlanFormInteractions(container) {
     const preferences = {
       destination: destSelect.value,
       destinationName: destSelect.options[destSelect.selectedIndex].text.split('(')[0].trim(),
+      travelMonth: parseInt(monthSelect.value, 10),
+      travelMonthName: monthSelect.options[monthSelect.selectedIndex].text.split('(')[0].trim(),
       budget: budgetVal,
       days: selectedDays,
       travellers: parseInt(container.querySelector('#plan-travellers').value, 10) || 2,

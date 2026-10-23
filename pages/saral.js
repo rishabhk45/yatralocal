@@ -19,6 +19,7 @@ import { store } from '../js/store.js';
 import { speechAssistant } from '../js/speech.js';
 import { YatraMap, getDirectionsUrl } from '../js/map.js';
 import { reviewsManager, openWriteReviewModal } from '../js/reviews.js';
+import { loadSeasonsData, getSeason } from '../js/season.js';
 
 export function renderSaralView() {
   const container = document.createElement('div');
@@ -523,10 +524,11 @@ export function renderSaralView() {
  * Collapsible day cards, ONE recommended stay, ONE guide, and single big "Book this" button.
  */
 function renderSaralResultsView(container, wizardData, lang) {
-  // Fetch sample hosts and seed reviews
+  // Fetch sample hosts, seed reviews, and seasons data
   Promise.all([
     fetch('data/hosts.json').then((r) => r.json()),
-    reviewsManager.loadSeedReviews()
+    reviewsManager.loadSeedReviews(),
+    loadSeasonsData()
   ])
     .then(([data]) => {
       const destId = wizardData.destinationId || 'varanasi';
@@ -558,6 +560,13 @@ function renderResultsHTML(container, wizardData, stay, guide, lang) {
 
   const totalEst = (stayPrice * Math.max(1, wizardData.days - 1)) + (guidePrice * wizardData.days);
   const stayMetrics = stay ? reviewsManager.getMetricsForTarget(stay.id) : { averageRating: '4.8', totalReviews: 12 };
+
+  const curMonth = new Date().getMonth();
+  const season = getSeason(wizardData.destinationId || 'varanasi', curMonth);
+  const isBusy = season.isOnSeason;
+  const saralSentence = lang === 'HI'
+    ? (isBusy ? 'यह भीड़-भाड़ वाला समय है। पहले से बुकिंग करें।' : 'यह शांत समय है। घूमने के लिए अच्छा अवसर है।')
+    : (isBusy ? 'This is a busy season. Book early.' : 'This is a quiet season. Good time to visit.');
 
   container.innerHTML = `
     <!-- Top Return & Voice Bar -->
@@ -601,6 +610,29 @@ function renderResultsHTML(container, wizardData, stay, guide, lang) {
           <a href="#/booking" class="saral-btn btn-primary" style="background-color: #C85A17; border-color: #8C3B07; font-size: 1.35rem; padding: 18px 36px;">
             Book This Simple Plan ➔
           </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Saral Seasonal Guidance Card (Phase 16) -->
+    <div class="card" style="padding: var(--space-5); border: 3px solid ${isBusy ? '#DC2626' : '#15803D'}; background-color: ${isBusy ? '#FEF2F2' : '#F0FDF4'}; margin-bottom: var(--space-8);">
+      <div class="flex-between" style="flex-wrap: wrap; gap: var(--space-3); align-items: center;">
+        <div>
+          <span class="badge ${isBusy ? 'badge-danger' : 'badge-verified'}" style="font-size: 1.05rem; padding: 4px 12px;">
+            ${isBusy ? (lang === 'HI' ? '🔴 अधिक भीड़' : '🔴 High Crowd Season') : (lang === 'HI' ? '🟢 शांत समय' : '🟢 Quiet Travel Season')}
+          </span>
+          <div style="font-size: 1.6rem; font-weight: 800; color: ${isBusy ? '#991B1B' : '#166534'}; margin-top: 8px; line-height: 1.4;">
+            ${saralSentence}
+          </div>
+          <p style="margin: 6px 0 0; font-size: 1.1rem; color: #4B5563;">
+            ${season.reason} (${lang === 'HI' ? 'अनुमान' : 'Estimate'})
+          </p>
+        </div>
+
+        <div>
+          <button type="button" id="btn-saral-read-season" class="saral-btn btn-ghost" style="min-height: 52px; font-size: 1.05rem; border: 2px solid ${isBusy ? '#DC2626' : '#15803D'}; color: ${isBusy ? '#DC2626' : '#15803D'};">
+            🔊 ${lang === 'HI' ? 'सलाह सुनें' : 'Read Advice'}
+          </button>
         </div>
       </div>
     </div>
@@ -839,6 +871,11 @@ function renderResultsHTML(container, wizardData, stay, guide, lang) {
   container.querySelector('#btn-read-results')?.addEventListener('click', () => {
     const text = `Here is your simple plan for ${wizardData.destination}. A ${wizardData.days} day trip with an estimated total cost of ${totalEst} rupees, including your homestay at ${stayName} and certified guide ${guideName}. Tap the big Book This Simple Plan button to confirm.`;
     speechAssistant.speak(text, lang);
+  });
+
+  // Saral Season Guidance Narration (Phase 16)
+  container.querySelector('#btn-saral-read-season')?.addEventListener('click', () => {
+    speechAssistant.speak(saralSentence, lang);
   });
 
   container.querySelector('#btn-stop-results')?.addEventListener('click', () => {

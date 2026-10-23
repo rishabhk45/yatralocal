@@ -13,6 +13,7 @@
 
 import { store } from '../js/store.js';
 import { reviewsManager, createReviewCardDOM } from '../js/reviews.js';
+import { loadSeasonsData, getSeason, renderSeasonBadgeHTML } from '../js/season.js';
 
 export function renderOwnerView() {
   const container = document.createElement('div');
@@ -114,6 +115,14 @@ export function renderOwnerView() {
     const revMetrics = reviewsManager.getMetricsForTarget(hostInfo.id);
     const hostReviews = reviewsManager.getReviewsForTarget(hostInfo.id);
 
+    const curMonthIdx = new Date().getMonth();
+    const seasonInfo = getSeason('manali', curMonthIdx);
+    const next3Months = [1, 2, 3].map(offset => {
+      const mIdx = (curMonthIdx + offset) % 12;
+      return getSeason('manali', mIdx);
+    });
+    const hasLowDemandUpcoming = next3Months.some(m => m.isOffSeason || m.isShoulder);
+
     container.innerHTML = `
       <!-- Top Host Profile & Session Banner -->
       <div class="card flex-between" style="flex-wrap: wrap; gap: var(--space-3); padding: var(--space-4) var(--space-6); background: linear-gradient(135deg, #F0FDF4 0%, #FFFFFF 100%); border-left: 5px solid var(--color-primary); margin-bottom: var(--space-6);">
@@ -195,6 +204,53 @@ export function renderOwnerView() {
             <div style="font-size: var(--font-size-xs); color: var(--color-text-muted);">
               Lost revenue on <strong>${totalEmpty} empty rooms</strong> without flash discounts
             </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Season Outlook & Advance Demand Card (Phase 16) -->
+      <section style="margin-bottom: var(--space-8);">
+        <div class="card flow" style="padding: var(--space-5); border: 2px solid var(--color-border); background: #FFFFFF;">
+          <div class="flex-between" style="align-items: flex-start; flex-wrap: wrap; gap: var(--space-3);">
+            <div>
+              <div class="flex gap-2" style="align-items: center; margin-bottom: 4px;">
+                <span class="badge badge-verified">Demand Outlook</span>
+                ${renderSeasonBadgeHTML(seasonInfo.demandLevel, 'EN')}
+              </div>
+              <h3 style="margin: 0; font-size: 1.25rem;">
+                Seasonal Demand Outlook for ${seasonInfo.destinationName}
+              </h3>
+              <p style="color: var(--color-text-muted); font-size: var(--font-size-xs); margin: 2px 0 0;">
+                Current month: <strong>${seasonInfo.monthName}</strong> (${seasonInfo.demandLevel.toUpperCase()} demand) • ${seasonInfo.reason}
+              </p>
+            </div>
+            <span class="badge badge-demo">Estimate based on travel cycles</span>
+          </div>
+
+          <!-- 3-Month Projection Grid -->
+          <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-3); margin-top: var(--space-4);">
+            ${next3Months.map(m => `
+              <div style="background-color: var(--color-bg); padding: var(--space-3); border-radius: var(--radius-md); border-left: 4px solid ${m.demandLevel === 'low' ? '#10B981' : (m.demandLevel === 'high' ? '#EF4444' : '#F59E0B')};">
+                <div class="flex-between" style="align-items: center;">
+                  <strong>${m.monthName}</strong>
+                  ${renderSeasonBadgeHTML(m.demandLevel, 'EN')}
+                </div>
+                <p style="margin: 4px 0 0; font-size: var(--font-size-xs); color: var(--color-text-muted); line-height: 1.4;">
+                  ${m.reason}
+                </p>
+              </div>
+            `).join('')}
+          </div>
+
+          <!-- Host Strategic Suggestion -->
+          <div style="background-color: #F0FDF4; border-left: 4px solid #16A34A; padding: var(--space-3) var(--space-4); border-radius: var(--radius-sm); margin-top: var(--space-4);">
+            <strong style="color: #15803D;">💡 Revenue Opportunity Suggestion:</strong>
+            <p style="margin: 2px 0 0; font-size: var(--font-size-xs); color: #166534; line-height: 1.5;">
+              ${hasLowDemandUpcoming
+                ? `Upcoming months include quiet low-demand periods. Use the <strong>Off-Season Offer Builder</strong> below to publish an advance discount and attract early travellers.`
+                : `Upcoming months have strong demand. Maintain your standard rates and prioritize early confirmations.`
+              }
+            </p>
           </div>
         </div>
       </section>
@@ -686,8 +742,11 @@ export function renderOwnerView() {
     });
   }
 
-  // Initial mount with preloaded seed reviews
-  reviewsManager.loadSeedReviews().then(() => {
+  // Initial mount with preloaded seed reviews and seasons data
+  Promise.all([
+    reviewsManager.loadSeedReviews(),
+    loadSeasonsData()
+  ]).then(() => {
     renderView();
   }).catch(() => {
     renderView();

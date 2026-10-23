@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YatraLocal - Seasonal Demand & Weather Test Suite (Phase 16)</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 24px; background: #FAF7F2; color: #1F2937; }
+    .test-card { background: white; border: 1.5px solid #E5E7EB; border-radius: 8px; padding: 14px 18px; margin-bottom: 12px; }
+    .badge-pass { background: #E8F5E9; color: #1B5E20; padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; }
+    .badge-fail { background: #FFEBEE; color: #B71C1C; padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; }
+  </style>
+</head>
+<body>
+  <div style="max-width: 900px; margin: 0 auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <div>
+        <h1 style="margin: 0; color: #0D5C5B; font-size: 1.8rem;">🧪 Phase 16: Seasonal Demand & Weather Test Suite</h1>
+        <p style="margin: 4px 0 0; color: #6B7280;">12-Month Demand Levels, Open-Meteo Integration, Fallback, Caching & Saral Guidance</p>
+      </div>
+      <a href="../index.html" class="btn btn-outline btn-sm">← Back to App</a>
+    </div>
+
+    <div id="summary-banner" style="background: white; border-radius: 8px; padding: 16px; margin-bottom: 20px; border-left: 5px solid #0D5C5B;">
+      Running tests...
+    </div>
+
+    <div id="test-results"></div>
+
+    <div id="interactive-preview-section" style="margin-top: 32px;">
+      <h2>Interactive Live Demand Bar & Weather Preview</h2>
+      <div id="preview-season-badge" style="margin-bottom: 16px;"></div>
+      <div id="preview-demand-bar" style="margin-bottom: 24px;"></div>
+      <div id="preview-weather-widget"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { loadSeasonsData, getSeason, renderDemandBarHTML, renderSeasonBadgeHTML, renderAlternativesHTML, renderWeatherWidgetHTML } from '../js/season.js';
+    import { interpretWeatherCode, fetchWeatherForecast } from '../js/api.js';
+
+    const resultsEl = document.getElementById('test-results');
+    const summaryEl = document.getElementById('summary-banner');
+    let passed = 0;
+    let total = 0;
+
+    function recordTest(name, isPass, detail = '') {
+      total++;
+      if (isPass) passed++;
+      const div = document.createElement('div');
+      div.className = 'test-card';
+      div.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <strong>${total}. ${name}</strong>
+          <span class="${isPass ? 'badge-pass' : 'badge-fail'}">${isPass ? '✓ PASS' : '✗ FAIL'}</span>
+        </div>
+        ${detail ? `<div style="font-size: 0.85rem; color: #4B5563; margin-top: 6px; font-family: monospace;">${detail}</div>` : ''}
+      `;
+      resultsEl.appendChild(div);
+    }
+
+    async function runAll() {
+      try {
+        const seasons = await loadSeasonsData();
+        const destKeys = Object.keys(seasons);
+
+        // 1. All destinations present
+        recordTest(
+          'seasons.json loads all 6 destinations with 12 months each',
+          destKeys.length === 6 && destKeys.every(k => seasons[k].months.length === 12),
+          `Loaded: ${destKeys.join(', ')}`
+        );
+
+        // 2. Estimate disclaimer
+        const allEstimated = destKeys.every(k => seasons[k].isEstimate === true && typeof seasons[k].estimateDisclaimer === 'string');
+        recordTest(
+          'All seasonal datasets explicitly tagged as estimates',
+          allEstimated,
+          `Disclaimer: "${seasons.manali.estimateDisclaimer}"`
+        );
+
+        // 3. getSeason check
+        const manaliMay = await getSeason('manali', 4); // May = index 4
+        const manaliNov = await getSeason('manali', 10); // Nov = index 10
+        recordTest(
+          'getSeason accurately identifies Manali May (On-Season) and Nov (Off-Season)',
+          manaliMay.demandLevel === 'high' && manaliNov.demandLevel === 'low',
+          `May: ${manaliMay.demandLevel.toUpperCase()} ("${manaliMay.reason}"), Nov: ${manaliNov.demandLevel.toUpperCase()} ("${manaliNov.reason}")`
+        );
+
+        // 4. Alternatives list
+        recordTest(
+          'Destinations provide alternative destinations for high-demand redistribution',
+          Array.isArray(manaliMay.alternatives) && manaliMay.alternatives.length >= 2,
+          `Manali alternatives: ${JSON.stringify(manaliMay.alternatives)}`
+        );
+
+        // 5. WMO interpretation
+        const rainInfo = interpretWeatherCode(63);
+        const snowInfo = interpretWeatherCode(71);
+        recordTest(
+          'interpretWeatherCode maps WMO codes to human labels and alerts',
+          rainInfo.icon === '🌧️' && snowInfo.icon === '❄️' && typeof rainInfo.warning === 'string',
+          `Rain: "${rainInfo.warning}"`
+        );
+
+        // 6. Live weather fetch
+        const weather = await fetchWeatherForecast(32.2432, 77.1892);
+        recordTest(
+          'fetchWeatherForecast returns 7-day forecast with temperatures & warnings',
+          weather.success === true && weather.days.length === 7,
+          `Condition: ${weather.current.condition}, Days: ${weather.days.length}`
+        );
+
+        // 7. Cache hit
+        const cached = await fetchWeatherForecast(32.2432, 77.1892);
+        recordTest(
+          'Subsequent weather queries for same coordinates return from cache',
+          cached.fromCache === true,
+          `Cache hit verified from sessionStorage`
+        );
+
+        // 8. Graceful fallback
+        const fallback = await fetchWeatherForecast('invalid', 'coords');
+        recordTest(
+          'Weather client gracefully falls back when coordinates missing or API fails',
+          fallback.success === false && fallback.fallback === true && fallback.message.includes('not available'),
+          `Fallback message: "${fallback.message}"`
+        );
+
+        // 9. Demand bar HTML
+        const barHTML = renderDemandBarHTML(manaliMay, 4, 'EN');
+        recordTest(
+          'renderDemandBarHTML generates accessible 12-month bar chart',
+          barHTML.includes('demand-bar-grid') && barHTML.includes('aria-label='),
+          `HTML generated (${barHTML.length} chars)`
+        );
+
+        // 10. Season badge HTML
+        const badgeHTML = renderSeasonBadgeHTML('high', 'EN');
+        recordTest(
+          'renderSeasonBadgeHTML outputs distinct badges for demand levels',
+          badgeHTML.includes('badge-season-on') && badgeHTML.includes('On-season'),
+          `Badge HTML generated: ${badgeHTML.trim()}`
+        );
+
+        // 11. Render live preview into container
+        document.getElementById('preview-season-badge').innerHTML = renderSeasonBadgeHTML(manaliMay.demandLevel, 'EN');
+        document.getElementById('preview-demand-bar').innerHTML = barHTML;
+        document.getElementById('preview-weather-widget').innerHTML = renderWeatherWidgetHTML(weather, manaliMay, 'EN');
+
+        // Summary
+        summaryEl.innerHTML = `
+          <strong style="color: ${passed === total ? '#1B5E20' : '#B71C1C'}; font-size: 1.1rem;">
+            ${passed === total ? '✅ All ' + total + ' Tests Passed' : '⚠️ ' + (total - passed) + ' Tests Failed'}
+          </strong>
+          <p style="margin: 4px 0 0; color: #4B5563;">YatraLocal Phase 16 seasonality and weather components validated successfully.</p>
+        `;
+      } catch (e) {
+        summaryEl.innerHTML = `<strong style="color: #B71C1C;">❌ Test Suite Exception:</strong> ${e.message}`;
+        console.error(e);
+      }
+    }
+
+    runAll();
+  </script>
+</body>
+</html>

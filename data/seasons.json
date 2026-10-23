@@ -1,0 +1,134 @@
+[
+  {
+    "destinationId": "manali",
+    "destinationName": "Manali",
+    "state": "Himachal Pradesh",
+    "isEstimate": true,
+    "estimateDisclaimer": "Seasonality is an estimate based on general travel patterns, not live booking data.",
+    "alternatives": ["rishikesh", "munnar"],
+    "months": [
+      { "month": 0, "name": "January", "demandLevel": "high", "reason": "Peak snowfall & winter snow sports season" },
+      { "month": 1, "name": "February", "demandLevel": "medium", "reason": "Late winter chill, moderate crowds" },
+      { "month": 2, "name": "March", "demandLevel": "low", "reason": "Shoulder transition, pleasant orchard thaws" },
+      { "month": 3, "name": "April", "demandLevel": "medium", "reason": "Spring blooming and apple blossoms" },
+      { "month": 4, "name": "May", "demandLevel": "high", "reason": "Peak summer escape from northern plains" },
+      { "month": 5, "name": "June", "demandLevel": "high", "reason": "Peak summer vacation rush, congested Mall Road" },
+      { "month": 6, "name": "July", "demandLevel": "low", "reason": "Monsoon arrival, high rainfall caution" },
+      { "month": 7, "name": "August", "demandLevel": "low", "reason": "Heavy monsoon and landslide warnings" },
+      { "month": 8, "name": "September", "demandLevel": "medium", "reason": "Post-monsoon freshness, apple harvest begins" },
+      { "month": 9, "name": "October", "demandLevel": "high", "reason": "Dussehra festival & clear autumn mountain views" },
+      { "month": 10, "name": "November", "demandLevel": "low", "reason": "Quiet pre-winter lull, lowest lodging rates" },
+      { "month": 11, "name": "December", "demandLevel": "high", "reason": "Christmas & New Year holiday snow rush" }
+    ]
+  },
+  {
+    "destinationId": "varanasi",
+    "destinationName": "Varanasi",
+    "state": "Uttar Pradesh",
+    "isEstimate": true,
+    "estimateDisclaimer": "Seasonality is an estimate based on general travel patterns, not live booking data.",
+    "alternatives": ["rishikesh", "hampi"],
+    "months": [
+      { "month": 0, "name": "January", "demandLevel": "high", "reason": "Pleasant cool weather, Makar Sankranti pilgrims" },
+      { "month": 1, "name": "February", "demandLevel": "high", "reason": "Maha Shivratri celebrations & Ganga ghat walks" },
+      { "month": 2, "name": "March", "demandLevel": "medium", "reason": "Holi celebrations, rising daytime temperatures" },
+      { "month": 3, "name": "April", "demandLevel": "low", "reason": "Dry pre-summer heat begins" },
+      { "month": 4, "name": "May", "demandLevel": "low", "reason": "Intense northern summer heat exceeding 42°C" },
+      { "month": 5, "name": "June", "demandLevel": "low", "reason": "Peak summer heat before monsoon onset" },
+      { "month": 6, "name": "July", "demandLevel": "medium", "reason": "Shravan month devotees, high humidity" },
+      { "month": 7, "name": "August", "demandLevel": "medium", "reason": "Shravan Somwar pilgrims, high Ganga water levels" },
+      { "month": 8, "name": "September", "demandLevel": "low", "reason": "Monsoon departure, quieter ghat evenings" },
+      { "month": 9, "name": "October", "demandLevel": "high", "reason": "Navratri festivities, pleasant autumn evenings" },
+      { "month": 10, "name": "November", "demandLevel": "high", "reason": "Dev Deepawali festival with 1 million earthen lamps" },
+      { "month": 11, "name": "December", "demandLevel": "high", "reason": "Winter holiday season, quiet morning mist on river" }
+    ]
+  },
+  {
+    "destinationId": "jaipur",
+    "destinationName": "Jaipur",
+    "state": "Rajasthan",
+    "isEstimate": true,
+    "estimateDisclaimer": "Seasonality is an estimate based on general travel patterns, not live booking data.",
+    "alternatives": ["hampi", "rishikesh"],
+    "months": [
+      { "month": 0, "name": "January", "demandLevel": "high", "reason": "Jaipur Literature Festival & International Kite Festival" },
+      { "month": 1, "name": "February", "demandLevel": "high", "reason": "Pleasant sunny days for fort exploring" },
+      { "month": 2, "name": "March", "demandLevel": "medium", "reason": "Elephant Festival & spring transition" },
+      { "month": 3, "name": "April", "demandLevel": "low", "reason": "Desert summer begins, warm afternoons" },
+      { "month": 4, "name": "May", "demandLevel": "low", "reason": "Intense summer heat, major off-peak discounts" },
+      { "month": 5, "name": "June", "demandLevel": "low", "reason": "Pre-monsoon heatwave, quiet heritage streets" },
+      { "month": 6, "name": "July", "demandLevel": "medium", "reason": "Teej festival celebrations, brief rains" },
+      { "month": 7, "name": "August", "demandLevel": "medium", "reason": "Lush Aravalli hills, heritage photography" },
+      { "month": 8, "name": "September", "demandLevel": "medium", "reason": "Pleasant shoulder season before winter rush" },
+      { "month": 9, "name": "October", "demandLevel": "high", "reason": "Diwali preparations, onset of pleasant royal season" },
+      { "month": 10, "name": "November", "demandLevel": "high", "reason": "Peak wedding & cultural festival tourism" },
+      { "month": 11, "name": "December", "demandLevel": "high", "reason": "Peak winter holiday season, bustling bazaars" }
+    ]
+  },
+  {
+    "destinationId": "rishikesh",
+    "destinationName": "Rishikesh",
+    "state": "Uttarakhand",
+    "isEstimate": true,
+    "estimateDisclaimer": "Seasonality is an estimate based on general travel patterns, not live booking data.",
+    "alternatives": ["munnar", "manali"],
+    "months": [
+      { "month": 0, "name": "January", "demandLevel": "medium", "reason": "Crisp winter mornings, calm ashram retreats" },
+      { "month": 1, "name": "February", "demandLevel": "high", "reason": "Pleasant weather, beginning of river rafting" },
+      { "month": 2, "name": "March", "demandLevel": "high", "reason": "International Yoga Festival & peak rafting" },
+      { "month": 3, "name": "April", "demandLevel": "high", "reason": "Warm sunny days, active river beaches" },
+      { "month": 4, "name": "May", "demandLevel": "high", "reason": "Summer weekend getaways, evening Ganga Aarti" },
+      { "month": 5, "name": "June", "demandLevel": "medium", "reason": "End of river rafting season before monsoon" },
+      { "month": 6, "name": "July", "demandLevel": "low", "reason": "Monsoon rains, Kanwar Yatra pilgrim traffic" },
+      { "month": 7, "name": "August", "demandLevel": "low", "reason": "Ganga in spate, river activities closed" },
+      { "month": 8, "name": "September", "demandLevel": "medium", "reason": "Post-monsoon resumption of quiet retreats" },
+      { "month": 9, "name": "October", "demandLevel": "high", "reason": "Rafting reopens, autumn yoga season" },
+      { "month": 10, "name": "November", "demandLevel": "high", "reason": "Clear Himalayan skies, peak camping season" },
+      { "month": 11, "name": "December", "demandLevel": "medium", "reason": "Peaceful winter meditation retreats" }
+    ]
+  },
+  {
+    "destinationId": "hampi",
+    "destinationName": "Hampi",
+    "state": "Karnataka",
+    "isEstimate": true,
+    "estimateDisclaimer": "Seasonality is an estimate based on general travel patterns, not live booking data.",
+    "alternatives": ["jaipur", "varanasi"],
+    "months": [
+      { "month": 0, "name": "January", "demandLevel": "high", "reason": "Hampi Utsav cultural festival & pleasant walking weather" },
+      { "month": 1, "name": "February", "demandLevel": "medium", "reason": "Warm sunny boulder walks before summer" },
+      { "month": 2, "name": "March", "demandLevel": "low", "reason": "Rising Deccan heat, quiet ruins" },
+      { "month": 3, "name": "April", "demandLevel": "low", "reason": "Extreme heat on stone monuments exceeding 40°C" },
+      { "month": 4, "name": "May", "demandLevel": "low", "reason": "Peak summer heat, lowest accommodation rates" },
+      { "month": 5, "name": "June", "demandLevel": "low", "reason": "Pre-monsoon dry heat and breeze" },
+      { "month": 6, "name": "July", "demandLevel": "medium", "reason": "Tungabhadra river fills, green boulder landscapes" },
+      { "month": 7, "name": "August", "demandLevel": "medium", "reason": "Lush monsoon moss on heritage ruins" },
+      { "month": 8, "name": "September", "demandLevel": "medium", "reason": "Clean air, pleasant post-monsoon sunsets" },
+      { "month": 9, "name": "October", "demandLevel": "high", "reason": "Pleasant morning temperatures return" },
+      { "month": 10, "name": "November", "demandLevel": "high", "reason": "Ideal weather for cycling through royal enclosures" },
+      { "month": 11, "name": "December", "demandLevel": "high", "reason": "Peak heritage travel & boulder climber season" }
+    ]
+  },
+  {
+    "destinationId": "munnar",
+    "destinationName": "Munnar",
+    "state": "Kerala",
+    "isEstimate": true,
+    "estimateDisclaimer": "Seasonality is an estimate based on general travel patterns, not live booking data.",
+    "alternatives": ["manali", "rishikesh"],
+    "months": [
+      { "month": 0, "name": "January", "demandLevel": "high", "reason": "Crisp winter mist, tea estate trekking" },
+      { "month": 1, "name": "February", "demandLevel": "medium", "reason": "Pleasant hill breeze, flower blossoming" },
+      { "month": 2, "name": "March", "demandLevel": "medium", "reason": "Mild sunny days, clear Anamudi views" },
+      { "month": 3, "name": "April", "demandLevel": "high", "reason": "Summer holiday retreat from humid lowlands" },
+      { "month": 4, "name": "May", "demandLevel": "high", "reason": "Peak summer mountain escape for South India" },
+      { "month": 5, "name": "June", "demandLevel": "low", "reason": "Southwest monsoon onset, heavy mist and rains" },
+      { "month": 6, "name": "July", "demandLevel": "low", "reason": "Heavy monsoon rains, water-drenched tea valleys" },
+      { "month": 7, "name": "August", "demandLevel": "low", "reason": "Heavy downpours, waterfall surges" },
+      { "month": 8, "name": "September", "demandLevel": "high", "reason": "Onam celebrations, lush verdant tea slopes" },
+      { "month": 9, "name": "October", "demandLevel": "medium", "reason": "Pleasant autumn, quiet spice plantation walks" },
+      { "month": 10, "name": "November", "demandLevel": "high", "reason": "Cool post-monsoon weather, peak trekking" },
+      { "month": 11, "name": "December", "demandLevel": "high", "reason": "Christmas & New Year tea plantation holiday rush" }
+    ]
+  }
+]

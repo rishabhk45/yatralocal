@@ -8,6 +8,7 @@
 import { store } from '../js/store.js';
 import { YatraMap, calculateDistanceKm } from '../js/map.js';
 import { reviewsManager, renderReviewsContainer } from '../js/reviews.js';
+import { loadSeasonsData, getSeason, renderSeasonBadgeHTML } from '../js/season.js';
 
 export function renderStaysView() {
   const container = document.createElement('div');
@@ -28,6 +29,7 @@ export function renderStaysView() {
   const currentDays = parseInt(prefs.days, 10) || 3;
   const currentTravellers = parseInt(prefs.travellers, 10) || 2;
   const userBudget = parseInt(prefs.budget, 10) || 8000;
+  const season = getSeason(currentDest, prefs.travelMonth);
 
   // View Skeleton
   container.innerHTML = `
@@ -83,6 +85,27 @@ export function renderStaysView() {
         <span class="badge badge-local">Supports a Local Family</span>
       </div>
     </div>
+
+    <!-- Off-Season Special Host Deals Banner (Phase 16) -->
+    ${season.isOffSeason ? `
+      <div class="card" style="margin-bottom: var(--space-6); background: linear-gradient(135deg, #ECFDF5 0%, #F0FDF4 100%); border-left: 4px solid #10B981; padding: var(--space-4);">
+        <div class="flex-between" style="flex-wrap: wrap; gap: var(--space-2); align-items: center;">
+          <div>
+            <div class="flex gap-2" style="align-items: center; margin-bottom: 2px;">
+              <span class="badge badge-season-off">🟢 Off-Season Deals Active</span>
+              <span class="badge badge-demo">Sample / Demo Offers</span>
+            </div>
+            <strong style="color: #065F46; font-size: 1rem;">🌱 Direct Host Off-Peak Savings in ${season.destinationName} (${season.monthName})</strong>
+            <p style="font-size: var(--font-size-xs); color: #047857; margin: 2px 0 0;">
+              Local hosts offer up to 20%–35% lower rates during off-peak periods. 100% of your stay fees support village families directly.
+            </p>
+          </div>
+          <span class="badge badge-verified" style="background-color: #059669; color: white;">
+            ✓ Book in Off-Season
+          </span>
+        </div>
+      </div>
+    ` : ''}
 
     <!-- Tab Bar: Stays vs Guides & View Switcher -->
     <div class="flex-between" style="flex-wrap: wrap; gap: var(--space-3); margin-bottom: var(--space-6); align-items: center;">
@@ -218,13 +241,14 @@ export function renderStaysView() {
     </div>
   `;
 
-  // Fetch host data and seed reviews, then initialize interactions immediately
+  // Fetch host data, seed reviews, and seasonal data, then initialize interactions immediately
   Promise.all([
     fetch('data/hosts.json').then((resp) => {
       if (!resp.ok) throw new Error('Could not load hosts dataset');
       return resp.json();
     }),
-    reviewsManager.loadSeedReviews()
+    reviewsManager.loadSeedReviews(),
+    loadSeasonsData()
   ])
     .then(([hostsData]) => {
       setupStaysAndGuidesApp(container, hostsData, currentDest, currentDays, currentTravellers, userBudget);

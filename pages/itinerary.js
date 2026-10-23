@@ -7,6 +7,8 @@
 import { store } from '../js/store.js';
 import { llmPlanProvider } from '../js/llmProvider.js';
 import { YatraMap } from '../js/map.js';
+import { loadSeasonsData, getSeason, renderSeasonBadgeHTML, renderDemandBarHTML, renderAlternativesHTML, renderWeatherWidgetHTML } from '../js/season.js';
+import { fetchWeatherForecast } from '../js/api.js';
 
 export function renderItineraryView() {
   const container = document.createElement('div');
@@ -71,6 +73,7 @@ export function renderItineraryView() {
         accessibility: {}
       };
 
+      await loadSeasonsData();
       const itineraryData = currentState.itinerary || await llmPlanProvider.getItinerary(prefs);
       store.setState({ itinerary: itineraryData });
 
@@ -106,6 +109,12 @@ function buildItineraryHTML(data) {
   const { destination, days, totalCost, userBudget, budgetStatus, breakdown, whyPlan } = data;
   const isOverBudget = budgetStatus === 'over-budget';
   const budgetRatio = Math.min(100, Math.round((totalCost / userBudget) * 100));
+
+  const state = store.getState();
+  const prefs = state.preferences || {};
+  const currentMonth = typeof prefs.travelMonth === 'number' ? prefs.travelMonth : new Date().getMonth();
+  const destId = destination.id || 'manali';
+  const seasonInfo = getSeason(destId, currentMonth);
 
   return `
     <!-- Top Stepper -->
@@ -192,6 +201,83 @@ function buildItineraryHTML(data) {
         <span>ℹ️</span>
         <span><strong>AI suggestions — verify before travelling.</strong> All candidate places, activities, and prices are verified against authentic local records.</span>
       </div>
+    </section>
+
+    <!-- Seasonal Demand Insights & Weather Section (Phase 16) -->
+    <section class="card flow" id="itinerary-season-card" style="margin-bottom: var(--space-8); border: 2px solid ${seasonInfo.isOnSeason ? '#FCA5A5' : (seasonInfo.isOffSeason ? '#86EFAC' : '#FCD34D')}; background: #FFFFFF; padding: var(--space-5);">
+      <div class="flex-between" style="align-items: flex-start; flex-wrap: wrap; gap: var(--space-2);">
+        <div>
+          <div class="flex gap-2" style="align-items: center; margin-bottom: 4px;">
+            ${renderSeasonBadgeHTML(seasonInfo.demandLevel, state.language || 'EN')}
+            <span style="font-size: var(--font-size-xs); font-weight: 700; color: var(--color-text-muted);">
+              ${seasonInfo.monthName} in ${destination.name}
+            </span>
+          </div>
+          <h2 style="margin: 0; font-size: 1.25rem; color: var(--color-primary);">
+            ${seasonInfo.isOnSeason ? '⚠️ High Demand Season: Plan Carefully' : (seasonInfo.isOffSeason ? '🌱 Off-Season Advantage: Fewer Crowds & Deals' : '🟡 Shoulder Season: Balanced Travel')}
+          </h2>
+          <p style="margin: 4px 0 0; color: var(--color-text-muted); font-size: var(--font-size-xs);">
+            ${seasonInfo.reason} • <em>${seasonInfo.estimateDisclaimer}</em>
+          </p>
+        </div>
+
+        <div class="flex gap-2" style="align-items: center;">
+          <label for="itinerary-month-select" style="font-size: var(--font-size-xs); font-weight: 700; color: var(--color-text-muted);">Compare Month:</label>
+          <select id="itinerary-month-select" class="form-select" style="padding: 4px 8px; font-size: 0.8rem; min-height: 32px;">
+            ${[
+              'January', 'February', 'March', 'April', 'May', 'June',
+              'July', 'August', 'September', 'October', 'November', 'December'
+            ].map((mName, idx) => `
+              <option value="${idx}" ${idx === currentMonth ? 'selected' : ''}>${mName}</option>
+            `).join('')}
+          </select>
+        </div>
+      </div>
+
+      <!-- 12-Month Demand Bar -->
+      <div id="itinerary-demand-bar-container" style="margin-top: var(--space-3);">
+        ${renderDemandBarHTML(seasonInfo, currentMonth, state.language || 'EN')}
+      </div>
+
+      <!-- OFF-SEASON specific callout -->
+      ${seasonInfo.isOffSeason ? `
+        <div style="background-color: #F0FDF4; border-left: 4px solid #16A34A; padding: var(--space-3) var(--space-4); border-radius: var(--radius-sm); margin-top: var(--space-4);">
+          <div class="flex-between" style="flex-wrap: wrap; gap: var(--space-2); align-items: center;">
+            <div>
+              <strong style="color: #15803D;">🌱 Why Off-Season Travels are Better:</strong>
+              <p style="margin: 2px 0 0; font-size: var(--font-size-xs); color: #166534;">
+                Quieter village trails, zero waiting queues at viewpoints, and verified family homestays offering off-peak discounts.
+              </p>
+            </div>
+            <a href="#/stays" class="btn btn-sm btn-primary" style="background-color: #15803D; border-color: #166534; font-size: 0.8rem; padding: 6px 14px;">
+              View Off-Season Host Offers ➔
+            </a>
+          </div>
+        </div>
+      ` : ''}
+
+      <!-- ON-SEASON specific callout with Live Weather & Alternatives -->
+      ${seasonInfo.isOnSeason ? `
+        <div style="margin-top: var(--space-4);">
+          <!-- Live Weather Container -->
+          <div id="itinerary-weather-container">
+            <div class="skeleton skeleton-rect" style="height: 100px; border-radius: 8px;"></div>
+          </div>
+
+          <!-- Crowd Tips -->
+          <div style="background-color: #FFFBEB; border-left: 4px solid #F59E0B; padding: var(--space-3) var(--space-4); border-radius: var(--radius-sm); margin-top: var(--space-4);">
+            <strong style="color: #B45309;">⚠️ Crowd Management Recommendations:</strong>
+            <ul style="margin: 4px 0 0 16px; padding: 0; font-size: var(--font-size-xs); color: #92400E; line-height: 1.5;">
+              <li><strong>Book stays & licensed guides early</strong> — small village homestays fill rapidly in high-demand months.</li>
+              <li><strong>Start sightseeing by 8:00 AM</strong> — experience serenity before commercial bus groups arrive.</li>
+              <li><strong>Avoid main town transit choke-points</strong> between 5:00 PM and 8:30 PM.</li>
+            </ul>
+          </div>
+
+          <!-- Less Crowded Alternatives -->
+          <div id="itinerary-alternatives-container"></div>
+        </div>
+      ` : ''}
     </section>
 
     <!-- "Why This Plan" Explanation Callout -->
@@ -585,6 +671,74 @@ function bindItineraryInteractions(container, itineraryData) {
         fitAllBtn.addEventListener('click', () => {
           yatraMap.fitAll();
         });
+      }
+    }
+  }
+
+  // Seasonality Month Switcher & Live Weather Handlers (Phase 16)
+  const monthSelect = container.querySelector('#itinerary-month-select');
+  if (monthSelect) {
+    monthSelect.addEventListener('change', () => {
+      const newMonth = parseInt(monthSelect.value, 10);
+      const curState = store.getState();
+      const updatedPrefs = { ...(curState.preferences || {}), travelMonth: newMonth };
+      store.setState({ preferences: updatedPrefs });
+      container.innerHTML = buildItineraryHTML(itineraryData);
+      bindItineraryInteractions(container, itineraryData);
+    });
+  }
+
+  const curPrefMonth = store.getState().preferences?.travelMonth !== undefined
+    ? store.getState().preferences.travelMonth
+    : new Date().getMonth();
+  const currentSeason = getSeason(itineraryData.destination?.id || 'manali', curPrefMonth);
+
+  if (currentSeason.isOnSeason) {
+    const weatherBox = container.querySelector('#itinerary-weather-container');
+    const alternativesBox = container.querySelector('#itinerary-alternatives-container');
+
+    // Populate alternative destinations
+    fetch('data/destinations.json')
+      .then(r => r.json())
+      .then(allDests => {
+        if (alternativesBox) {
+          alternativesBox.innerHTML = renderAlternativesHTML(currentSeason.alternatives, allDests, store.getState().language || 'EN');
+        }
+      })
+      .catch(() => {});
+
+    // Only fetch live weather if travel month is current month
+    const isCurrentMonth = curPrefMonth === new Date().getMonth();
+    if (isCurrentMonth) {
+      const lat = itineraryData.destination?.lat || itineraryData.destination?.center?.lat || 32.2432;
+      const lng = itineraryData.destination?.lng || itineraryData.destination?.center?.lng || 77.1892;
+
+      fetchWeatherForecast(lat, lng)
+        .then(weather => {
+          if (weatherBox) {
+            weatherBox.innerHTML = renderWeatherWidgetHTML(weather, store.getState().language || 'EN');
+          }
+        })
+        .catch(() => {
+          if (weatherBox) {
+            weatherBox.innerHTML = renderWeatherWidgetHTML({ fallback: true }, store.getState().language || 'EN');
+          }
+        });
+    } else {
+      if (weatherBox) {
+        weatherBox.innerHTML = `
+          <div style="background-color: #F0F9FF; border: 1.5px solid #BAE6FD; border-radius: var(--radius-md); padding: var(--space-3); margin-top: var(--space-3);">
+            <div class="flex gap-2" style="align-items: center;">
+              <span style="font-size: 1.25rem;">🗓️</span>
+              <div>
+                <strong style="color: #0369A1; font-size: var(--font-size-xs);">Future High-Demand Travel (${currentSeason.monthName})</strong>
+                <p style="margin: 2px 0 0; color: #0C4A6E; font-size: 0.75rem;">
+                  Live 7-day weather is fetched for current travels. For ${currentSeason.monthName}, expect: ${currentSeason.reason}.
+                </p>
+              </div>
+            </div>
+          </div>
+        `;
       }
     }
   }

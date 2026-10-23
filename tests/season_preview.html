@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YatraLocal - Seasonality Preview</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <style>
+    body {
+      background: var(--color-background, #FAF7F2);
+      padding: 24px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    .preview-container {
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="preview-container" id="app">
+    <div id="target-view">Loading preview...</div>
+  </div>
+
+  <script type="module">
+    import { loadSeasonsData, getSeason, renderDemandBarHTML, renderSeasonBadgeHTML, renderAlternativesHTML, renderWeatherWidgetHTML } from '../js/season.js';
+    import { fetchWeatherForecast } from '../js/api.js';
+
+    const params = new URLSearchParams(window.location.search);
+    const view = params.get('view') || 'demand_bar';
+    const target = document.getElementById('target-view');
+
+    async function init() {
+      await loadSeasonsData();
+
+      if (view === 'demand_bar') {
+        // Show Itinerary Seasonality Section with 12-month demand bar for Manali
+        const seasonInfo = await getSeason('manali', 4); // May = High Demand
+        target.innerHTML = `
+          <div style="margin-bottom: 16px;">
+            <span class="badge badge-verified">✨ AI-Generated (Gemini)</span>
+            <span class="badge badge-verified">Crowd-Smart Route</span>
+            <h1 style="margin: 8px 0 4px; font-size: 2rem;">Manali Itinerary (3 Days)</h1>
+            <p style="color: #6B7280; margin: 0;">Himachal Pradesh • High Crowd Destination</p>
+          </div>
+
+          <section class="card flow" id="itinerary-season-card" style="border: 2px solid #FCA5A5; background: #FFFFFF; padding: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px;">
+              <div>
+                <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
+                  ${renderSeasonBadgeHTML('high', 'EN')}
+                  <span style="font-size: 0.85rem; font-weight: 700; color: #4B5563;">May in Manali</span>
+                </div>
+                <h2 style="margin: 0; font-size: 1.35rem; color: #0D5C5B;">
+                  ⚠️ High Demand Season: Plan Carefully
+                </h2>
+                <p style="margin: 4px 0 0; color: #4B5563; font-size: 0.85rem;">
+                  Peak summer escape from northern plains • <em>Seasonality is an estimate based on general travel patterns, not live booking data.</em>
+                </p>
+              </div>
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <label style="font-size: 0.85rem; font-weight: 700; color: #4B5563;">Compare Month:</label>
+                <select class="form-select" style="padding: 4px 8px; font-size: 0.85rem;">
+                  <option selected>May (Peak)</option>
+                  <option>November (Off-season)</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="margin-top: 16px;">
+              ${renderDemandBarHTML(seasonInfo, 4, 'EN')}
+            </div>
+
+            <div style="background-color: #FEF2F2; border-left: 4px solid #EF4444; padding: 12px 16px; border-radius: 4px; margin-top: 16px;">
+              <strong style="color: #B91C1C;">⚠️ Peak Season Advisory:</strong>
+              <p style="margin: 4px 0 0; font-size: 0.85rem; color: #991B1B;">
+                Popular spots (Solang, Mall Road) experience heavy traffic and inflated commercial rates. Consider starting early before 7:30 AM or visiting our recommended offbeat hamlets below.
+              </p>
+            </div>
+          </section>
+        `;
+      } else if (view === 'weather_onseason') {
+        // High-demand season with live weather forecast and alternative destinations
+        const seasonInfo = await getSeason('manali', 4);
+        const weather = await fetchWeatherForecast(32.2432, 77.1892);
+        const altHTML = await renderAlternativesHTML(seasonInfo.alternatives, 'EN');
+
+        target.innerHTML = `
+          <div style="max-width: 900px; margin: 0 auto;">
+            <h1 style="color: #0D5C5B; font-size: 1.8rem; margin-bottom: 8px;">Manali (May Peak Season) — Live Weather & Offbeat Alternatives</h1>
+            <p style="color: #4B5563; margin-bottom: 20px;">Open-Meteo 7-day live weather conditions, safety advisories and crowd-redistribution alternatives.</p>
+            
+            <div style="margin-bottom: 24px;">
+              ${renderWeatherWidgetHTML(weather, seasonInfo, 'EN')}
+            </div>
+
+            <div style="background: white; border-radius: 8px; padding: 20px; border: 1.5px solid #E5E7EB;">
+              <h3 style="margin-top: 0; color: #0D5C5B;">🌱 Less Crowded Alternatives to Manali</h3>
+              <p style="font-size: 0.85rem; color: #6B7280; margin-top: -8px;">To avoid peak queues and support local communities, explore these serene destinations:</p>
+              ${altHTML}
+            </div>
+          </div>
+        `;
+      } else if (view === 'owner_outlook') {
+        // Owner Dashboard Season Outlook card
+        const currentMonthIdx = new Date().getMonth();
+        const seasonInfo = await getSeason('manali', currentMonthIdx);
+        const monthsList = [
+          'January', 'February', 'March', 'April', 'May', 'June',
+          'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+
+        let outlookHTML = '';
+        for (let i = 0; i < 4; i++) {
+          const mIdx = (currentMonthIdx + i) % 12;
+          const mSeason = await getSeason('manali', mIdx);
+          const isCurr = i === 0;
+          outlookHTML += `
+            <div style="background: #F9FAFB; border: 1.5px solid ${isCurr ? '#0D5C5B' : '#E5E7EB'}; border-radius: 6px; padding: 12px; position: relative;">
+              ${isCurr ? '<span style="position: absolute; top: -10px; right: 12px; background: #0D5C5B; color: white; font-size: 0.7rem; font-weight: bold; padding: 1px 6px; border-radius: 4px;">CURRENT</span>' : ''}
+              <div style="font-weight: bold; color: #1F2937; margin-bottom: 4px;">${monthsList[mIdx]}</div>
+              <div style="margin-bottom: 6px;">${renderSeasonBadgeHTML(mSeason.demandLevel, 'EN')}</div>
+              <div style="font-size: 0.8rem; color: #4B5563; line-height: 1.3;">${mSeason.reason}</div>
+            </div>
+          `;
+        }
+
+        target.innerHTML = `
+          <div style="max-width: 960px; margin: 0 auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+              <div>
+                <h1 style="color: #0D5C5B; margin: 0; font-size: 1.8rem;">Uncle Ramesh's Homestay — Host Dashboard</h1>
+                <p style="color: #6B7280; margin: 4px 0 0;">Old Manali, Himachal Pradesh • Verified Host</p>
+              </div>
+              <span class="badge badge-verified">Host ID: stay-manali-1</span>
+            </div>
+
+            <section class="card flow" id="owner-season-outlook" style="background: white; border: 1.5px solid #E5E7EB; border-radius: 8px; padding: 24px;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px;">
+                <div>
+                  <h2 style="margin: 0; font-size: 1.25rem; color: #0D5C5B;">📊 Season Demand Outlook (Next 4 Months)</h2>
+                  <p style="margin: 4px 0 0; color: #4B5563; font-size: 0.85rem;">
+                    Local travel patterns for Old Manali. Plan your inventory, special tariffs and guest hospitality ahead.
+                  </p>
+                </div>
+                <span class="badge badge-demo">General Estimate</span>
+              </div>
+
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 16px;">
+                ${outlookHTML}
+              </div>
+
+              <div style="background: #F0FDF4; border-left: 4px solid #16A34A; border-radius: 4px; padding: 12px 16px; margin-top: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                <div>
+                  <strong style="color: #15803D;">💡 Revenue Opportunity for Low-Demand Periods</strong>
+                  <p style="margin: 2px 0 0; font-size: 0.8rem; color: #166534;">
+                    Offering a 15–20% off-season discount attracts quiet remote workers, writers, and mindful elders.
+                  </p>
+                </div>
+                <button type="button" class="btn btn-primary btn-sm" onclick="alert('Demo: Discount published to YatraLocal travellers!')">
+                  🏷️ Publish 15% Off-Season Offer
+                </button>
+              </div>
+            </section>
+          </div>
+        `;
+      } else if (view === 'saral') {
+        // Saral Mode 360px mobile preview
+        document.body.classList.add('saral');
+        document.body.style.padding = '12px';
+        target.innerHTML = `
+          <div style="max-width: 360px; margin: 0 auto; background: white; border: 2px solid #0D5C5B; border-radius: 12px; padding: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <h1 style="font-size: 1.4rem; color: #0D5C5B; margin: 0;">सरल यात्रा</h1>
+              <span class="badge badge-verified" style="font-size: 0.8rem;">मनाली</span>
+            </div>
+
+            <div class="card flow" style="border: 2px solid #FCD34D; background: #FFFBEB; padding: 16px; border-radius: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                <span style="font-size: 1.5rem;">🔴</span>
+                <strong style="font-size: 1.15rem; color: #B45309;">भीड़ का मौसम (On-Season)</strong>
+              </div>
+              <p style="font-size: 1rem; color: #1F2937; line-height: 1.4; margin: 0 0 12px;">
+                "यह व्यस्त मौसम है। कमरे जल्दी बुक करें।"
+              </p>
+              <div style="font-size: 0.85rem; color: #6B7280; margin-bottom: 12px;">
+                English: "This is a busy season. Book early."
+              </div>
+              <button type="button" class="btn btn-primary" style="width: 100%; min-height: 48px; font-size: 1rem; font-weight: bold;">
+                🔊 Read Advice Aloud
+              </button>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>

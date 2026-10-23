@@ -2,6 +2,8 @@
   {
     "id": "manali",
     "name": "Manali",
+    "lat": 32.2432,
+    "lng": 77.1892,
     "state": "Himachal Pradesh",
     "crowdLevel": "High",
     "crowdBadge": "Crowded in Town • Peaceful in Hamlets",
@@ -174,6 +176,8 @@
   {
     "id": "jaipur",
     "name": "Jaipur",
+    "lat": 26.9124,
+    "lng": 75.7873,
     "state": "Rajasthan",
     "crowdLevel": "Moderate",
     "crowdBadge": "Moderate • Heritage Walking Areas",
@@ -345,6 +349,8 @@
   {
     "id": "varanasi",
     "name": "Varanasi",
+    "lat": 25.3176,
+    "lng": 82.9739,
     "state": "Uttar Pradesh",
     "crowdLevel": "High",
     "crowdBadge": "Dense Ghats • Calm Morning Boats",
@@ -518,6 +524,8 @@
   {
     "id": "rishikesh",
     "name": "Rishikesh",
+    "lat": 30.0869,
+    "lng": 78.2676,
     "state": "Uttarakhand",
     "crowdLevel": "Moderate",
     "crowdBadge": "Moderate • Serene Upstream",
@@ -688,6 +696,8 @@
   {
     "id": "hampi",
     "name": "Hampi",
+    "lat": 15.3350,
+    "lng": 76.4600,
     "state": "Karnataka",
     "crowdLevel": "Low",
     "crowdBadge": "Low • Expansive Ancient Ruins",
@@ -860,6 +870,8 @@
   {
     "id": "munnar",
     "name": "Munnar",
+    "lat": 10.0889,
+    "lng": 77.0595,
     "state": "Kerala",
     "crowdLevel": "Moderate",
     "crowdBadge": "Moderate • Tea Estates & Spice Groves",

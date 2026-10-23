@@ -83,6 +83,7 @@ To ensure absolute transparency for hackathon evaluators, here is our full audit
 | **Voice Guidance (TTS)** | **Real Browser API** | Fully functional Web Speech API (`SpeechSynthesis`) in English and Hindi (`hi-IN`). | Cloud Neural TTS (Google Cloud Speech-to-Text & Text-to-Speech) for low-end device consistency. |
 | **State Persistence** | **Real Client Storage** | Reactive client store (`js/store.js`) backed by browser `localStorage`. Persists trips, offers, and settings across refreshes. | Distributed cloud database (Cloud Firestore / PostgreSQL). |
 | **User Reviews & Feedback** | **Real Client Storage + Sample Seed** | Reviews engine (`js/reviews.js`) with input validation, XSS sanitization, 1-per-browser rate limiting, and `localStorage` persistence. Seed data (25 reviews across stays, guides, destinations) marked with `[Sample review]` badges. | Distributed backend database with verified booking receipts, spam filters, and photo uploads. |
+| **Seasonal Demand & Weather** | **Real Live API (Open-Meteo) + General Estimate** | Open-Meteo 7-day live forecast (no API key, 5s timeout, 1 retry, 15-min `sessionStorage` cache, graceful offline fallback) for on-season travel. 12-month demand levels (`data/seasons.json`) honestly tagged as general estimates with zero fabricated numbers. | Direct integration with state tourism board footfall telemetry and live hotel PMS occupancy APIs. |
 
 ---
 
@@ -93,6 +94,7 @@ To ensure absolute transparency for hackathon evaluators, here is our full audit
 3. **Emergency SOS Disclaimer**: SOS broadcasts generate prefilled messages on the user's device and do not connect directly to emergency services. Production requires official integrations with Ministry of Home Affairs ERSS 112 endpoints.
 4. **Browser Speech Support**: Web Speech API capabilities vary depending on the host OS and browser vendor (e.g., availability of Hindi voice models).
 5. **Local Device Review Scope**: Reviews submitted by users are stored locally in the current browser device (`localStorage['yl_reviews']`) and merged with seed data. Production deployment requires centralized backend persistence and verified-stay receipt validation.
+6. **Seasonality Is An Estimate**: Demand levels (`low`, `medium`, `high`) are derived from general historical tourism patterns rather than live hotel booking census feeds. All seasonal charts carry explicit disclaimers: *"Seasonality is an estimate based on general travel patterns, not live booking data."* Live forecasts are fetched via Open-Meteo.
 
 ---
 

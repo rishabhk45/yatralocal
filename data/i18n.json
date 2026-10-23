@@ -80,6 +80,21 @@
       "saralGood": "😊 Good",
       "saralOkay": "😐 Okay",
       "saralNotGood": "🙁 Not good"
+    },
+    "seasons": {
+      "offSeasonBadge": "🟢 Off-season: fewer crowds",
+      "shoulderBadge": "🟡 Shoulder: moderate",
+      "onSeasonBadge": "🔴 On-season: high demand",
+      "monthSelectorLabel": "Travel Month (Best time to avoid crowds)",
+      "offSeasonAdvantage": "🌱 Off-Season Advantage",
+      "offSeasonDesc": "Enjoy peaceful village trails, uncrowded heritage sights, and direct host off-peak discounts.",
+      "onSeasonAdvisory": "⚠️ High Demand Advisory: Plan Carefully",
+      "onSeasonTips": "Book verified homestays early, start morning sightseeing by 8:00 AM, and avoid central bazaar jams between 5–8 PM.",
+      "liveWeatherTitle": "7-Day Live Weather Forecast",
+      "weatherAttribution": "Weather data: Open-Meteo",
+      "alternativeTitle": "Consider a Quieter Alternative",
+      "saralBusy": "This is a busy season. Book early.",
+      "saralQuiet": "This is a quiet season. Good time to visit."
     }
   },
   "HI": {
@@ -163,6 +178,21 @@
       "saralGood": "😊 अच्छा रहा",
       "saralOkay": "😐 ठीक-ठाक",
       "saralNotGood": "🙁 अच्छा नहीं"
+    },
+    "seasons": {
+      "offSeasonBadge": "🟢 ऑफ-सीजन: शांत वातावरण",
+      "shoulderBadge": "🟡 मध्यम सीजन: संतुलित",
+      "onSeasonBadge": "🔴 ऑन-सीजन: भारी मांग",
+      "monthSelectorLabel": "यात्रा का महीना (भीड़ से बचने का सही समय)",
+      "offSeasonAdvantage": "🌱 ऑफ-सीजन का लाभ",
+      "offSeasonDesc": "शांत ग्रामीण रास्ते, बिना भीड़ के ऐतिहासिक स्थल और मेजबानों से विशेष मौसमी छूट का आनंद लें।",
+      "onSeasonAdvisory": "⚠️ भारी मांग की चेतावनी: सावधानी से योजना बनाएं",
+      "onSeasonTips": "होमस्टे पहले से बुक करें, सुबह 8:00 बजे से पहले भ्रमण शुरू करें और शाम 5 से 8 बजे के बीच मुख्य बाजार की भीड़ से बचें।",
+      "liveWeatherTitle": "7-दिवसीय लाइव मौसम पूर्वानुमान",
+      "weatherAttribution": "मौसम डेटा: ओपन-मेटियो",
+      "alternativeTitle": "कम भीड़-भाड़ वाले शांत विकल्प",
+      "saralBusy": "यह भीड़-भाड़ वाला समय है। पहले से बुकिंग करें।",
+      "saralQuiet": "यह शांत समय है। घूमने के लिए अच्छा अवसर है।"
     }
   }
 }
