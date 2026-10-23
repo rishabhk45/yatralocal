@@ -6,7 +6,11 @@
     "name": "Amit",
     "rating": 5,
     "comment": "Pure mountain bliss. Uncle Ramesh gave us warm herbal tea and homemade apricot jam. Ground floor room was perfect for my mother.",
-    "tags": ["Friendly host", "Senior-friendly", "Good value"],
+    "tags": [
+      "Friendly host",
+      "Senior-friendly",
+      "Good value"
+    ],
     "travelMonth": "September 2026",
     "createdAt": "2026-09-22T10:30:00Z",
     "language": "en",
@@ -19,7 +23,11 @@
     "name": "Meera",
     "rating": 5,
     "comment": "Orchard walks in Burwa are tranquil and completely away from noisy Mall Road traffic. Spotless rooms and hot water.",
-    "tags": ["Clean", "Less crowded", "Safe"],
+    "tags": [
+      "Clean",
+      "Less crowded",
+      "Safe"
+    ],
     "travelMonth": "October 2026",
     "createdAt": "2026-10-04T15:20:00Z",
     "language": "en",
@@ -32,7 +40,11 @@
     "name": "रोहित",
     "rating": 5,
     "comment": "बहुत ही शांत और सुंदर वातावरण। रमेश जी का आतिथ्य बहुत प्यारा था। परिवार के साथ रुकने के लिए सर्वोत्तम जगह।",
-    "tags": ["Friendly host", "Safe", "Good value"],
+    "tags": [
+      "Friendly host",
+      "Safe",
+      "Good value"
+    ],
     "travelMonth": "October 2026",
     "createdAt": "2026-10-12T08:45:00Z",
     "language": "hi",
@@ -45,7 +57,10 @@
     "name": "Kavita",
     "rating": 4,
     "comment": "Peaceful stay with delicious home food. Night temperature dropped but the room heater kept us cozy.",
-    "tags": ["Clean", "Friendly host"],
+    "tags": [
+      "Clean",
+      "Friendly host"
+    ],
     "travelMonth": "October 2026",
     "createdAt": "2026-10-18T18:10:00Z",
     "language": "en",
@@ -58,7 +73,11 @@
     "name": "Deepak",
     "rating": 5,
     "comment": "Waking up to apple trees right outside the window was heavenly. Highly recommended for couples wanting peace.",
-    "tags": ["Less crowded", "Clean", "Good value"],
+    "tags": [
+      "Less crowded",
+      "Clean",
+      "Good value"
+    ],
     "travelMonth": "August 2026",
     "createdAt": "2026-08-19T11:00:00Z",
     "language": "en",
@@ -71,7 +90,10 @@
     "name": "Pooja",
     "rating": 4,
     "comment": "Simple, honest village homestay. Host family cooked fresh Pahari dal and rice for us every evening.",
-    "tags": ["Friendly host", "Good value"],
+    "tags": [
+      "Friendly host",
+      "Good value"
+    ],
     "travelMonth": "September 2026",
     "createdAt": "2026-09-15T14:30:00Z",
     "language": "en",
@@ -84,7 +106,11 @@
     "name": "Ananya",
     "rating": 5,
     "comment": "Courtyard Haveli with authentic block printing workshop. My grandmother felt very comfortable with the gentle pace.",
-    "tags": ["Senior-friendly", "Clean", "Friendly host"],
+    "tags": [
+      "Senior-friendly",
+      "Clean",
+      "Friendly host"
+    ],
     "travelMonth": "September 2026",
     "createdAt": "2026-09-28T09:15:00Z",
     "language": "en",
@@ -97,7 +123,10 @@
     "name": "विकास",
     "rating": 4,
     "comment": "हवेली का वातावरण बहुत शांत था। घर का खाना और जयपुर के पारंपरिक किस्से सुनकर बहुत अच्छा लगा।",
-    "tags": ["Friendly host", "Good value"],
+    "tags": [
+      "Friendly host",
+      "Good value"
+    ],
     "travelMonth": "October 2026",
     "createdAt": "2026-10-02T16:40:00Z",
     "language": "hi",
@@ -110,7 +139,11 @@
     "name": "Rahul",
     "rating": 5,
     "comment": "Great heritage feel at a very affordable price. Away from heavy city traffic and noise.",
-    "tags": ["Good value", "Safe", "Less crowded"],
+    "tags": [
+      "Good value",
+      "Safe",
+      "Less crowded"
+    ],
     "travelMonth": "October 2026",
     "createdAt": "2026-10-14T19:00:00Z",
     "language": "en",
@@ -123,7 +156,11 @@
     "name": "Suresh",
     "rating": 5,
     "comment": "Just 2 minutes walk to morning boat ghats without any steep staircases. Courteous staff and pure vegetarian kitchen.",
-    "tags": ["Senior-friendly", "Clean", "Safe"],
+    "tags": [
+      "Senior-friendly",
+      "Clean",
+      "Safe"
+    ],
     "travelMonth": "September 2026",
     "createdAt": "2026-09-10T07:30:00Z",
     "language": "en",
@@ -136,7 +173,11 @@
     "name": "सुनीता",
     "rating": 5,
     "comment": "माताजी के दर्शन के लिए यह आश्रम-स्टाइल होमस्टे बहुत ही सुविधाजनक रहा। शांतिपूर्ण माहौल।",
-    "tags": ["Senior-friendly", "Friendly host", "Safe"],
+    "tags": [
+      "Senior-friendly",
+      "Friendly host",
+      "Safe"
+    ],
     "travelMonth": "October 2026",
     "createdAt": "2026-10-08T12:00:00Z",
     "language": "hi",
@@ -149,7 +190,11 @@
     "name": "Gaurav",
     "rating": 4,
     "comment": "Clean room, quiet neighborhood away from main market commotion. Safe for solo travellers.",
-    "tags": ["Clean", "Safe", "Good value"],
+    "tags": [
+      "Clean",
+      "Safe",
+      "Good value"
+    ],
     "travelMonth": "October 2026",
     "createdAt": "2026-10-19T20:20:00Z",
     "language": "en",
@@ -162,7 +207,11 @@
     "name": "Nandini",
     "rating": 5,
     "comment": "The riverside meditation deck is magical at dawn. Organic meals and supportive hosts who arranged gentle walks.",
-    "tags": ["Clean", "Less crowded", "Safe"],
+    "tags": [
+      "Clean",
+      "Less crowded",
+      "Safe"
+    ],
     "travelMonth": "October 2026",
     "createdAt": "2026-10-11T09:45:00Z",
     "language": "en",
@@ -175,7 +224,10 @@
     "name": "Arjun",
     "rating": 4,
     "comment": "Very peaceful atmosphere in Tapovan. No commercial party noise. Great value for a week-long recharge.",
-    "tags": ["Good value", "Less crowded"],
+    "tags": [
+      "Good value",
+      "Less crowded"
+    ],
     "travelMonth": "October 2026",
     "createdAt": "2026-10-16T17:15:00Z",
     "language": "en",
@@ -188,7 +240,11 @@
     "name": "Priyanka",
     "rating": 5,
     "comment": "Surrounded by banana plantations and boulders. Host gave us cycles to explore quiet side routes.",
-    "tags": ["Less crowded", "Good value", "Friendly host"],
+    "tags": [
+      "Less crowded",
+      "Good value",
+      "Friendly host"
+    ],
     "travelMonth": "September 2026",
     "createdAt": "2026-09-24T11:20:00Z",
     "language": "en",
@@ -201,7 +257,11 @@
     "name": "Karthik",
     "rating": 5,
     "comment": "Nestled in quiet tea gardens away from town jams. Fresh cardamoms from their own spice garden with morning chai.",
-    "tags": ["Clean", "Less crowded", "Friendly host"],
+    "tags": [
+      "Clean",
+      "Less crowded",
+      "Friendly host"
+    ],
     "travelMonth": "October 2026",
     "createdAt": "2026-10-09T08:00:00Z",
     "language": "en",
@@ -214,7 +274,11 @@
     "name": "Vikram",
     "rating": 5,
     "comment": "Guide Sunil was outstanding. He paced our forest walk gently and showed us ancient cedar wood carving techniques.",
-    "tags": ["Senior-friendly", "Friendly host", "Safe"],
+    "tags": [
+      "Senior-friendly",
+      "Friendly host",
+      "Safe"
+    ],
     "travelMonth": "October 2026",
     "createdAt": "2026-10-06T14:10:00Z",
     "language": "en",
@@ -227,7 +291,10 @@
     "name": "अमित",
     "rating": 5,
     "comment": "सुनील जी ने मनाली के इतिहास और लोक कथाओं के बारे में बहुत रोचक बातें बताईं। बुजुर्गों का बहुत ध्यान रखा।",
-    "tags": ["Senior-friendly", "Friendly host"],
+    "tags": [
+      "Senior-friendly",
+      "Friendly host"
+    ],
     "travelMonth": "October 2026",
     "createdAt": "2026-10-15T11:30:00Z",
     "language": "hi",
@@ -240,7 +307,10 @@
     "name": "Tanvi",
     "rating": 4,
     "comment": "Very knowledgeable local eco-guide. Took us on quiet forest trails with zero tourist crowd.",
-    "tags": ["Less crowded", "Safe"],
+    "tags": [
+      "Less crowded",
+      "Safe"
+    ],
     "travelMonth": "October 2026",
     "createdAt": "2026-10-20T16:00:00Z",
     "language": "en",
@@ -253,7 +323,11 @@
     "name": "Ramesh",
     "rating": 5,
     "comment": "Guide Panditji took us to peaceful northern ghats at sunrise. No pushy shopping stops whatsoever.",
-    "tags": ["Friendly host", "Less crowded", "Senior-friendly"],
+    "tags": [
+      "Friendly host",
+      "Less crowded",
+      "Senior-friendly"
+    ],
     "travelMonth": "September 2026",
     "createdAt": "2026-09-18T08:15:00Z",
     "language": "en",
@@ -266,7 +340,10 @@
     "name": "Harish",
     "rating": 5,
     "comment": "Deep insights into royal architecture and stepwells. Guided my elderly father patiently with flat routes.",
-    "tags": ["Senior-friendly", "Friendly host"],
+    "tags": [
+      "Senior-friendly",
+      "Friendly host"
+    ],
     "travelMonth": "October 2026",
     "createdAt": "2026-10-05T13:45:00Z",
     "language": "en",
@@ -279,7 +356,11 @@
     "name": "Neha",
     "rating": 5,
     "comment": "Visiting Burwa village instead of central Manali made all the difference. Peaceful, authentic, and pristine pine air.",
-    "tags": ["Less crowded", "Safe", "Good value"],
+    "tags": [
+      "Less crowded",
+      "Safe",
+      "Good value"
+    ],
     "travelMonth": "October 2026",
     "createdAt": "2026-10-10T10:00:00Z",
     "language": "en",
@@ -292,7 +373,10 @@
     "name": "सुरेश",
     "rating": 4,
     "comment": "मनाली के ग्रामीण इलाके बहुत ही शांत हैं। स्थानीय होमस्टे और सेब के बागों का अनुभव यादगार रहा।",
-    "tags": ["Less crowded", "Good value"],
+    "tags": [
+      "Less crowded",
+      "Good value"
+    ],
     "travelMonth": "October 2026",
     "createdAt": "2026-10-17T15:20:00Z",
     "language": "hi",
@@ -305,7 +389,10 @@
     "name": "Alok",
     "rating": 5,
     "comment": "The morning boat ride at dawn was deeply spiritual. Choose early mornings to escape the alley crowd.",
-    "tags": ["Less crowded", "Safe"],
+    "tags": [
+      "Less crowded",
+      "Safe"
+    ],
     "travelMonth": "September 2026",
     "createdAt": "2026-09-29T06:30:00Z",
     "language": "en",
@@ -318,10 +405,672 @@
     "name": "Meenakshi",
     "rating": 5,
     "comment": "Loved the local artisan craft workshops in Sanganer and the quiet evening stepwells.",
-    "tags": ["Good value", "Friendly host", "Safe"],
+    "tags": [
+      "Good value",
+      "Friendly host",
+      "Safe"
+    ],
     "travelMonth": "October 2026",
     "createdAt": "2026-10-01T12:40:00Z",
     "language": "en",
+    "isSample": true
+  },
+  {
+    "id": "rev-dest-hampi-1",
+    "targetType": "destination",
+    "targetId": "hampi",
+    "name": "Priyanka",
+    "rating": 5,
+    "comment": "Hampi during sunrise is breathtaking. Crossing the Tungabhadra in a coracle and exploring Vijayanagara ruins with local guides was unforgettable.",
+    "tags": [
+      "Less crowded",
+      "Safe",
+      "Good value"
+    ],
+    "travelMonth": "September 2026",
+    "createdAt": "2026-09-18T09:15:00Z",
+    "language": "en",
+    "isSample": true
+  },
+  {
+    "id": "rev-dest-hampi-2",
+    "targetType": "destination",
+    "targetId": "hampi",
+    "name": "आनंद",
+    "rating": 5,
+    "comment": "विजयनगर साम्राज्य के पत्थरों की नक्काशी अद्भुत है। स्थानीय होमस्टे बहुत शांतिपूर्ण थे और भीड़-भाड़ से दूर प्राकृतिक अनुभव मिला।",
+    "tags": [
+      "Safe",
+      "Friendly host",
+      "Less crowded"
+    ],
+    "travelMonth": "October 2026",
+    "createdAt": "2026-10-05T14:30:00Z",
+    "language": "hi",
+    "isSample": true
+  },
+  {
+    "id": "rev-dest-hampi-3",
+    "targetType": "destination",
+    "targetId": "hampi",
+    "name": "Deepak",
+    "rating": 5,
+    "comment": "Way better than rushed tour buses. Renting a bicycle on the Anegundi side and taking slow walks made this our favorite trip.",
+    "tags": [
+      "Less crowded",
+      "Good value",
+      "Senior-friendly"
+    ],
+    "travelMonth": "October 2026",
+    "createdAt": "2026-10-12T11:20:00Z",
+    "language": "en",
+    "isSample": true
+  },
+  {
+    "id": "rev-dest-munnar-1",
+    "targetType": "destination",
+    "targetId": "munnar",
+    "name": "Sneha",
+    "rating": 5,
+    "comment": "Endless rolling tea estates and cool mist. Staying in Marayoor was the best choice—so peaceful compared to crowded Munnar town.",
+    "tags": [
+      "Clean",
+      "Less crowded",
+      "Safe"
+    ],
+    "travelMonth": "September 2026",
+    "createdAt": "2026-09-25T16:00:00Z",
+    "language": "en",
+    "isSample": true
+  },
+  {
+    "id": "rev-dest-munnar-2",
+    "targetType": "destination",
+    "targetId": "munnar",
+    "name": "सुरेश",
+    "rating": 5,
+    "comment": "चाय के बागानों और मसालों की खुशबू दिल को छू गई। शांत वातावरण और स्थानीय लोगों का सहयोग बहुत ही सराहनीय था।",
+    "tags": [
+      "Clean",
+      "Friendly host",
+      "Safe"
+    ],
+    "travelMonth": "October 2026",
+    "createdAt": "2026-10-08T10:15:00Z",
+    "language": "hi",
+    "isSample": true
+  },
+  {
+    "id": "rev-dest-munnar-3",
+    "targetType": "destination",
+    "targetId": "munnar",
+    "name": "George",
+    "rating": 5,
+    "comment": "The sandalwood forests and dolmens in Marayoor are a hidden gem. Perfect for seniors looking for clean fresh air without steep climbs.",
+    "tags": [
+      "Senior-friendly",
+      "Less crowded",
+      "Clean"
+    ],
+    "travelMonth": "October 2026",
+    "createdAt": "2026-10-14T12:00:00Z",
+    "language": "en",
+    "isSample": true
+  },
+  {
+    "id": "rev-dest-rishikesh-1",
+    "targetType": "destination",
+    "targetId": "rishikesh",
+    "name": "Sunita",
+    "rating": 5,
+    "comment": "Ganga aarti at Triveni Ghat and early morning meditation by the river was deeply spiritual. Away from commercial hubs, the quiet ghats are pure serenity.",
+    "tags": [
+      "Safe",
+      "Senior-friendly",
+      "Good value"
+    ],
+    "travelMonth": "September 2026",
+    "createdAt": "2026-09-28T08:00:00Z",
+    "language": "en",
+    "isSample": true
+  },
+  {
+    "id": "rev-dest-rishikesh-2",
+    "targetType": "destination",
+    "targetId": "rishikesh",
+    "name": "अजय",
+    "rating": 5,
+    "comment": "गंगा किनारे सुबह का शांत वातावरण और ध्यान सत्र अद्वितीय था। स्थानीय गाइड ने हमें छिपे हुए शांत घाटों तक पहुँचाया।",
+    "tags": [
+      "Friendly host",
+      "Less crowded",
+      "Safe"
+    ],
+    "travelMonth": "October 2026",
+    "createdAt": "2026-10-09T17:40:00Z",
+    "language": "hi",
+    "isSample": true
+  },
+  {
+    "id": "rev-dest-rishikesh-3",
+    "targetType": "destination",
+    "targetId": "rishikesh",
+    "name": "Vikram",
+    "rating": 5,
+    "comment": "Tapovan and Phool Chatti valley are much more peaceful than Ram Jhula bottlenecks. Truly rejuvenating experience.",
+    "tags": [
+      "Less crowded",
+      "Clean",
+      "Good value"
+    ],
+    "travelMonth": "October 2026",
+    "createdAt": "2026-10-16T19:30:00Z",
+    "language": "en",
+    "isSample": true
+  },
+  {
+    "id": "rev-stay-hampi-1-2",
+    "targetType": "stay",
+    "targetId": "stay-hampi-1",
+    "name": "Karthik",
+    "rating": 5,
+    "comment": "Traditional clay-tiled home with a private courtyard. Manjula aunty cooked fresh ragi mudde and coconut chutney every morning.",
+    "tags": [
+      "Friendly host",
+      "Clean",
+      "Good value"
+    ],
+    "travelMonth": "September 2026",
+    "createdAt": "2026-09-20T11:00:00Z",
+    "language": "en",
+    "isSample": true
+  },
+  {
+    "id": "rev-stay-hampi-1-3",
+    "targetType": "stay",
+    "targetId": "stay-hampi-1",
+    "name": "संगीता",
+    "rating": 5,
+    "comment": "पारंपरिक घर और शांतिपूर्ण परिवेश। बुजुर्ग माता-पिता के लिए भूतल पर आरामदायक कमरे उपलब्ध थे। भोजन बहुत स्वादिष्ट था।",
+    "tags": [
+      "Senior-friendly",
+      "Clean",
+      "Friendly host"
+    ],
+    "travelMonth": "October 2026",
+    "createdAt": "2026-10-07T08:30:00Z",
+    "language": "hi",
+    "isSample": true
+  },
+  {
+    "id": "rev-stay-hampi-2-1",
+    "targetType": "stay",
+    "targetId": "stay-hampi-2",
+    "name": "Rohan",
+    "rating": 5,
+    "comment": "Waking up to 360-degree views of monolithic boulders and paddy fields. Far away from backpacker noise, completely peaceful.",
+    "tags": [
+      "Less crowded",
+      "Safe",
+      "Clean"
+    ],
+    "travelMonth": "September 2026",
+    "createdAt": "2026-09-24T15:00:00Z",
+    "language": "en",
+    "isSample": true
+  },
+  {
+    "id": "rev-stay-hampi-2-2",
+    "targetType": "stay",
+    "targetId": "stay-hampi-2",
+    "name": "Pooja",
+    "rating": 5,
+    "comment": "The lake is a short 10-minute walk away. Stargazing at night from the cottage terrace was magical.",
+    "tags": [
+      "Clean",
+      "Friendly host",
+      "Good value"
+    ],
+    "travelMonth": "October 2026",
+    "createdAt": "2026-10-11T13:45:00Z",
+    "language": "en",
+    "isSample": true
+  },
+  {
+    "id": "rev-stay-hampi-2-3",
+    "targetType": "stay",
+    "targetId": "stay-hampi-2",
+    "name": "मनोज",
+    "rating": 4,
+    "comment": "बहुत ही प्राकृतिक और शांत वातावरण। शाम को ठंडी हवा और खुली छत से सूर्यास्त देखने का अलग ही आनंद है।",
+    "tags": [
+      "Less crowded",
+      "Good value"
+    ],
+    "travelMonth": "October 2026",
+    "createdAt": "2026-10-18T10:10:00Z",
+    "language": "hi",
+    "isSample": true
+  },
+  {
+    "id": "rev-stay-munnar-1-2",
+    "targetType": "stay",
+    "targetId": "stay-munnar-1",
+    "name": "Divya",
+    "rating": 5,
+    "comment": "Warm cardamom tea on arrival! Host Joseph guided us through his spice garden. Safe for solo female travellers.",
+    "tags": [
+      "Safe",
+      "Friendly host",
+      "Clean"
+    ],
+    "travelMonth": "September 2026",
+    "createdAt": "2026-09-29T14:20:00Z",
+    "language": "en",
+    "isSample": true
+  },
+  {
+    "id": "rev-stay-munnar-1-3",
+    "targetType": "stay",
+    "targetId": "stay-munnar-1",
+    "name": "राजीव",
+    "rating": 5,
+    "comment": "इलाइची और काली मिर्च के बागानों के बीच स्थित यह कॉटेज मन को शांति देता है। मेजबान का व्यवहार अत्यंत पारिवारिक था।",
+    "tags": [
+      "Friendly host",
+      "Good value",
+      "Safe"
+    ],
+    "travelMonth": "October 2026",
+    "createdAt": "2026-10-06T18:00:00Z",
+    "language": "hi",
+    "isSample": true
+  },
+  {
+    "id": "rev-stay-munnar-2-1",
+    "targetType": "stay",
+    "targetId": "stay-munnar-2",
+    "name": "Arjun",
+    "rating": 5,
+    "comment": "Spectacular valley views covered in afternoon mist. Very clean bathrooms with solar heated water. Loved the home-cooked Kerala stew.",
+    "tags": [
+      "Clean",
+      "Less crowded",
+      "Good value"
+    ],
+    "travelMonth": "September 2026",
+    "createdAt": "2026-09-22T09:40:00Z",
+    "language": "en",
+    "isSample": true
+  },
+  {
+    "id": "rev-stay-munnar-2-2",
+    "targetType": "stay",
+    "targetId": "stay-munnar-2",
+    "name": "Anjali",
+    "rating": 5,
+    "comment": "Wheelchair accessible ground floor suite for my grandmother. The hosts took extraordinary care of our dietary preferences.",
+    "tags": [
+      "Senior-friendly",
+      "Clean",
+      "Friendly host"
+    ],
+    "travelMonth": "October 2026",
+    "createdAt": "2026-10-03T16:50:00Z",
+    "language": "en",
+    "isSample": true
+  },
+  {
+    "id": "rev-stay-munnar-2-3",
+    "targetType": "stay",
+    "targetId": "stay-munnar-2",
+    "name": "विमल",
+    "rating": 5,
+    "comment": "पहाड़ी वादियों का शानदार नजारा। सुबह-सुबह ताजी हवा और मसालों की खुशबू मन मोह लेती है।",
+    "tags": [
+      "Clean",
+      "Friendly host",
+      "Safe"
+    ],
+    "travelMonth": "October 2026",
+    "createdAt": "2026-10-15T11:30:00Z",
+    "language": "hi",
+    "isSample": true
+  },
+  {
+    "id": "rev-stay-rishikesh-1-3",
+    "targetType": "stay",
+    "targetId": "stay-rishikesh-1",
+    "name": "हेमा",
+    "rating": 5,
+    "comment": "गंगा नदी की कल-कल ध्वनि के साथ सुबह का योग सत्र बहुत ऊर्जावान था। कमरा साफ और शांत था।",
+    "tags": [
+      "Clean",
+      "Friendly host",
+      "Safe"
+    ],
+    "travelMonth": "October 2026",
+    "createdAt": "2026-10-02T07:15:00Z",
+    "language": "hi",
+    "isSample": true
+  },
+  {
+    "id": "rev-stay-rishikesh-2-1",
+    "targetType": "stay",
+    "targetId": "stay-rishikesh-2",
+    "name": "Aditya",
+    "rating": 5,
+    "comment": "Located 5 km past Laxman Jhula right on a quiet tributary. Zero traffic honking, just forest sounds and mountain stream.",
+    "tags": [
+      "Less crowded",
+      "Clean",
+      "Good value"
+    ],
+    "travelMonth": "September 2026",
+    "createdAt": "2026-09-26T12:00:00Z",
+    "language": "en",
+    "isSample": true
+  },
+  {
+    "id": "rev-stay-rishikesh-2-2",
+    "targetType": "stay",
+    "targetId": "stay-rishikesh-2",
+    "name": "Tanya",
+    "rating": 5,
+    "comment": "Authentic Garhwali thali served on traditional brass plates. Hosts are genuine locals who care deeply about conservation.",
+    "tags": [
+      "Friendly host",
+      "Safe",
+      "Good value"
+    ],
+    "travelMonth": "October 2026",
+    "createdAt": "2026-10-10T14:15:00Z",
+    "language": "en",
+    "isSample": true
+  },
+  {
+    "id": "rev-stay-rishikesh-2-3",
+    "targetType": "stay",
+    "targetId": "stay-rishikesh-2",
+    "name": "नरेश",
+    "rating": 5,
+    "comment": "प्रकृति की गोद में बसा एक सच्चा विश्राम स्थल। परिवार के साथ बिताए ये दिन हमेशा याद रहेंगे।",
+    "tags": [
+      "Safe",
+      "Friendly host",
+      "Less crowded"
+    ],
+    "travelMonth": "October 2026",
+    "createdAt": "2026-10-17T09:00:00Z",
+    "language": "hi",
+    "isSample": true
+  },
+  {
+    "id": "rev-stay-jaipur-2-1",
+    "targetType": "stay",
+    "targetId": "stay-jaipur-2",
+    "name": "Nandini",
+    "rating": 5,
+    "comment": "Bagru village is an artisan paradise. We did a 2-hour natural dye block printing workshop right in the host courtyard!",
+    "tags": [
+      "Friendly host",
+      "Good value",
+      "Less crowded"
+    ],
+    "travelMonth": "September 2026",
+    "createdAt": "2026-09-27T15:30:00Z",
+    "language": "en",
+    "isSample": true
+  },
+  {
+    "id": "rev-stay-jaipur-2-2",
+    "targetType": "stay",
+    "targetId": "stay-jaipur-2",
+    "name": "राहुल",
+    "rating": 5,
+    "comment": "पारंपरिक छपाई कला को इतने करीब से देखना एक अद्भुत अनुभव था। शुद्ध राजस्थानी भोजन और गर्मजोशी भरा आतिथ्य।",
+    "tags": [
+      "Friendly host",
+      "Clean",
+      "Good value"
+    ],
+    "travelMonth": "October 2026",
+    "createdAt": "2026-10-09T18:20:00Z",
+    "language": "hi",
+    "isSample": true
+  },
+  {
+    "id": "rev-stay-jaipur-2-3",
+    "targetType": "stay",
+    "targetId": "stay-jaipur-2",
+    "name": "Sarah",
+    "rating": 5,
+    "comment": "Clean farm stay away from Jaipur city smog. Our kids loved learning block printing and meeting the artisan family.",
+    "tags": [
+      "Safe",
+      "Clean",
+      "Friendly host"
+    ],
+    "travelMonth": "October 2026",
+    "createdAt": "2026-10-19T10:45:00Z",
+    "language": "en",
+    "isSample": true
+  },
+  {
+    "id": "rev-stay-varanasi-2-1",
+    "targetType": "stay",
+    "targetId": "stay-varanasi-2",
+    "name": "Abhishek",
+    "rating": 5,
+    "comment": "Sarnath is tranquil and green. Perfect base if you want to visit Kashi temples by day but sleep peacefully without street noise.",
+    "tags": [
+      "Clean",
+      "Less crowded",
+      "Senior-friendly"
+    ],
+    "travelMonth": "September 2026",
+    "createdAt": "2026-09-23T11:15:00Z",
+    "language": "en",
+    "isSample": true
+  },
+  {
+    "id": "rev-stay-varanasi-2-2",
+    "targetType": "stay",
+    "targetId": "stay-varanasi-2",
+    "name": "मीनाक्षी",
+    "rating": 5,
+    "comment": "सारनाथ के स्तूपों के पास बहुत ही शांत जगह। साफ-सुथरा कमरा और बुजुर्गों के लिए पूरी तरह सुलभ।",
+    "tags": [
+      "Senior-friendly",
+      "Clean",
+      "Safe"
+    ],
+    "travelMonth": "October 2026",
+    "createdAt": "2026-10-08T16:00:00Z",
+    "language": "hi",
+    "isSample": true
+  },
+  {
+    "id": "rev-stay-varanasi-2-3",
+    "targetType": "stay",
+    "targetId": "stay-varanasi-2",
+    "name": "Tarun",
+    "rating": 4,
+    "comment": "Generous hosts and fresh garden breakfast. Great connectivity to Varanasi Cantt station.",
+    "tags": [
+      "Good value",
+      "Friendly host"
+    ],
+    "travelMonth": "October 2026",
+    "createdAt": "2026-10-16T13:10:00Z",
+    "language": "en",
+    "isSample": true
+  },
+  {
+    "id": "rev-guide-manali-2-1",
+    "targetType": "guide",
+    "targetId": "guide-manali-2",
+    "name": "Manish",
+    "rating": 5,
+    "comment": "Tenzin knows every alpine wildflower and hidden pine trail above Solang. Very patient with our photography stops.",
+    "tags": [
+      "Friendly host",
+      "Less crowded",
+      "Safe"
+    ],
+    "travelMonth": "October 2026",
+    "createdAt": "2026-10-05T12:30:00Z",
+    "language": "en",
+    "isSample": true
+  },
+  {
+    "id": "rev-guide-manali-2-2",
+    "targetType": "guide",
+    "targetId": "guide-manali-2",
+    "name": "रोशनी",
+    "rating": 5,
+    "comment": "तेनज़िन जी ने हमें हिमालय की जड़ी-बूटियों और बौद्ध मठों के इतिहास के बारे में बहुत विस्तार से समझाया। बहुत ही विनम्र स्वभाव।",
+    "tags": [
+      "Friendly host",
+      "Safe"
+    ],
+    "travelMonth": "October 2026",
+    "createdAt": "2026-10-14T09:20:00Z",
+    "language": "hi",
+    "isSample": true
+  },
+  {
+    "id": "rev-guide-rishikesh-1-1",
+    "targetType": "guide",
+    "targetId": "guide-rishikesh-1",
+    "name": "Deepa",
+    "rating": 5,
+    "comment": "Gita di is an exceptional certified woman guide. She took us to quiet meditation spots and sacred springs away from crowd lines.",
+    "tags": [
+      "Safe",
+      "Friendly host",
+      "Senior-friendly"
+    ],
+    "travelMonth": "September 2026",
+    "createdAt": "2026-09-30T10:00:00Z",
+    "language": "en",
+    "isSample": true
+  },
+  {
+    "id": "rev-guide-rishikesh-1-2",
+    "targetType": "guide",
+    "targetId": "guide-rishikesh-1",
+    "name": "राजेश",
+    "rating": 5,
+    "comment": "गीता जी का मार्गदर्शन बहुत प्रेरणादायक था। बुजुर्गों की गति के अनुसार धीरे-धीरे चले और हर ऐतिहासिक स्थल का महत्व समझाया।",
+    "tags": [
+      "Senior-friendly",
+      "Safe",
+      "Friendly host"
+    ],
+    "travelMonth": "October 2026",
+    "createdAt": "2026-10-11T16:45:00Z",
+    "language": "hi",
+    "isSample": true
+  },
+  {
+    "id": "rev-guide-hampi-1-1",
+    "targetType": "guide",
+    "targetId": "guide-hampi-1",
+    "name": "Suresh",
+    "rating": 5,
+    "comment": "Shekhar made Vijayanagara stones come alive with stories of royal courtiers and international traders. Incredible historical depth.",
+    "tags": [
+      "Good value",
+      "Friendly host",
+      "Safe"
+    ],
+    "travelMonth": "September 2026",
+    "createdAt": "2026-09-21T14:10:00Z",
+    "language": "en",
+    "isSample": true
+  },
+  {
+    "id": "rev-guide-hampi-1-2",
+    "targetType": "guide",
+    "targetId": "guide-hampi-1",
+    "name": "ममता",
+    "rating": 5,
+    "comment": "शेखर जी को हम्पी के एक-एक मंदिर और शिला का इतिहास कंठस्थ है। बहुत ही ज्ञानवर्धक और आत्मीय भ्रमण रहा।",
+    "tags": [
+      "Friendly host",
+      "Good value"
+    ],
+    "travelMonth": "October 2026",
+    "createdAt": "2026-10-13T11:00:00Z",
+    "language": "hi",
+    "isSample": true
+  },
+  {
+    "id": "rev-guide-munnar-1-1",
+    "targetType": "guide",
+    "targetId": "guide-munnar-1",
+    "name": "Harish",
+    "rating": 5,
+    "comment": "Biju showed us wild Nilgiri tahr at a respectful distance and identified 20+ bird species. Expert naturalist and gentle companion.",
+    "tags": [
+      "Friendly host",
+      "Safe",
+      "Less crowded"
+    ],
+    "travelMonth": "October 2026",
+    "createdAt": "2026-10-04T08:15:00Z",
+    "language": "en",
+    "isSample": true
+  },
+  {
+    "id": "rev-guide-munnar-1-2",
+    "targetType": "guide",
+    "targetId": "guide-munnar-1",
+    "name": "सुरभि",
+    "rating": 5,
+    "comment": "बिजू जी ने जंगल के रास्तों पर बहुत सुरक्षित तरीके से घुमाया। मसालों के पौधों की पहचान और औषधीय गुणों की जानकारी बहुत रोचक थी।",
+    "tags": [
+      "Safe",
+      "Clean",
+      "Friendly host"
+    ],
+    "travelMonth": "October 2026",
+    "createdAt": "2026-10-15T15:20:00Z",
+    "language": "hi",
+    "isSample": true
+  },
+  {
+    "id": "rev-guide-jaipur-2-1",
+    "targetType": "guide",
+    "targetId": "guide-jaipur-2",
+    "name": "Akash",
+    "rating": 5,
+    "comment": "5th generation block-printing master! Irfan took us behind closed doors in Bagru to meet the master dyers. Unbelievable authenticity.",
+    "tags": [
+      "Friendly host",
+      "Good value",
+      "Less crowded"
+    ],
+    "travelMonth": "September 2026",
+    "createdAt": "2026-09-28T13:00:00Z",
+    "language": "en",
+    "isSample": true
+  },
+  {
+    "id": "rev-guide-jaipur-2-2",
+    "targetType": "guide",
+    "targetId": "guide-jaipur-2",
+    "name": "सुमन",
+    "rating": 5,
+    "comment": "इरफान जी के साथ कारीगरों की कार्यशाला देखने का अनुभव बहुत अनूठा था। पारंपरिक भारतीय हस्तकला का सच्चा सम्मान।",
+    "tags": [
+      "Friendly host",
+      "Good value"
+    ],
+    "travelMonth": "October 2026",
+    "createdAt": "2026-10-12T17:30:00Z",
+    "language": "hi",
     "isSample": true
   }
 ]
