@@ -34,8 +34,13 @@ export function renderSosView() {
       </p>
     </header>
 
+    <!-- Safety & Legal Disclaimer -->
+    <div style="background: #FFFBEB; border: 1.5px solid #F59E0B; border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-6); font-size: var(--font-size-xs); color: #92400E; line-height: 1.6;">
+      ⚠️ <strong>Important Safety & Legal Disclaimer:</strong> This prototype is not a replacement for official national emergency services. Production deployment requires formal integration, telemetry testing, carrier SMS safeguards, and compliance with local telecommunication regulations. In an immediate life-threatening emergency, always dial <strong>112</strong> directly.
+    </div>
+
     <!-- Quick SOS Test & Drill Banner -->
-    <div class="card" style="border: 2px dashed var(--color-danger); background-color: #FEF2F2; margin-bottom: var(--space-6); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-4); padding: var(--space-5);">
+    <div class="card" style="border: 2px dashed var(--color-danger); background-color: #FEF2F2; margin-bottom: var(--space-4); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-4); padding: var(--space-5);">
       <div>
         <h3 style="color: #991B1B; margin: 0 0 4px 0; font-size: 1.25rem;">🚨 Practice Emergency Drill</h3>
         <p style="color: #7F1D1D; font-size: var(--font-size-sm); margin: 0;">
@@ -45,6 +50,27 @@ export function renderSosView() {
       <button type="button" class="btn btn-primary" id="btn-trigger-drill" style="background-color: var(--color-danger); border-color: var(--color-danger); font-weight: 700; min-height: 48px;">
         Trigger Practice SOS (5s Countdown)
       </button>
+    </div>
+
+    <!-- Send Test Alert to Myself Card -->
+    <div class="card" style="border: 1.5px solid #0284C7; background-color: #F0F9FF; margin-bottom: var(--space-6); padding: var(--space-5);">
+      <div class="flex-between" style="align-items: center; flex-wrap: wrap; gap: var(--space-3);">
+        <div>
+          <div class="flex gap-2" style="align-items: center; margin-bottom: 4px;">
+            <span class="badge" style="background: #0284C7; color: #FFFFFF; font-weight: 800; font-size: 0.72rem;">TEST ALERT MODE</span>
+            <h3 style="color: #0369A1; margin: 0; font-size: 1.15rem;">Send Test Alert to Myself</h3>
+          </div>
+          <p style="color: #075985; font-size: var(--font-size-xs); margin: 0;">
+            Verify delivery of SMS alerts and preview live tracking without panicking your contacts.
+          </p>
+        </div>
+        <div class="flex gap-2" style="align-items: center; flex-wrap: wrap;">
+          <input type="tel" id="input-test-phone" placeholder="Your phone (+91...)" value="${contacts[0]?.phone || ''}" style="padding: 8px 12px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-size: var(--font-size-xs); min-width: 170px;" />
+          <button type="button" class="btn btn-primary btn-sm" id="btn-send-test-alert" style="background-color: #0284C7; border-color: #0284C7; font-weight: 700; min-height: 38px;">
+            🧪 Send Test Alert (TEST)
+          </button>
+        </div>
+      </div>
     </div>
 
     <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--space-6); align-items: start;">
@@ -127,6 +153,14 @@ export function renderSosView() {
             </p>
           </div>
           <input type="checkbox" id="chk-share-gps" ${settings.shareLiveLocation !== false ? 'checked' : ''} style="width: 22px; height: 22px; cursor: pointer;" aria-label="Broadcast Live GPS Coordinates" />
+        </div>
+
+        <!-- Explicit Consent Checkbox -->
+        <div style="display: flex; align-items: flex-start; gap: var(--space-2); padding: var(--space-3) 0; border-top: 1px solid var(--color-border); margin-top: var(--space-2);">
+          <input type="checkbox" id="chk-sos-consent" checked style="width: 20px; height: 20px; margin-top: 2px; cursor: pointer;" />
+          <label for="chk-sos-consent" style="font-size: var(--font-size-xs); color: var(--color-text-main); cursor: pointer;">
+            <strong>Explicit Consent:</strong> I authorize YatraLocal to broadcast my live GPS coordinates and medical details to my emergency contacts during an active SOS.
+          </label>
         </div>
       </section>
 
@@ -308,6 +342,41 @@ export function renderSosView() {
     container.querySelector('#chk-share-gps')?.addEventListener('change', (e) => {
       store.updateSosSettings({ shareLiveLocation: e.target.checked });
       window.YatraApp.showToast(`Live GPS sharing ${e.target.checked ? 'enabled' : 'disabled'}.`);
+    });
+
+    // Consent checkbox
+    container.querySelector('#chk-sos-consent')?.addEventListener('change', (e) => {
+      try {
+        localStorage.setItem('yatralocal_sos_consent', String(e.target.checked));
+      } catch (_) {}
+      window.YatraApp.showToast(`Location sharing consent ${e.target.checked ? 'granted' : 'withdrawn'}.`);
+    });
+
+    // Send Test Alert button
+    container.querySelector('#btn-send-test-alert')?.addEventListener('click', async (e) => {
+      const btn = e.currentTarget;
+      const phoneInput = container.querySelector('#input-test-phone');
+      const testPhone = phoneInput?.value.trim() || '+91 98765 43210';
+
+      btn.disabled = true;
+      btn.textContent = '⏳ Dispatching Test...';
+
+      try {
+        const result = await sosEngine.sendTestAlert(testPhone);
+        if (result.smsDispatched) {
+          window.YatraApp.showToast(`✓ Test alert dispatched via Twilio SMS to ${testPhone}!`);
+        } else {
+          window.YatraApp.showToast(`Test generated! Live tracking preview link: ${result.trackingUrl}`);
+          if (result.trackingUrl) {
+            window.open(result.trackingUrl, '_blank');
+          }
+        }
+      } catch (err) {
+        window.YatraApp.showToast(`Test error: ${err.message}`, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '🧪 Send Test Alert (TEST)';
+      }
     });
   }, 0);
 

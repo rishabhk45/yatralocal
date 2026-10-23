@@ -75,10 +75,11 @@ To ensure absolute transparency for hackathon evaluators, here is our full audit
 
 | Feature Component | Prototype Status | Current Implementation Details | What Production Requires |
 | :--- | :---: | :--- | :--- |
-| **AI Itinerary Engine** | **Simulated AI / Rules** | Deterministic rule-based engine (`js/itinerary.js`) with mood filtering, budget optimization, crowd score matching, and senior-walking checks. | Serverless proxy to Gemini 1.5 Flash / Pro API with structured JSON outputs. |
+| **Interactive Route Map** | **Real Production Client** | Pinned Leaflet 1.9.4 + OpenStreetMap tiles with verified SRI hashes. 48 real activity GPS coordinates, Haversine distance, day-coded paths, and crowd layers. | Vector tile hosting / Mapbox / Google Maps Platform for offline raster tile caching. |
+| **AI Itinerary Engine** | **Real Gemini LLM + Fallback** | Serverless function calling Google Gemini API (`gemini-2.5-flash`) with candidate-only constraints, zero price hallucination, and deterministic fallback. | Production enterprise quota and LLM response caching. |
+| **Safety SOS Dispatch** | **Real Twilio SMS + Fallback** | Serverless function (`/netlify/functions/sos`) sending real SMS to emergency contacts via Twilio, with 6-hour family live tracking link (`/track.html?id=TOKEN`), throttled 15s GPS watch, offline queueing, and zero-backend fallback (`sms:`, `wa.me`, `navigator.share`). | Integration with Ministry of Home Affairs ERSS 112 API and local police CAD systems. |
 | **Digital Payments** | **Simulated Demo** | Demo payment selector (`UPI`, `Card`, `Cash at check-in`) with zero financial charges and immediate digital voucher generation. | Razorpay / Cashfree / Stripe India webhook integrations with 3D Secure OTP verification. |
 | **Verified Host Listings** | **Sample Data** | 12 curated homestays and 8 local guides across 6 destinations (`/data/hosts.json`), marked "Sample data for demonstration". | Government ID / Aadhaar verification, local tourism board registration, and on-ground field audits. |
-| **Safety SOS Dispatch** | **Simulated / Client GPS** | Real HTML5 `navigator.geolocation` coordinate capture, Google Maps deep link generation, and prefilled WhatsApp/SMS payloads. Direct `tel:` links dial 112/100/108. | Certified carrier telecom SMS gateway (e.g. Twilio/Karix) and State Police CAD (Computer Aided Dispatch) API integration. |
 | **Voice Guidance (TTS)** | **Real Browser API** | Fully functional Web Speech API (`SpeechSynthesis`) in English and Hindi (`hi-IN`). | Cloud Neural TTS (Google Cloud Speech-to-Text & Text-to-Speech) for low-end device consistency. |
 | **State Persistence** | **Real Client Storage** | Reactive client store (`js/store.js`) backed by browser `localStorage`. Persists trips, offers, and settings across refreshes. | Distributed cloud database (Cloud Firestore / PostgreSQL). |
 
@@ -211,6 +212,36 @@ npx serve -l 4173 .
 
 ---
 
+### 🚨 Emergency SOS SMS & Live Family Tracking Setup (Phase 13)
+
+YatraLocal provides real SMS alert delivery via Twilio with zero-backend fallback, plus a 6-hour read-only family tracking beacon page (`/track.html?id=TOKEN`).
+
+#### 1. Twilio Configuration (Optional for Real SMS)
+To enable real SMS delivery to your phone and emergency contacts:
+```env
+TWILIO_ACCOUNT_SID=ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+TWILIO_AUTH_TOKEN=your_twilio_auth_token
+TWILIO_FROM=+1234567890
+```
+
+#### 2. Real Delivery vs. Zero-Backend Fallback Comparison
+| Feature | With Twilio Configured | Zero-Backend Fallback (No Keys) |
+| :--- | :--- | :--- |
+| **SMS Delivery** | Automatic backend dispatch via Twilio REST API to all saved contacts. | Opens native prefilled `sms:` links with one-tap dispatch from phone. |
+| **WhatsApp Delivery** | Optional Twilio WhatsApp sandbox integration. | Opens prefilled `https://wa.me/` direct messaging links. |
+| **Native Sharing** | Direct SMS + Web Share link. | Uses `navigator.share` system sheet to dispatch to family contacts. |
+| **Live Family Map** | Live beacon page at `/track.html?id=TOKEN` updating every 15s. | Local storage cached tracking page + Google Maps link. |
+| **Emergency Dialers** | Direct `tel:112`, `100`, `108`, `1363` hotlines. | Direct `tel:112`, `100`, `108`, `1363` hotlines. |
+| **Privacy Guarantee** | Location expires in 6 hours; phone numbers never exposed. | Zero data transmitted off-device. |
+
+#### 3. SOS Test Plan
+1. **Verification Test**: Navigate to `#/sos` and tap **🧪 Send Test Alert to Myself (TEST)**. If Twilio keys exist, an SMS arrives with a live tracking link. If unconfigured, the tracking preview opens immediately.
+2. **Practice Emergency Drill**: Tap **Trigger Practice SOS (5s Countdown)** in `#/sos`. Watch the countdown ring, test cancellation within 5s, or let it complete to view live coordinates, family tracking link, and prefilled WhatsApp/SMS options.
+3. **Offline Resilience**: Turn off Wi-Fi or set Network to Offline in DevTools. Activate SOS; coordinates are queued in memory and automatically flushed when connectivity is restored.
+4. **Mark Safe**: Tap **✓ I'm Safe — Stop Sharing** to halt `watchPosition` tracking and update the family tracking page to green "Traveller Marked SAFE" state.
+
+---
+
 ## 🚀 How to Run Locally
 
 Because YatraLocal is built with vanilla ES Modules and zero build tools, you can serve it with any local static HTTP server:
@@ -239,6 +270,7 @@ All unit tests run directly in your browser without requiring test runners or he
 - **LLM Planner & Fallback Tests**: `http://localhost:4173/tests/llm.test.html`
 - **Node.js LLM Verification**: `node tests/llm-provider.test.js`
 - **Node.js Map Verification**: `node tests/map-node-verify.js`
+- **Node.js SOS & Live Tracking**: `node tests/sos-live.test.js`
 - **Itinerary Engine Tests**: `http://localhost:4173/tests/itinerary.test.html`
 - **Saral Mode Tests**: `http://localhost:4173/tests/saral.test.html`
 - **Booking & Family Flow Tests**: `http://localhost:4173/tests/booking.test.html`

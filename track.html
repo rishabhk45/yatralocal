@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YatraLocal - Emergency Live Tracking</title>
+  
+  <!-- Leaflet 1.9.4 with SRI hashes -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H" crossorigin="">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH" crossorigin=""></script>
+
+  <style>
+    :root {
+      --color-primary: #0D5C5B;
+      --color-danger: #C5221F;
+      --color-success: #15803D;
+      --color-bg: #FAF7F2;
+      --color-surface: #FFFFFF;
+      --color-border: #E5DFD5;
+      --color-text: #1C2526;
+      --color-text-muted: #64748B;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.5;
+      padding-bottom: 40px;
+    }
+
+    header {
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .brand {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--color-primary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .main-container {
+      max-width: 900px;
+      margin: 24px auto;
+      padding: 0 16px;
+    }
+
+    .card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      margin-bottom: 20px;
+    }
+
+    .status-banner {
+      padding: 16px 20px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .status-active {
+      background: #FEE2E2;
+      border: 2px solid #EF4444;
+      color: #991B1B;
+    }
+
+    .status-safe {
+      background: #DCFCE7;
+      border: 2px solid #22C55E;
+      color: #14532D;
+    }
+
+    .status-expired {
+      background: #F1F5F9;
+      border: 2px solid #94A3B8;
+      color: #475569;
+    }
+
+    #track-map {
+      width: 100%;
+      height: 380px;
+      border-radius: 10px;
+      border: 1px solid var(--color-border);
+      z-index: 1;
+    }
+
+    .pulse-dot {
+      width: 20px;
+      height: 20px;
+      background: #DC2626;
+      border-radius: 50%;
+      box-shadow: 0 0 0 rgba(220, 38, 38, 0.7);
+      animation: pulse 1.8s infinite;
+      border: 3px solid #FFFFFF;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); }
+      70% { box-shadow: 0 0 0 16px rgba(220, 38, 38, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+      font-size: 0.95rem;
+    }
+
+    .info-item {
+      background: var(--color-bg);
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--color-border);
+    }
+
+    .info-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--color-text-muted);
+      margin-bottom: 4px;
+    }
+
+    .info-value {
+      font-weight: 600;
+      color: var(--color-text);
+      word-break: break-word;
+    }
+
+    .dialers-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .dial-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      border-radius: 8px;
+      background: var(--color-bg);
+      border: 1.5px solid var(--color-border);
+      text-decoration: none;
+      color: var(--color-text);
+      font-weight: 700;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .dial-btn:hover {
+      background: #FEE2E2;
+      border-color: #EF4444;
+      color: #991B1B;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      font-size: 0.9rem;
+    }
+
+    .btn-primary {
+      background: var(--color-primary);
+      color: #FFFFFF;
+    }
+
+    .privacy-notice {
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      margin-top: 24px;
+      text-align: center;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="/" class="brand">
+      <span>🛡️ YatraLocal</span>
+      <span style="font-size: 0.85rem; font-weight: normal; color: var(--color-text-muted);">| Family Safety Tracking</span>
+    </a>
+    <span id="header-refresh-status" style="font-size: 0.8rem; color: var(--color-text-muted);">
+      Auto-updates every 15s
+    </span>
+  </header>
+
+  <main class="main-container">
+    <div id="status-container"></div>
+
+    <div class="card" id="map-card" style="display: none;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+        <h2 style="font-size: 1.25rem; color: var(--color-primary);" id="traveller-heading">
+          📍 Live Location Map
+        </h2>
+        <span id="last-updated-badge" style="font-size: 0.8rem; background: var(--color-bg); padding: 4px 10px; border-radius: 999px; border: 1px solid var(--color-border);">
+          Connecting to beacon...
+        </span>
+      </div>
+
+      <div id="track-map"></div>
+
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-label">Traveller</div>
+          <div class="info-value" id="val-name">—</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Area / Location</div>
+          <div class="info-value" id="val-address">—</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">GPS Coordinates</div>
+          <div class="info-value" id="val-coords">—</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Medical Note</div>
+          <div class="info-value" id="val-medical" style="color: #B91C1C;">—</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 16px; display: flex; gap: 12px; flex-wrap: wrap;">
+        <a id="btn-open-google-maps" href="#" target="_blank" rel="noopener" class="btn btn-primary">
+          🗺️ Open in Google Maps ↗
+        </a>
+      </div>
+
+      <!-- Quick Emergency Calling -->
+      <div style="margin-top: 24px; border-top: 1px solid var(--color-border); padding-top: 16px;">
+        <div style="font-size: 0.85rem; font-weight: 700; color: var(--color-text-muted); margin-bottom: 8px;">
+          📞 Direct Emergency Services (India):
+        </div>
+        <div class="dialers-row">
+          <a href="tel:112" class="dial-btn" style="background:#FEE2E2; border-color:#FCA5A5; color:#991B1B;">
+            <span>112</span>
+            <small style="font-size:0.7rem; font-weight:normal;">National Help</small>
+          </a>
+          <a href="tel:100" class="dial-btn">
+            <span>100</span>
+            <small style="font-size:0.7rem; font-weight:normal;">Police</small>
+          </a>
+          <a href="tel:108" class="dial-btn">
+            <span>108</span>
+            <small style="font-size:0.7rem; font-weight:normal;">Ambulance</small>
+          </a>
+          <a href="tel:1363" class="dial-btn">
+            <span>1363</span>
+            <small style="font-size:0.7rem; font-weight:normal;">Tourist Help</small>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="privacy-notice">
+      🔒 <strong>Privacy & Security Policy:</strong> This live beacon link is strictly read-only for emergency contacts and expires in 6 hours. No phone numbers are exposed. Location data is automatically deleted after expiration.<br>
+      <em>Notice: YatraLocal prototype emergency alerts are designed as a companion tool. In life-threatening emergencies, always call 112 directly.</em>
+    </div>
+  </main>
+
+  <script>
+    let map = null;
+    let marker = null;
+    let circle = null;
+    let refreshInterval = null;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('id');
+
+    async function fetchTrackingData() {
+      if (!token) {
+        renderError('NO_TOKEN', 'No emergency tracking token provided in link.');
+        return;
+      }
+
+      // Try Netlify function then Vercel function
+      const endpoints = [
+        `/.netlify/functions/sos?action=get&token=${encodeURIComponent(token)}`,
+        `/api/sos?action=get&token=${encodeURIComponent(token)}`
+      ];
+
+      let data = null;
+      for (const url of endpoints) {
+        try {
+          const res = await fetch(url);
+          if (res.ok) {
+            data = await res.json();
+            break;
+          } else if (res.status === 404) {
+            renderError('EXPIRED', 'This emergency tracking link has expired or was not found. Emergency tracking sessions expire automatically after 6 hours.');
+            return;
+          }
+        } catch (_) {}
+      }
+
+      if (!data) {
+        // Check if there is an in-memory/local fallback token in parent app or storage
+        try {
+          const localSos = localStorage.getItem('yatralocal_sos_active_token');
+          if (localSos) {
+            const parsed = JSON.parse(localSos);
+            if (parsed.token === token) {
+              data = parsed;
+            }
+          }
+        } catch (_) {}
+      }
+
+      if (!data) {
+        renderError('FETCH_FAILED', 'Unable to connect to live tracking service. Please verify your internet connection or call emergency services directly.');
+        return;
+      }
+
+      renderTrackingView(data);
+    }
+
+    function renderError(code, message) {
+      const statusContainer = document.getElementById('status-container');
+      const mapCard = document.getElementById('map-card');
+      if (mapCard) mapCard.style.display = 'none';
+
+      statusContainer.innerHTML = `
+        <div class="status-banner status-expired">
+          <div>
+            <div style="font-size: 1.1rem; margin-bottom: 4px;">⚠️ Tracking Link Inactive</div>
+            <div style="font-weight: normal; font-size: 0.9rem;">${message}</div>
+          </div>
+          <a href="tel:112" class="btn btn-primary" style="background:#991B1B;">Call 112</a>
+        </div>
+      `;
+    }
+
+    function renderTrackingView(data) {
+      const statusContainer = document.getElementById('status-container');
+      const mapCard = document.getElementById('map-card');
+      mapCard.style.display = 'block';
+
+      const isSafe = data.status === 'SAFE';
+
+      if (isSafe) {
+        statusContainer.innerHTML = `
+          <div class="status-banner status-safe">
+            <div>
+              <div style="font-size: 1.15rem;">✓ Traveller Marked SAFE</div>
+              <div style="font-weight: normal; font-size: 0.85rem;">The traveller has confirmed their safety and deactivated emergency SOS.</div>
+            </div>
+            <span style="font-size: 1.8rem;">🌿</span>
+          </div>
+        `;
+        if (refreshInterval) clearInterval(refreshInterval);
+      } else {
+        statusContainer.innerHTML = `
+          <div class="status-banner status-active">
+            <div>
+              <div style="font-size: 1.15rem; display: flex; align-items: center; gap: 8px;">
+                <span class="pulse-dot"></span>
+                <span>🚨 EMERGENCY SOS ACTIVE</span>
+              </div>
+              <div style="font-weight: normal; font-size: 0.85rem; margin-top: 4px;">
+                Broadcasting live GPS coordinates. Check location details below.
+              </div>
+            </div>
+            <span style="font-size: 1.8rem;">🚨</span>
+          </div>
+        `;
+      }
+
+      // Populate info fields
+      document.getElementById('traveller-heading').textContent = `📍 Live Location: ${data.travellerName || 'Traveller'}`;
+      document.getElementById('val-name').textContent = data.travellerName || 'YatraLocal Traveller';
+      document.getElementById('val-address').textContent = data.coords?.address || 'Near Manali, Himachal Pradesh';
+      document.getElementById('val-coords').textContent = data.coords ? `${data.coords.lat?.toFixed(5)}, ${data.coords.lng?.toFixed(5)} (±${Math.round(data.coords.accuracy || 20)}m)` : 'GPS Pending';
+      document.getElementById('val-medical').textContent = data.medicalNotes || 'None specified';
+
+      const gMapsUrl = `https://maps.google.com/?q=${data.coords?.lat},${data.coords?.lng}`;
+      document.getElementById('btn-open-google-maps').href = gMapsUrl;
+
+      const lastUpdatedTime = data.lastUpdated ? new Date(data.lastUpdated).toLocaleTimeString() : new Date().toLocaleTimeString();
+      document.getElementById('last-updated-badge').textContent = `Updated: ${lastUpdatedTime}`;
+
+      // Initialize or update Leaflet map
+      if (data.coords && data.coords.lat && data.coords.lng) {
+        const lat = data.coords.lat;
+        const lng = data.coords.lng;
+
+        if (!map) {
+          map = L.map('track-map', { zoomControl: true }).setView([lat, lng], 15);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
+            maxZoom: 19
+          }).addTo(map);
+
+          const pulseIcon = L.divIcon({
+            className: 'custom-pulse-marker',
+            html: '<div class="pulse-dot"></div>',
+            iconSize: [20, 20],
+            iconAnchor: [10, 10]
+          });
+
+          marker = L.marker([lat, lng], { icon: pulseIcon }).addTo(map);
+          circle = L.circle([lat, lng], {
+            radius: data.coords.accuracy || 25,
+            color: '#DC2626',
+            fillColor: '#F87171',
+            fillOpacity: 0.15
+          }).addTo(map);
+        } else {
+          marker.setLatLng([lat, lng]);
+          circle.setLatLng([lat, lng]);
+          circle.setRadius(data.coords.accuracy || 25);
+          map.panTo([lat, lng]);
+        }
+      }
+    }
+
+    // Initial load and 15s refresh interval
+    fetchTrackingData();
+    refreshInterval = setInterval(fetchTrackingData, 15000);
+  </script>
+</body>
+</html>

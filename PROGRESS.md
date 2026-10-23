@@ -109,10 +109,15 @@ Track progress across all 14 project phases.
   - **Bilingual & Saral Support**: Supports both English and Hindi (`hi-IN`), with concise reassuring sentences in Saral Mode.
   - **Automated Test Coverage**: 6/6 assertions passing in `tests/llm-provider.test.js` and 5/5 assertions passing in `tests/llm.test.html`. Visual test results captured in `assets/screenshots/llm_test_results.png` and `assets/screenshots/llm_itinerary_chat.png`.
 
-- [ ] **Phase 13: Real SOS integration**
-  - Live location beacon backend proxy `/api/sos`.
-  - Shareable emergency link generator with real coordinates and timestamp.
-  - Safe simulated fallback when offline.
+- [x] **Phase 13: Real SOS alert delivery & live family tracking**
+  - **Serverless SOS Function (`netlify/functions/sos.js` & `api/sos.js`)**: Real alert delivery via Twilio REST API to saved emergency contacts (using `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM`). Generates short-lived 6-hour cryptographic tracking tokens (`crypto.randomBytes(12)`).
+  - **Read-Only Family Tracking Page (`/track.html?id=TOKEN`)**: Dedicated public tracking beacon displaying the traveller's latest GPS coordinates, Leaflet map with pulsing red marker, last updated time, medical alerts, and "Traveller marked safe" banner. Strictly **zero exposed phone numbers**; data automatically expires and is purged after 6 hours.
+  - **Client Tracking & Throttling (`js/sos.js`)**: Real-time `watchPosition` updates posted every 15s to the serverless tracking endpoint. Implements an offline queue (`offlineQueue`) that automatically flushes upon network reconnection (`window.addEventListener('online')`). Stops tracking and transitions status to `SAFE` upon clicking "I'm safe — stop sharing".
+  - **Zero-Backend Client Fallback**: Operates fully on phones without any server keys: opens prefilled `sms:` and `https://wa.me/` direct messaging links, and invokes `navigator.share` system sheet with live tracking links.
+  - **Consent, Safety Drills & Test Mode**: Retains 2-second press-and-hold trigger with 5-second cancel countdown. Enforces explicit location sharing consent checkbox stored in `localStorage`. Features a dedicated **"Send test alert to myself (TEST)"** button for safety verification.
+  - **Emergency Hotlines & Metrics**: Direct 1-touch dialers for 112 (National), 100 (Police), 108 (Ambulance), and 1363 (Tourist Helpline). Logs dispatch and resolution events with timestamps to compute mean response time metrics.
+  - **Privacy & Safety Disclaimer**: Prominently displays: *"This prototype is not a replacement for emergency services; production use requires testing, safeguards and compliance. In immediate danger, call 112."*
+  - **Automated Verification**: 7/7 test assertions passing in `tests/sos-live.test.js` and 5/5 in `tests/sos.test.html`. Visual test artifacts captured in `assets/screenshots/sos_track_page.png` and `assets/screenshots/sos_setup_phase13.png`.
 
 - [ ] **Phase 14: Final redeploy & verification**
   - End-to-end verification of all flows.
