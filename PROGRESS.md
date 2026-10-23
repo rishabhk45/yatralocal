@@ -16,7 +16,7 @@ Track progress across all 14 project phases.
   - Multi-input trip preference form (budget, trip length/days, travel mood, accessibility needs).
   - Form validation, instant state persistence, and transition to itinerary view.
 
-- [ ] **Phase 3: Itinerary engine**
+- [x] **Phase 3: Itinerary engine**
   - Day-wise itinerary generator algorithm with crowdsourced offbeat spots.
   - Crowd-avoidance recommendations (off-peak hours, hidden gems).
   - Cost breakdowns, filterable days, and interactive activity schedule.

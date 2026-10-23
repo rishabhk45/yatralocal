@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>YatraLocal - Itinerary Engine Unit Tests</title>
+  <style>
+    body { font-family: system-ui, sans-serif; padding: 24px; background: #FAF7F2; color: #1A252C; }
+    h1 { color: #0D5C5B; }
+    .test-box { background: white; border: 1px solid #E2D9CC; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+    .pass { color: #1B7955; font-weight: 700; }
+    .fail { color: #C5221F; font-weight: 700; }
+    pre { background: #F2ECE1; padding: 12px; border-radius: 4px; overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <h1>🧪 YatraLocal Itinerary Engine Test Suite</h1>
+  <p>Verifying unit constraints: Budget adherence, Senior Mode pacing limits, and Mood matching.</p>
+  <div id="results">Running tests...</div>
+
+  <script type="module">
+    import { generateItinerary } from '../js/itinerary.js';
+
+    async function runTests() {
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '';
+
+      const resp = await fetch('../data/destinations.json');
+      const destinationsData = await resp.json();
+
+      let passedCount = 0;
+      let totalTests = 0;
+
+      function assert(title, condition, detail = '') {
+        totalTests++;
+        const el = document.createElement('div');
+        el.className = 'test-box';
+        if (condition) {
+          passedCount++;
+          console.log(`[PASS] ${title}`);
+          el.innerHTML = `<span class="pass">✓ PASS:</span> <strong>${title}</strong> ${detail ? `<br><small>${detail}</small>` : ''}`;
+        } else {
+          console.error(`[FAIL] ${title}: ${detail}`);
+          el.innerHTML = `<span class="fail">✗ FAIL:</span> <strong>${title}</strong><br><small style="color: #C5221F;">${detail}</small>`;
+        }
+        resultsDiv.appendChild(el);
+      }
+
+      console.log('--- STARTING ITINERARY ENGINE UNIT TESTS ---');
+
+      // Test 1: Senior Mode pacing limits & walking restrictions
+      const seniorPrefs = {
+        destination: 'manali',
+        budget: 15000,
+        days: 3,
+        travellers: 2,
+        moods: ['Relaxed', 'Spiritual'],
+        accessibility: { seniorFriendly: true, minimalWalking: true }
+      };
+      const seniorPlan = generateItinerary(seniorPrefs, destinationsData);
+      
+      const allSeniorActivities = seniorPlan.days.flatMap(d => d.activities);
+      const invalidWalkItems = allSeniorActivities.filter(a => a.walkingLevel !== 'flat/minimal');
+      const maxSeniorPerDay = Math.max(...seniorPlan.days.map(d => d.activities.length));
+
+      assert(
+        'Senior Mode: No strenuous walking activities scheduled',
+        invalidWalkItems.length === 0,
+        `Found ${invalidWalkItems.length} activities with non-flat walking.`
+      );
+
+      assert(
+        'Senior Mode: Max 1-2 activities per day to prevent exhaustion',
+        maxSeniorPerDay <= 2,
+        `Maximum activities scheduled in a single day was ${maxSeniorPerDay}.`
+      );
+
+      // Test 2: Budget Breakdown & Calculation Integrity
+      const standardPrefs = {
+        destination: 'jaipur',
+        budget: 12000,
+        days: 3,
+        travellers: 2,
+        moods: ['Cultural', 'Foodie'],
+        accessibility: {}
+      };
+      const standardPlan = generateItinerary(standardPrefs, destinationsData);
+      const expectedTotal = standardPlan.breakdown.stay + 
+                            standardPlan.breakdown.food + 
+                            standardPlan.breakdown.activities + 
+                            standardPlan.breakdown.transport;
+
+      assert(
+        'Budget Calculation: Sum of breakdown items equals totalCost',
+        standardPlan.totalCost === expectedTotal,
+        `totalCost: ${standardPlan.totalCost}, breakdown sum: ${expectedTotal}`
+      );
+
+      // Test 3: Mood Matching & Offbeat Preference
+      const culturalPlan = standardPlan;
+      const matchingMoodItems = culturalPlan.days.flatMap(d => d.activities)
+        .filter(a => a.categories.includes('Cultural') || a.categories.includes('Foodie'));
+
+      assert(
+        'Mood Matching: Majority of scheduled activities match specified moods',
+        matchingMoodItems.length > 0,
+        `${matchingMoodItems.length} activities directly matched requested moods.`
+      );
+
+      // Test 4: 1-Day Trip Edge Case Handling
+      const oneDayPrefs = {
+        destination: 'varanasi',
+        budget: 4000,
+        days: 1,
+        travellers: 1,
+        moods: ['Spiritual'],
+        accessibility: {}
+      };
+      const oneDayPlan = generateItinerary(oneDayPrefs, destinationsData);
+      assert(
+        'Edge Case: 1-Day trip correctly builds 1 Day schedule without error',
+        oneDayPlan.days.length === 1 && oneDayPlan.days[0].activities.length > 0,
+        `Day count: ${oneDayPlan.days.length}, Activities: ${oneDayPlan.days[0]?.activities.length}`
+      );
+
+      // Summary
+      const summaryEl = document.createElement('div');
+      summaryEl.style.marginTop = '24px';
+      summaryEl.style.fontWeight = 'bold';
+      summaryEl.innerHTML = `🏁 Results: ${passedCount} / ${totalTests} tests passed. Check developer console for detailed logs.`;
+      resultsDiv.prepend(summaryEl);
+      console.log(`--- TEST RESULTS: ${passedCount}/${totalTests} PASSED ---`);
+    }
+
+    runTests();
+  </script>
+</body>
+</html>

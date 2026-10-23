@@ -8,7 +8,117 @@
     "description": "Snow-capped peaks and cedar forests. While Old Manali Mall Road is crowded, villages like Naggar and Burwa offer tranquil homestays.",
     "suggestedBudgetMin": 5000,
     "suggestedDays": 4,
-    "offbeatAlternatives": ["Naggar Castle Hamlet", "Burwa Village", "Sojha"]
+    "offbeatAlternatives": ["Naggar Castle Hamlet", "Burwa Village", "Sojha"],
+    "crowdPair": {
+      "popular": "Mall Road & Hadimba Temple Queue",
+      "offbeat": "Burwa Cedar Grove Walk & Naggar Heritage Wood Art"
+    },
+    "activities": [
+      {
+        "id": "manali-1",
+        "name": "Burwa Apple Orchard Stroll & Local Jam Tasting",
+        "categories": ["Relaxed", "Nature", "Family"],
+        "durationHours": 2.5,
+        "cost": 250,
+        "crowdLevel": "low",
+        "isHiddenGem": true,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "Burwa Hamlet",
+        "description": "Walk through family-tended apple orchards with scenic mountain views and fresh apricot juice."
+      },
+      {
+        "id": "manali-2",
+        "name": "Naggar Castle Heritage Walk & Roerich Art Gallery",
+        "categories": ["Cultural", "Relaxed", "Foodie"],
+        "durationHours": 3,
+        "cost": 300,
+        "crowdLevel": "low",
+        "isHiddenGem": true,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "Naggar Heritage Village",
+        "description": "Wood-and-stone Himalayan architecture with quiet viewpoints and traditional Siddu food stalls."
+      },
+      {
+        "id": "manali-3",
+        "name": "Jogini Waterfall Forest Trail",
+        "categories": ["Adventure", "Nature"],
+        "durationHours": 3.5,
+        "cost": 100,
+        "crowdLevel": "medium",
+        "isHiddenGem": false,
+        "seniorFriendly": false,
+        "walkingLevel": "moderate",
+        "area": "Vashisht Upper Trail",
+        "description": "Pleasant cedar forest trek from Vashisht leading to cascading natural springs."
+      },
+      {
+        "id": "manali-4",
+        "name": "Vashisht Sage Temple & Natural Sulphur Bath",
+        "categories": ["Spiritual", "Cultural"],
+        "durationHours": 1.5,
+        "cost": 50,
+        "crowdLevel": "medium",
+        "isHiddenGem": false,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "Vashisht Village",
+        "description": "4,000-year-old wooden temple dedicated to Sage Vashisht with warm therapeutic spring baths."
+      },
+      {
+        "id": "manali-5",
+        "name": "Hampta Valley High Alpine Pine Picnic",
+        "categories": ["Adventure", "Nature"],
+        "durationHours": 4,
+        "cost": 650,
+        "crowdLevel": "low",
+        "isHiddenGem": true,
+        "seniorFriendly": false,
+        "walkingLevel": "high/strenuous",
+        "area": "Sethi / Hampta Foothills",
+        "description": "Cross river meadows and pine canopies with zero city traffic or horns."
+      },
+      {
+        "id": "manali-6",
+        "name": "Traditional Himachali Dham Feast at Village Kitchen",
+        "categories": ["Foodie", "Cultural", "Family"],
+        "durationHours": 1.5,
+        "cost": 400,
+        "crowdLevel": "low",
+        "isHiddenGem": true,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "Haripur Crafts Village",
+        "description": "Festive botanical vegetarian feast served on dried leaf pattals by local village cooks."
+      },
+      {
+        "id": "manali-7",
+        "name": "Hadimba Temple Forest Sanctuary",
+        "categories": ["Spiritual", "Cultural"],
+        "durationHours": 2,
+        "cost": 50,
+        "crowdLevel": "high",
+        "isHiddenGem": false,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "Dhungri Park",
+        "description": "Pagoda-style 16th century wooden shrine nestled inside towering deodar trees."
+      },
+      {
+        "id": "manali-8",
+        "name": "Traditional Kullu Handloom Shawl Weaving Workshop",
+        "categories": ["Cultural", "Family"],
+        "durationHours": 2,
+        "cost": 200,
+        "crowdLevel": "low",
+        "isHiddenGem": true,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "Kullu Valley Cooperative",
+        "description": "Witness multigenerational geometric geometric woolen weaving and try your hands on the spindle."
+      }
+    ]
   },
   {
     "id": "jaipur",
@@ -19,7 +129,117 @@
     "description": "The historic Pink City. Step away from Hawa Mahal queues to explore artisan block-printing villages and heritage dharamsalas.",
     "suggestedBudgetMin": 6000,
     "suggestedDays": 3,
-    "offbeatAlternatives": ["Amer Old Town Haveli Quarter", "Bagru Artisan Enclave", "Sanganer"]
+    "offbeatAlternatives": ["Amer Old Town Haveli Quarter", "Bagru Artisan Enclave", "Sanganer"],
+    "crowdPair": {
+      "popular": "Hawa Mahal & City Palace Main Ticketing",
+      "offbeat": "Panna Meena Kund Stepwell & Bagru Hand-Block Dyeing Village"
+    },
+    "activities": [
+      {
+        "id": "jaipur-1",
+        "name": "Panna Meena Ka Kund Stepwell & Quiet Amber Lanes",
+        "categories": ["Cultural", "Relaxed"],
+        "durationHours": 2,
+        "cost": 100,
+        "crowdLevel": "low",
+        "isHiddenGem": true,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "Amer Old Town",
+        "description": "16th-century symmetrical geometric stepwell tucked away from the main Amer Fort tourist rush."
+      },
+      {
+        "id": "jaipur-2",
+        "name": "Bagru Natural Dyeing & Wooden Block Print Workshop",
+        "categories": ["Cultural", "Family", "Foodie"],
+        "durationHours": 3.5,
+        "cost": 450,
+        "crowdLevel": "low",
+        "isHiddenGem": true,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "Bagru Artisan Colony",
+        "description": "Learn 300-year-old Chippa family vegetable-dye printing and create your own handmade scarf."
+      },
+      {
+        "id": "jaipur-3",
+        "name": "Sunset Tea at Nahargarh Fort Ridge",
+        "categories": ["Relaxed", "Nature"],
+        "durationHours": 2.5,
+        "cost": 200,
+        "crowdLevel": "medium",
+        "isHiddenGem": false,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "Aravalli Ridge",
+        "description": "Panoramic golden-hour view overlooking the glowing pink terracotta city."
+      },
+      {
+        "id": "jaipur-4",
+        "name": "Govind Dev Ji Temple Dawn Aarti & Bhajan",
+        "categories": ["Spiritual", "Cultural"],
+        "durationHours": 1.5,
+        "cost": 0,
+        "crowdLevel": "medium",
+        "isHiddenGem": true,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "City Palace Enclosure",
+        "description": "Deeply moving sunrise devotional songs with thousands of local devotees without commercial tickets."
+      },
+      {
+        "id": "jaipur-5",
+        "name": "Galta Ji (Monkey Temple) Sun Pavilion Stroll",
+        "categories": ["Spiritual", "Adventure"],
+        "durationHours": 2.5,
+        "cost": 150,
+        "crowdLevel": "low",
+        "isHiddenGem": true,
+        "seniorFriendly": false,
+        "walkingLevel": "moderate",
+        "area": "Eastern Valley Pass",
+        "description": "Ancient freshwater springs, pink sandstone pavilions, and tranquil hill views."
+      },
+      {
+        "id": "jaipur-6",
+        "name": "Old City Heritage Haveli & Sweet Meat Walk",
+        "categories": ["Foodie", "Cultural", "Family"],
+        "durationHours": 2,
+        "cost": 300,
+        "crowdLevel": "medium",
+        "isHiddenGem": false,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "Johari Bazaar Chowk",
+        "description": "Taste authentic Pyaaz Kachori and Ghewar from 80-year-old family halwais."
+      },
+      {
+        "id": "jaipur-7",
+        "name": "Jaigarh Fort & Underground Water Reservoir",
+        "categories": ["Cultural", "Adventure"],
+        "durationHours": 3,
+        "cost": 200,
+        "crowdLevel": "low",
+        "isHiddenGem": true,
+        "seniorFriendly": false,
+        "walkingLevel": "moderate",
+        "area": "Cheel Ka Teela",
+        "description": "Massive military citadel boasting ancient rainwater-harvesting canals and medieval cannon foundry."
+      },
+      {
+        "id": "jaipur-8",
+        "name": "Smriti Van Quiet Biodiversity Forest Walk",
+        "categories": ["Nature", "Relaxed"],
+        "durationHours": 2,
+        "cost": 50,
+        "crowdLevel": "low",
+        "isHiddenGem": true,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "JL Marg Greens",
+        "description": "Peaceful city forest with chirping peacocks and medicinal trees far from urban bustle."
+      }
+    ]
   },
   {
     "id": "varanasi",
@@ -30,7 +250,117 @@
     "description": "Timeless spiritual cradle on the holy Ganga. Experience serene dawn boat rides and quiet weaver mohallas away from temple bottlenecks.",
     "suggestedBudgetMin": 4000,
     "suggestedDays": 3,
-    "offbeatAlternatives": ["Chet Singh Ghat", "Ramnagar Rural Riverfront", "Sarnath Quiet Enclave"]
+    "offbeatAlternatives": ["Chet Singh Ghat", "Ramnagar Rural Riverfront", "Sarnath Quiet Enclave"],
+    "crowdPair": {
+      "popular": "Dashashwamedh Evening Ganga Aarti Crowd",
+      "offbeat": "Assi Dawn Subah-e-Banaras & Quiet Chet Singh Fortress Ghat"
+    },
+    "activities": [
+      {
+        "id": "varanasi-1",
+        "name": "Subah-e-Banaras: Dawn Classical Sitar & Ganga Aarti",
+        "categories": ["Spiritual", "Relaxed", "Cultural"],
+        "durationHours": 2,
+        "cost": 0,
+        "crowdLevel": "low",
+        "isHiddenGem": true,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "Assi Ghat",
+        "description": "Mellow morning Vedic chants, Indian classical music, and sunrise yoga at the quiet southern ghats."
+      },
+      {
+        "id": "varanasi-2",
+        "name": "Quiet Hand-Rowed Wooden Boat to Chet Singh Fort",
+        "categories": ["Spiritual", "Relaxed", "Nature"],
+        "durationHours": 2,
+        "cost": 400,
+        "crowdLevel": "low",
+        "isHiddenGem": true,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "Shivala Ghat Front",
+        "description": "Glide gently on clean morning river currents without noisy motorized boat fumes."
+      },
+      {
+        "id": "varanasi-3",
+        "name": "Madanpura Heritage Silk Weavers Quarter",
+        "categories": ["Cultural", "Family"],
+        "durationHours": 2.5,
+        "cost": 150,
+        "crowdLevel": "low",
+        "isHiddenGem": true,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "Madanpura Mohalla",
+        "description": "Meet Ansari master weavers crafting pure Banarasi zari sarees on centuries-old pit-looms."
+      },
+      {
+        "id": "varanasi-4",
+        "name": "Sarnath Deer Park & Dhamek Stupa Enclosure",
+        "categories": ["Spiritual", "Cultural", "Relaxed"],
+        "durationHours": 3,
+        "cost": 250,
+        "crowdLevel": "low",
+        "isHiddenGem": false,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "Sarnath",
+        "description": "Tranquil lawns where Buddha delivered his first sermon; wheelchair and senior-accessible."
+      },
+      {
+        "id": "varanasi-5",
+        "name": "Dashashwamedh Ghat Main Evening Aarti",
+        "categories": ["Spiritual", "Cultural"],
+        "durationHours": 2,
+        "cost": 100,
+        "crowdLevel": "high",
+        "isHiddenGem": false,
+        "seniorFriendly": false,
+        "walkingLevel": "moderate",
+        "area": "Central Ghats",
+        "description": "Spectacular brass lamp ceremony, vibrant and musical, but heavily crowded on peak evenings."
+      },
+      {
+        "id": "varanasi-6",
+        "name": "Ramnagar Fort & Famous Lassi Tasting Across the River",
+        "categories": ["Foodie", "Cultural"],
+        "durationHours": 2.5,
+        "cost": 200,
+        "crowdLevel": "low",
+        "isHiddenGem": true,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "Ramnagar Riverfront",
+        "description": "18th-century sandstone fortress museum followed by creamy malai lassi served in earthen kulhad."
+      },
+      {
+        "id": "varanasi-7",
+        "name": "Kashi Heritage Thali in Heritage Haveli Courtyard",
+        "categories": ["Foodie", "Family", "Relaxed"],
+        "durationHours": 1.5,
+        "cost": 450,
+        "crowdLevel": "low",
+        "isHiddenGem": true,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "Bengal Tola",
+        "description": "Sattvic Ayurvedic seasonal vegetarian recipes curated for digestion and vitality."
+      },
+      {
+        "id": "varanasi-8",
+        "name": "Tulsi Ghat Akhaada & Wrestling Practice Observation",
+        "categories": ["Cultural", "Adventure"],
+        "durationHours": 1.5,
+        "cost": 50,
+        "crowdLevel": "low",
+        "isHiddenGem": true,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "Tulsi Ghat",
+        "description": "Centuries-old traditional clay wrestling grounds where ascetics and athletes train at dawn."
+      }
+    ]
   },
   {
     "id": "rishikesh",
@@ -41,7 +371,117 @@
     "description": "Yoga capital nestled in the Shivaliks. Skip congested bridge lanes for upstream eco-ashrams and slow river beaches.",
     "suggestedBudgetMin": 4500,
     "suggestedDays": 3,
-    "offbeatAlternatives": ["Tapovan Quiet Ridge", "Phool Chatti Ashram Trail", "Shivpuri Hamlet"]
+    "offbeatAlternatives": ["Tapovan Quiet Ridge", "Phool Chatti Ashram Trail", "Shivpuri Hamlet"],
+    "crowdPair": {
+      "popular": "Ram Jhula Traffic & Commercial River Rafting Camp",
+      "offbeat": "Phool Chatti River Meditation & Quiet Vashishta Gufa Cave"
+    },
+    "activities": [
+      {
+        "id": "rishikesh-1",
+        "name": "Vashishta Gufa Ancient Meditation Cave",
+        "categories": ["Spiritual", "Relaxed"],
+        "durationHours": 2,
+        "cost": 50,
+        "crowdLevel": "low",
+        "isHiddenGem": true,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "Upstream Ganga Bank",
+        "description": "Ancient secluded riverside cave filled with profound silence and cool Himalayan breeze."
+      },
+      {
+        "id": "rishikesh-2",
+        "name": "Phool Chatti Gentle Herbal Garden Walk",
+        "categories": ["Nature", "Relaxed", "Spiritual"],
+        "durationHours": 2,
+        "cost": 100,
+        "crowdLevel": "low",
+        "isHiddenGem": true,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "Phool Chatti Valley",
+        "description": "Where the tributary streams meet the Ganga; peaceful herbal garden with zero vehicle traffic."
+      },
+      {
+        "id": "rishikesh-3",
+        "name": "White Water River Rafting Adventure",
+        "categories": ["Adventure"],
+        "durationHours": 3.5,
+        "cost": 850,
+        "crowdLevel": "high",
+        "isHiddenGem": false,
+        "seniorFriendly": false,
+        "walkingLevel": "high/strenuous",
+        "area": "Shivpuri to NIM Beach",
+        "description": "Grade III rapids through scenic Himalayan canyons; exciting but unsuitable for seniors."
+      },
+      {
+        "id": "rishikesh-4",
+        "name": "Beatles Ashram (Chaurasi Kutia) Art & Heritage",
+        "categories": ["Cultural", "Nature", "Relaxed"],
+        "durationHours": 2.5,
+        "cost": 150,
+        "crowdLevel": "medium",
+        "isHiddenGem": false,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "Swarg Ashram Forest",
+        "description": "Stone meditation domes surrounded by Rajaji tiger reserve wilderness and colorful graffiti."
+      },
+      {
+        "id": "rishikesh-5",
+        "name": "Parmarth Niketan Sunset Ganga Aarti",
+        "categories": ["Spiritual", "Family"],
+        "durationHours": 1.5,
+        "cost": 0,
+        "crowdLevel": "medium",
+        "isHiddenGem": false,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "Parmarth Ghat",
+        "description": "Soulful riverside bhajans and floating flower diyas with orderly seating arrangements."
+      },
+      {
+        "id": "rishikesh-6",
+        "name": "Ayurvedic Herbal Tea & Sattvic Khichdi Session",
+        "categories": ["Foodie", "Relaxed"],
+        "durationHours": 1.5,
+        "cost": 250,
+        "crowdLevel": "low",
+        "isHiddenGem": true,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "Tapovan Upper Ridge",
+        "description": "Taste mountain honey, tulsi infusions, and digestible millet khichdi made with garden herbs."
+      },
+      {
+        "id": "rishikesh-7",
+        "name": "Neer Garh Natural Waterfall Forest Walk",
+        "categories": ["Adventure", "Nature"],
+        "durationHours": 3,
+        "cost": 100,
+        "crowdLevel": "medium",
+        "isHiddenGem": false,
+        "seniorFriendly": false,
+        "walkingLevel": "moderate",
+        "area": "Neer Valley",
+        "description": "Tiered natural turquoise pools ideal for cool wading and butterfly watching."
+      },
+      {
+        "id": "rishikesh-8",
+        "name": "Sound Healing & Tibetan Singing Bowl Therapy",
+        "categories": ["Relaxed", "Spiritual"],
+        "durationHours": 1.5,
+        "cost": 400,
+        "crowdLevel": "low",
+        "isHiddenGem": true,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "Tapovan Quiet Studio",
+        "description": "Deep resonance vibrational acoustic session to release fatigue and restore calm."
+      }
+    ]
   },
   {
     "id": "hampi",
@@ -52,7 +492,117 @@
     "description": "Boulder-strewn UNESCO world heritage site. Vast landscape where you can cycle or stroll peacefully with local artisan guides.",
     "suggestedBudgetMin": 5000,
     "suggestedDays": 3,
-    "offbeatAlternatives": ["Anegundi Historic Village", "Sanapur Lake Hamlet", "Daroji Scrublands"]
+    "offbeatAlternatives": ["Anegundi Historic Village", "Sanapur Lake Hamlet", "Daroji Scrublands"],
+    "crowdPair": {
+      "popular": "Virupaksha Temple Main Bazaar Parking",
+      "offbeat": "Anegundi Banana Fiber Craft Village & Sanapur Boulder Sunset"
+    },
+    "activities": [
+      {
+        "id": "hampi-1",
+        "name": "Anegundi Rural Village & Banana-Fiber Craft Collective",
+        "categories": ["Cultural", "Family", "Relaxed"],
+        "durationHours": 2.5,
+        "cost": 150,
+        "crowdLevel": "low",
+        "isHiddenGem": true,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "Anegundi Rural Island",
+        "description": "Historic Kishkindha village where women craft eco-friendly bags and baskets from organic banana fiber."
+      },
+      {
+        "id": "hampi-2",
+        "name": "Sanapur Lake Coracle Ride & Granite Cliffs",
+        "categories": ["Nature", "Relaxed"],
+        "durationHours": 2,
+        "cost": 350,
+        "crowdLevel": "low",
+        "isHiddenGem": true,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "Sanapur Reservoir",
+        "description": "Float gently in round woven reed coracles through surreal red granite canyons."
+      },
+      {
+        "id": "hampi-3",
+        "name": "Vittala Temple Stone Chariot & Musical Pillars",
+        "categories": ["Cultural", "Spiritual"],
+        "durationHours": 2.5,
+        "cost": 100,
+        "crowdLevel": "medium",
+        "isHiddenGem": false,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "Royal Sacred Enclosure",
+        "description": "World-famous monolithic stone chariot with electric golf cart assistance for seniors."
+      },
+      {
+        "id": "hampi-4",
+        "name": "Hemakuta Hill Sunset over Monolithic Ganesha",
+        "categories": ["Spiritual", "Relaxed", "Cultural"],
+        "durationHours": 2,
+        "cost": 0,
+        "crowdLevel": "low",
+        "isHiddenGem": true,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "Hemakuta Ridge",
+        "description": "Gentle sloping granite hill sprinkled with early pre-Vijayanagara shrines and golden sunset glow."
+      },
+      {
+        "id": "hampi-5",
+        "name": "Anjanadri Hill Sunrise Monkey Temple Climb",
+        "categories": ["Spiritual", "Adventure"],
+        "durationHours": 3,
+        "cost": 50,
+        "crowdLevel": "medium",
+        "isHiddenGem": false,
+        "seniorFriendly": false,
+        "walkingLevel": "high/strenuous",
+        "area": "Gangavathi Taluk",
+        "description": "575 stone steps leading to the legendary birthplace of Lord Hanuman; breathtaking vistas."
+      },
+      {
+        "id": "hampi-6",
+        "name": "Traditional North Karnataka Jolada Roti Meal",
+        "categories": ["Foodie", "Family", "Cultural"],
+        "durationHours": 1.5,
+        "cost": 200,
+        "crowdLevel": "low",
+        "isHiddenGem": true,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "Kamalapur Village",
+        "description": "Wood-fired sorghum rotis served with stuffed brinjal ennegayi, shenga chutney, and fresh buttermilk."
+      },
+      {
+        "id": "hampi-7",
+        "name": "Tungabhadra River Coracle Crossing & Riverside Ruin Path",
+        "categories": ["Adventure", "Nature"],
+        "durationHours": 2,
+        "cost": 150,
+        "crowdLevel": "low",
+        "isHiddenGem": true,
+        "seniorFriendly": false,
+        "walkingLevel": "moderate",
+        "area": "Chakratirtha",
+        "description": "Scramble through peaceful rock trails where ancient boulder carvings line the roaring river."
+      },
+      {
+        "id": "hampi-8",
+        "name": "Daroji Sloth Bear Sanctuary Quiet Safari",
+        "categories": ["Nature", "Family"],
+        "durationHours": 3,
+        "cost": 300,
+        "crowdLevel": "low",
+        "isHiddenGem": true,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "Daroji Scrubland",
+        "description": "Watch wild Indian sloth bears climbing rocky outcrops from a sheltered watchtower."
+      }
+    ]
   },
   {
     "id": "munnar",
@@ -63,6 +613,116 @@
     "description": "Rolling emerald tea plantations and mist. Escape congested viewpoint parking for family-run plantation stays in Marayoor.",
     "suggestedBudgetMin": 7000,
     "suggestedDays": 4,
-    "offbeatAlternatives": ["Marayoor Sandalwood Forest", "Vattavada Farm Village", "Chinnakanal Tea Ridge"]
+    "offbeatAlternatives": ["Marayoor Sandalwood Forest", "Vattavada Farm Village", "Chinnakanal Tea Ridge"],
+    "crowdPair": {
+      "popular": "Echo Point Tour Bus Parking Jam",
+      "offbeat": "Marayoor Natural Sandalwood Grove & Jaggery Farm Tasting"
+    },
+    "activities": [
+      {
+        "id": "munnar-1",
+        "name": "Marayoor Organic Jaggery Making & Sandalwood Walk",
+        "categories": ["Cultural", "Foodie", "Relaxed"],
+        "durationHours": 3,
+        "cost": 250,
+        "crowdLevel": "low",
+        "isHiddenGem": true,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "Marayoor Valley",
+        "description": "Watch traditional sugarcane boiling into famous Marayoor Sharkara jaggery in serene forest glades."
+      },
+      {
+        "id": "munnar-2",
+        "name": "Family Spice Plantation Stroll & Cardamom Picking",
+        "categories": ["Nature", "Family", "Foodie"],
+        "durationHours": 2,
+        "cost": 200,
+        "crowdLevel": "low",
+        "isHiddenGem": true,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "Chithirapuram",
+        "description": "Smell fresh cinnamon bark, vanilla pods, and green cardamom under shade of jackfruit trees."
+      },
+      {
+        "id": "munnar-3",
+        "name": "Top Station Cloud Ridge Viewpoint",
+        "categories": ["Nature", "Adventure"],
+        "durationHours": 3,
+        "cost": 150,
+        "crowdLevel": "high",
+        "isHiddenGem": false,
+        "seniorFriendly": false,
+        "walkingLevel": "moderate",
+        "area": "Kerala-Tamil Nadu Border",
+        "description": "Highest point in Munnar overlooking deep Tamil Nadu plains; breathtaking but busy during mid-day."
+      },
+      {
+        "id": "munnar-4",
+        "name": "Tea Leaf Plucking Experience & Factory Museum",
+        "categories": ["Cultural", "Relaxed", "Family"],
+        "durationHours": 2.5,
+        "cost": 200,
+        "crowdLevel": "medium",
+        "isHiddenGem": false,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "Nullatanni Estate",
+        "description": "Learn Orthodox CTC tea processing and sample brisk high-altitude orthodox black tea."
+      },
+      {
+        "id": "munnar-5",
+        "name": "Vattavada Terrace Vegetable Farm Walk",
+        "categories": ["Nature", "Relaxed"],
+        "durationHours": 3,
+        "cost": 100,
+        "crowdLevel": "low",
+        "isHiddenGem": true,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "Vattavada Village",
+        "description": "Cool terraced fields of strawberries, garlic, and tree tomatoes tucked away behind eucalyptus forests."
+      },
+      {
+        "id": "munnar-6",
+        "name": "Traditional Kerala Sadhya on Fresh Banana Leaf",
+        "categories": ["Foodie", "Cultural", "Family"],
+        "durationHours": 1.5,
+        "cost": 300,
+        "crowdLevel": "low",
+        "isHiddenGem": true,
+        "seniorFriendly": true,
+        "walkingLevel": "flat/minimal",
+        "area": "Anachal Village",
+        "description": "Authentic feast of avial, sambar, thoran, and hot red rice served with crunchy pappadams."
+      },
+      {
+        "id": "munnar-7",
+        "name": "Lakkom Waterfalls Natural Forest Bathing",
+        "categories": ["Nature", "Adventure"],
+        "durationHours": 2.5,
+        "cost": 100,
+        "crowdLevel": "medium",
+        "isHiddenGem": false,
+        "seniorFriendly": false,
+        "walkingLevel": "moderate",
+        "area": "Eravikulam Boundary",
+        "description": "Silky mountain cascade fringed with thick bamboo thickets."
+      },
+      {
+        "id": "munnar-8",
+        "name": "Chinnar Wildlife Sanctuary Tree House Watch",
+        "categories": ["Adventure", "Nature"],
+        "durationHours": 3.5,
+        "cost": 400,
+        "crowdLevel": "low",
+        "isHiddenGem": true,
+        "seniorFriendly": false,
+        "walkingLevel": "moderate",
+        "area": "Rain Shadow Region",
+        "description": "Dry deciduous scrub home to the endangered Grizzled Giant Squirrel and star tortoises."
+      }
+    ]
   }
 ]
