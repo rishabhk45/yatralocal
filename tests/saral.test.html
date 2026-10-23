@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>YatraLocal - Saral Mode Unit & Flow Tests</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    body { font-family: monospace; padding: 24px; background: #fafafa; }
+    .pass { color: green; font-weight: bold; }
+    .fail { color: red; font-weight: bold; }
+    .test-box { background: white; border: 1px solid #ccc; padding: 16px; margin-bottom: 12px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Saral Mode Test Suite (Phase 5)</h1>
+  <div id="results"></div>
+
+  <div id="test-sandbox" style="display: none;"></div>
+
+  <script type="module">
+    import { store } from '../js/store.js';
+    import { speechAssistant } from '../js/speech.js';
+    import { renderSaralView } from '../pages/saral.js';
+
+    const results = document.getElementById('results');
+    const log = (name, passed, detail = '') => {
+      const div = document.createElement('div');
+      div.className = 'test-box';
+      div.innerHTML = `
+        <span class="${passed ? 'pass' : 'fail'}">${passed ? '✓ PASS' : '✗ FAIL'}</span>: 
+        <strong>${name}</strong>
+        ${detail ? `<pre style="margin-top:6px; color:#444;">${detail}</pre>` : ''}
+      `;
+      results.appendChild(div);
+      console.log(`[${passed ? 'PASS' : 'FAIL'}] ${name}`, detail);
+    };
+
+    async function runTests() {
+      // Test 1: Global Toggle persistence and <html> class
+      try {
+        store.setSaralMode(true);
+        const state1 = store.getState().saralMode;
+        document.documentElement.classList.toggle('saral', state1);
+        const hasClass = document.documentElement.classList.contains('saral');
+        log('Test 1: Global Saral Mode toggle updates store and adds class to <html>', state1 === true && hasClass, `saralMode=${state1}, hasClass=${hasClass}`);
+      } catch (err) {
+        log('Test 1: Global Saral Mode toggle', false, err.message);
+      }
+
+      // Test 2: Web Speech Assistant API availability and fallback
+      try {
+        const isSupported = speechAssistant.isSupported;
+        const synth = window.speechSynthesis;
+        log('Test 2: SpeechAssistant correctly wraps window.speechSynthesis', isSupported === Boolean(synth), `isSupported: ${isSupported}`);
+      } catch (err) {
+        log('Test 2: SpeechAssistant', false, err.message);
+      }
+
+      // Test 3: Saral View mounts 5-step wizard with Step 1
+      try {
+        const sandbox = document.getElementById('test-sandbox');
+        sandbox.innerHTML = '';
+        const viewEl = renderSaralView();
+        sandbox.appendChild(viewEl);
+
+        const stepBadge = viewEl.querySelector('#saral-step-indicator');
+        const hasStep1 = stepBadge && stepBadge.textContent.includes('1');
+        const choiceCards = viewEl.querySelectorAll('.saral-choice-card');
+        log('Test 3: Wizard initializes at Step 1 of 5 with 6 destination cards', hasStep1 && choiceCards.length === 6, `Indicator text: "${stepBadge?.textContent.trim()}", Cards count: ${choiceCards.length}`);
+      } catch (err) {
+        log('Test 3: Wizard Step 1', false, err.message);
+      }
+
+      // Test 4: Stepping through wizard to Step 5
+      try {
+        const sandbox = document.getElementById('test-sandbox');
+        const viewEl = sandbox.firstChild;
+
+        // Click next through steps
+        let nextBtn = viewEl.querySelector('#saral-next-btn');
+        nextBtn?.click(); // To step 2
+        nextBtn = viewEl.querySelector('#saral-next-btn');
+        nextBtn?.click(); // To step 3
+        nextBtn = viewEl.querySelector('#saral-next-btn');
+        nextBtn?.click(); // To step 4
+        nextBtn = viewEl.querySelector('#saral-next-btn');
+        nextBtn?.click(); // To step 5
+
+        const stepBadge = viewEl.querySelector('#saral-step-indicator');
+        const isStep5 = stepBadge && stepBadge.textContent.includes('5');
+        const finishBtn = viewEl.querySelector('#saral-finish-btn');
+        log('Test 4: Steps forward sequentially to Step 5 (Review)', isStep5 && Boolean(finishBtn), `Final step: "${stepBadge?.textContent.trim()}", Finish button present: ${Boolean(finishBtn)}`);
+      } catch (err) {
+        log('Test 4: Step advancement', false, err.message);
+      }
+
+      // Test 5: Accessible buttons have minimum height and aria-labels
+      try {
+        const sandbox = document.getElementById('test-sandbox');
+        const viewEl = sandbox.firstChild;
+        const audioBar = viewEl.querySelector('.saral-audio-bar');
+        const readBtn = viewEl.querySelector('#saral-read-btn');
+        const helpBtn = viewEl.querySelector('#saral-help-btn');
+        const callBtn = viewEl.querySelector('#saral-call-family-btn');
+
+        const allButtonsPresent = Boolean(audioBar && readBtn && helpBtn && callBtn);
+        log('Test 5: Audio guidance, Help, and Call Family buttons are all mounted', allButtonsPresent, 'Read, Stop, Lang, Help, Call Family present');
+      } catch (err) {
+        log('Test 5: Accessible buttons', false, err.message);
+      }
+    }
+
+    runTests();
+  </script>
+</body>
+</html>

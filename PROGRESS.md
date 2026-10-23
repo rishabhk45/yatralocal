@@ -26,11 +26,19 @@ Track progress across all 14 project phases.
   - Verified local guides directory with spoken languages, badges, and specialties.
   - Filter by budget, location, amenities, and senior-friendliness.
 
-- [ ] **Phase 5: Saral Mode**
-  - High-visibility toggle for Saral Mode.
-  - Ultra-large touch targets (min 48-56px), simplified typography, high-contrast palette.
-  - Web Speech API integration for text-to-speech / voice guidance.
-  - One-click simplified booking shortcuts.
+- [x] **Phase 5: Saral Mode**
+  - High-visibility global toggle in header and landing page, adding `.saral` to `<html>` and persisting in `localStorage`.
+  - High-contrast accessible styling: 22px+ base font, min 64px button height, zero visual clutter, large icons.
+  - Simplified 5-step wizard (Destination with optional voice input, Days, Budget, Preferences, Review).
+  - Web Speech API integration (`SpeechSynthesis` in EN/HI + graceful fallback, `SpeechRecognition` voice input, Read Aloud & Stop buttons).
+  - Persistent Help modal and "Call a Family Member" simulation (phone & WhatsApp).
+  - Simplified results page: collapsible day cards, ONE homestay, ONE guide, and single big "Book this" CTA.
+  - **Manual QA Checklist (Keyboard & 200% Zoom)**:
+    - [x] Keyboard-only Tab navigation across all 5 steps with visible 4px golden focus rings (`outline: 4px solid #D97706`).
+    - [x] 200% browser zoom verification: zero text clipping or horizontal layout overflow.
+    - [x] Web Speech narration: "Read Aloud" reads active step; "Stop" halts speech; language toggle switches to Hindi (`hi-IN`).
+    - [x] Selection audio feedback: announces confirmation ("You chose Varanasi").
+    - [x] Family Call modal: opens on click, simulates companion direct call & WhatsApp dispatch.
 
 - [ ] **Phase 6: Booking + family-assisted flow**
   - Simulated booking modal with instant confirmation and QR code/voucher generation.

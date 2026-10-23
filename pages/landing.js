@@ -4,6 +4,8 @@
  * Inclusion Strip, Impact Metrics, and Footer placeholders.
  */
 
+import { store } from '../js/store.js';
+
 export function renderLandingView() {
   const container = document.createElement('div');
   container.className = 'landing-view';
@@ -158,7 +160,14 @@ export function renderLandingView() {
             <div style="background-color: #FFFFFF; padding: var(--space-4); border-radius: var(--radius-md); border: 1px solid #FCD34D;">
               <strong>👨‍👩‍👧 For Families:</strong> Assist parents with bookings, get emergency updates, and coordinate with verified guides.
             </div>
-            <a href="#/saral" class="btn btn-secondary" style="align-self: flex-start;">Open Saral Mode ➔</a>
+            <div class="flex gap-2" style="flex-wrap: wrap;">
+              <button type="button" id="landing-saral-toggle-btn" class="btn btn-secondary" style="font-weight: 700;">
+                ☀️ Turn ON Saral Mode
+              </button>
+              <a href="#/saral" class="btn btn-ghost" style="border-color: #D97706; color: #92400E; font-weight: 700;">
+                Open Simple 5-Step Wizard ➔
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -226,6 +235,26 @@ export function renderLandingView() {
       </div>
     </section>
   `;
+
+  const landingSaralBtn = container.querySelector('#landing-saral-toggle-btn');
+  if (landingSaralBtn) {
+    const isSaral = store.getState().saralMode;
+    landingSaralBtn.textContent = isSaral ? '☀️ Saral Mode is ACTIVE (Click to Turn OFF)' : '☀️ Turn ON Saral Mode';
+
+    landingSaralBtn.addEventListener('click', () => {
+      const currentState = store.getState().saralMode;
+      const newState = !currentState;
+      store.setSaralMode(newState);
+      document.documentElement.classList.toggle('saral', newState);
+      landingSaralBtn.textContent = newState ? '☀️ Saral Mode is ACTIVE (Click to Turn OFF)' : '☀️ Turn ON Saral Mode';
+      const headerToggle = document.getElementById('saral-toggle');
+      if (headerToggle) {
+        headerToggle.classList.toggle('active', newState);
+        headerToggle.setAttribute('aria-pressed', String(newState));
+      }
+      window.YatraApp.showToast(newState ? '☀️ Saral Mode Enabled' : 'Saral Mode Disabled');
+    });
+  }
 
   return container;
 }

@@ -9,6 +9,7 @@ import { renderLandingView } from '../pages/landing.js';
 import { renderPlanView } from '../pages/plan.js';
 import { renderItineraryView } from '../pages/itinerary.js';
 import { renderStaysView } from '../pages/stays.js';
+import { renderSaralView } from '../pages/saral.js';
 import { renderStyleGuide } from '../pages/style-guide.js';
 
 function renderStubView(title, description, nextLink, nextLabel) {
@@ -85,9 +86,9 @@ document.addEventListener('DOMContentLoaded', () => {
   router.register('#/plan', renderPlanView);
   router.register('#/itinerary', renderItineraryView);
   router.register('#/stays', renderStaysView);
+  router.register('#/saral', renderSaralView);
   router.register('#/booking', renderStubView('Bookings & Family Assistance', 'Simulated booking details and family-assisted confirmation.', '#/', 'Home'));
   router.register('#/owner', renderStubView('Hotel Owner Dashboard', 'Occupancy tracker and off-season demand booster.', '#/', 'Home'));
-  router.register('#/saral', renderStubView('Saral Mode Portal', 'Elder-friendly high-contrast UI with voice assistance.', '#/', 'Home'));
   router.register('#/styleguide', renderStyleGuide);
 
   // Initialize router
@@ -107,15 +108,35 @@ document.addEventListener('DOMContentLoaded', () => {
     showToast('🚨 Safety SOS triggered: Emergency location beacon wired in Phase 8 (Demo).');
   });
 
-  // Saral Mode Toggle
+  // Saral Mode Global Sync & Toggle
   const saralToggleBtn = document.getElementById('saral-toggle');
+  const syncSaralUI = (isEnabled) => {
+    document.documentElement.classList.toggle('saral', isEnabled);
+    if (saralToggleBtn) {
+      saralToggleBtn.classList.toggle('active', isEnabled);
+      saralToggleBtn.setAttribute('aria-pressed', String(isEnabled));
+      const label = saralToggleBtn.querySelector('#saral-btn-label');
+      if (label) label.textContent = isEnabled ? 'Saral ON ☀️' : 'Saral Mode';
+    }
+  };
+
+  // Initial Saral state restore
+  const initialSaral = store.getState().saralMode || window.location.hash.startsWith('#/saral');
+  syncSaralUI(initialSaral);
+
   saralToggleBtn?.addEventListener('click', () => {
     const currentState = store.getState().saralMode;
     const newState = !currentState;
     store.setSaralMode(newState);
-    saralToggleBtn.classList.toggle('active', newState);
-    saralToggleBtn.setAttribute('aria-pressed', String(newState));
-    showToast(newState ? '☀️ Saral Easy Mode Enabled' : 'Saral Mode Disabled');
+    syncSaralUI(newState);
+    showToast(newState ? '☀️ Saral Easy Mode Enabled (22px+ Font, Big Buttons)' : 'Standard Mode Restored');
+  });
+
+  // Auto-activate Saral mode styles when navigating to #/saral
+  window.addEventListener('hashchange', () => {
+    if (window.location.hash.startsWith('#/saral')) {
+      syncSaralUI(true);
+    }
   });
 
   // Mobile menu toggle

@@ -1,0 +1,188 @@
+/* ==========================================================================
+   YATRALOCAL - SARAL MODE (EASY / ACCESSIBLE STYLES)
+   Applied when <html class="saral"> is active.
+   Optimized for seniors, pilgrims, and low tech-literacy travellers.
+   WCAG AAA target contrast, 22px+ base font, min 64px tap targets.
+   ========================================================================== */
+
+html.saral {
+  font-size: 22px; /* Base font size 22px+ */
+}
+
+html.saral body {
+  font-size: 1.15rem; /* ~25px */
+  line-height: 1.65;
+  color: #0A0A0A;
+  background-color: #FFFDF8;
+}
+
+/* Headings in Saral Mode */
+html.saral h1 {
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  line-height: 1.25;
+  color: #052E2B;
+  font-weight: 800;
+  margin-bottom: var(--space-4);
+}
+
+html.saral h2 {
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  line-height: 1.3;
+  color: #052E2B;
+  font-weight: 800;
+  margin-bottom: var(--space-3);
+}
+
+html.saral h3 {
+  font-size: clamp(1.3rem, 3vw, 1.7rem);
+  line-height: 1.35;
+  color: #111827;
+  font-weight: 700;
+}
+
+/* Buttons in Saral Mode - Minimum 64px tall, bold, easy to press */
+html.saral .btn,
+html.saral .saral-btn {
+  min-height: 64px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  padding: 16px 28px;
+  border-radius: 16px;
+  letter-spacing: 0.02em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  border: 3px solid transparent;
+}
+
+html.saral .btn:focus-visible,
+html.saral .saral-btn:focus-visible,
+html.saral a:focus-visible,
+html.saral button:focus-visible {
+  outline: 4px solid #D97706 !important;
+  outline-offset: 4px !important;
+}
+
+html.saral .btn-primary {
+  background-color: #0B4F4A;
+  color: #FFFFFF;
+  border-color: #052E2B;
+}
+
+html.saral .btn-primary:hover {
+  background-color: #052E2B;
+}
+
+html.saral .btn-secondary {
+  background-color: #C85A17;
+  color: #FFFFFF;
+  border-color: #8C3B07;
+}
+
+html.saral .btn-secondary:hover {
+  background-color: #8C3B07;
+}
+
+html.saral .btn-ghost {
+  border: 3px solid #0B4F4A;
+  color: #0B4F4A;
+  background-color: #FFFFFF;
+}
+
+html.saral .btn-ghost:hover {
+  background-color: #E6F3F1;
+}
+
+/* Saral Big Choice Cards */
+html.saral .saral-choice-card {
+  min-height: 100px;
+  padding: var(--space-5) var(--space-4);
+  border: 3px solid #D1D5DB;
+  border-radius: 20px;
+  background-color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  font-size: 1.3rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+  width: 100%;
+}
+
+html.saral .saral-choice-card:hover {
+  border-color: #0B4F4A;
+  background-color: #F0FDF4;
+  transform: translateY(-2px);
+}
+
+html.saral .saral-choice-card.selected {
+  border-color: #0B4F4A;
+  background-color: #E6F4F1;
+  box-shadow: 0 0 0 3px #0B4F4A;
+}
+
+html.saral .saral-choice-card .choice-icon {
+  font-size: 2.8rem;
+  flex-shrink: 0;
+}
+
+/* Layout Spacing in Saral Mode */
+html.saral #main-content {
+  padding-top: 2.5rem;
+}
+
+/* Wizard Header & Step Badge */
+html.saral .saral-step-indicator {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #8C3B07;
+  background-color: #FEF3C7;
+  border: 2px solid #F59E0B;
+  padding: 8px 24px;
+  border-radius: 30px;
+  display: inline-block;
+}
+
+/* Audio & Help Toolbar */
+html.saral .saral-audio-bar {
+  background-color: #F8FAFC;
+  border: 2px solid #CBD5E1;
+  border-radius: 16px;
+  padding: var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+  margin-bottom: var(--space-6);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* High Contrast Cards */
+html.saral .card {
+  border: 3px solid #D1D5DB;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  background-color: #FFFFFF;
+}
+
+/* Hide Visual Clutter in Saral Mode */
+html.saral .saral-hide-clutter,
+html.saral .badge-demo,
+html.saral .site-nav {
+  /* Keep only core primary action */
+}
+
+/* Prominent Focus & Touch Adjustments */
+html.saral select,
+html.saral input {
+  font-size: 1.15rem;
+  min-height: 56px;
+  border-width: 2.5px;
+}

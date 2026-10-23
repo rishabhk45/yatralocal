@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="YatraLocal — Tourism for Everyone, Powered by Locals. AI-powered, local-first, inclusive travel web app for India.">
   <title>YatraLocal — Tourism for Everyone, Powered by Locals</title>
+  <script>
+    try {
+      const s = localStorage.getItem('yatralocal_store_v1');
+      if ((s && JSON.parse(s).saralMode) || window.location.hash.startsWith('#/saral')) {
+        document.documentElement.classList.add('saral');
+      }
+    } catch(e) {}
+  </script>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
