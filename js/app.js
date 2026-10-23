@@ -12,6 +12,7 @@ import { renderStaysView } from '../pages/stays.js';
 import { renderSaralView } from '../pages/saral.js';
 import { renderBookingView } from '../pages/booking.js';
 import { renderTripsView } from '../pages/trips.js';
+import { renderOwnerView } from '../pages/owner.js';
 import { renderStyleGuide } from '../pages/style-guide.js';
 
 function renderStubView(title, description, nextLink, nextLabel) {
@@ -92,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
   router.register('#/booking', renderBookingView);
   router.register('#/trips', renderTripsView);
   router.register('#/bookings', renderTripsView);
-  router.register('#/owner', renderStubView('Hotel Owner Dashboard', 'Occupancy tracker and off-season demand booster.', '#/', 'Home'));
+  router.register('#/owner', renderOwnerView);
   router.register('#/styleguide', renderStyleGuide);
 
   // Initialize router

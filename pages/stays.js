@@ -414,6 +414,11 @@ function buildHostCardHTML(item, type) {
   const isStay = item.type === 'stay' || type === 'stay' || type === 'stays';
   const isSelected = isStay ? state.selectedStay?.id === item.id : state.selectedGuide?.id === item.id;
 
+  const hostOffer = isStay ? store.getHostOffer(item.id) : null;
+  const activeDiscount = hostOffer?.discountPercent || item.offPeakDiscountPercent;
+  const activePrice = hostOffer?.discountedPrice || (isStay ? item.pricePerNight : item.pricePerDay);
+  const activeRoomsEmpty = hostOffer?.roomsOffered !== undefined ? hostOffer.roomsOffered : item.roomsAvailableOffSeason;
+
   return `
     <article class="card card-interactive flow" data-id="${item.id}" style="border: 2px solid ${isSelected ? 'var(--color-primary)' : 'var(--color-border)'}; display: flex; flex-direction: column; justify-content: space-between;">
       <div>
@@ -422,9 +427,9 @@ function buildHostCardHTML(item, type) {
           <div style="font-size: 3rem; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));">
             ${item.photoPlaceholder?.icon || (isStay ? '🏡' : '🪪')}
           </div>
-          ${item.offPeakDiscountPercent ? `
+          ${activeDiscount ? `
             <div style="background-color: var(--color-accent); color: white; padding: 0.25rem 0.6rem; border-radius: var(--radius-full); font-size: var(--font-size-xs); font-weight: 700; box-shadow: var(--shadow-sm);">
-              🎉 ${item.offPeakDiscountPercent}% Off-Peak Offer
+              🎉 ${activeDiscount}% Off-Peak Offer ${hostOffer ? '⚡ Live' : ''}
             </div>
           ` : ''}
         </div>
@@ -454,7 +459,7 @@ function buildHostCardHTML(item, type) {
         ${isStay ? `
           <div style="background-color: var(--color-bg); padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-size: var(--font-size-xs); margin-bottom: var(--space-3); border: 1px solid var(--color-border);" class="flex-between">
             <span>🛏️ Rooms Available:</span>
-            <strong>${item.roomsAvailableOffSeason} of ${item.roomsTotal} empty</strong>
+            <strong>${activeRoomsEmpty} of ${item.roomsTotal} empty</strong>
           </div>
         ` : `
           <div style="background-color: var(--color-bg); padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-size: var(--font-size-xs); margin-bottom: var(--space-3); border: 1px solid var(--color-border);" class="flex-between">
@@ -465,7 +470,7 @@ function buildHostCardHTML(item, type) {
 
         <!-- Snippet Story -->
         <p style="font-size: var(--font-size-sm); color: var(--color-text-muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: var(--space-4);">
-          ${isStay ? item.hostStory : item.bioStory}
+          ${isStay ? (hostOffer?.promoMessage || item.hostStory) : item.bioStory}
         </p>
       </div>
 
@@ -474,7 +479,7 @@ function buildHostCardHTML(item, type) {
         <div class="flex-between" style="align-items: center; margin-bottom: var(--space-3);">
           <div>
             <div style="font-size: 1.35rem; font-weight: 700; color: var(--color-primary);">
-              ₹${(isStay ? item.pricePerNight : item.pricePerDay).toLocaleString('en-IN')}
+              ₹${activePrice.toLocaleString('en-IN')}
               <span style="font-size: var(--font-size-xs); font-weight: normal; color: var(--color-text-muted);">/${isStay ? 'night' : 'day'}</span>
             </div>
             ${item.originalPrice ? `

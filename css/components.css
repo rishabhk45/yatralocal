@@ -503,3 +503,43 @@
   50% { opacity: 0.4; transform: scale(1.3); }
   100% { opacity: 1; transform: scale(0.9); }
 }
+
+/* --------------------------------------------------------------------------
+   Responsive Data Tables (Converts to Cards on Mobile)
+   -------------------------------------------------------------------------- */
+.owner-table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 640px) {
+  .owner-table-wrapper table,
+  .owner-table-wrapper thead,
+  .owner-table-wrapper tbody,
+  .owner-table-wrapper th,
+  .owner-table-wrapper td,
+  .owner-table-wrapper tr {
+    display: block;
+  }
+  .owner-table-wrapper thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+  .owner-table-wrapper tr {
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-3);
+    margin-bottom: var(--space-3);
+    background-color: var(--color-bg-surface);
+  }
+  .owner-table-wrapper td {
+    padding: var(--space-1) 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: none;
+    font-size: var(--font-size-xs);
+  }
+}
+

@@ -19,6 +19,13 @@ const defaultState = {
   selectedGuide: null,
   bookings: [],
   draftBooking: null,
+  ownerSession: {
+    loggedIn: false,
+    hostId: 'stay-manali-1',
+    hostName: 'Uncle Ramesh Thakur',
+    property: 'Burwa Apple Woods Homestay'
+  },
+  hostOffers: {},
   saralMode: false,
   language: 'EN' // 'EN' | 'HI'
 };
@@ -93,6 +100,45 @@ class Store {
 
   clearDraftBooking() {
     this.setState({ draftBooking: null });
+  }
+
+  loginAsOwner(hostId = 'stay-manali-1') {
+    this.setState({
+      ownerSession: {
+        loggedIn: true,
+        hostId,
+        hostName: 'Uncle Ramesh Thakur',
+        property: 'Burwa Apple Woods Homestay'
+      }
+    });
+  }
+
+  logoutOwner() {
+    this.setState({
+      ownerSession: {
+        loggedIn: false,
+        hostId: 'stay-manali-1',
+        hostName: 'Uncle Ramesh Thakur',
+        property: 'Burwa Apple Woods Homestay'
+      }
+    });
+  }
+
+  saveHostOffer(hostId, offerData) {
+    const currentOffers = this.state.hostOffers || {};
+    const updated = {
+      ...currentOffers,
+      [hostId]: {
+        ...offerData,
+        updatedAt: new Date().toISOString()
+      }
+    };
+    this.setState({ hostOffers: updated });
+    return updated[hostId];
+  }
+
+  getHostOffer(hostId) {
+    return (this.state.hostOffers || {})[hostId] || null;
   }
 
   setSaralMode(enabled) {

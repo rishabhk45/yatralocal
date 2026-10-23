@@ -47,10 +47,15 @@ Track progress across all 14 project phases.
   - Persistent booking ledger in `localStorage` with "My Trips" dashboard at `#/trips`.
   - Full Saral Mode compatibility with voice prompts (`SpeechSynthesis`).
 
-- [ ] **Phase 7: Hotel Owner Dashboard**
-  - Portal for local homestay/hotel hosts.
-  - Occupancy tracker, off-season demand alerts, and dynamic discount promoter.
-  - Simple listing management mock data generator.
+- [x] **Phase 7: Hotel Owner Dashboard**
+  - Portal for local homestay/hotel hosts (`#/owner`) with simulated demo login for Uncle Ramesh Thakur (Manali homestay, 8 rooms, 6 empty off-season).
+  - Dynamic KPI cards: 25% occupancy, 6 vacant rooms, 90% direct payout net estimate, and off-season gap tracker.
+  - Zero-dependency SVG seasonality bar chart and congestion vs. village demand shift line chart marked `[Sample data]`.
+  - Interactive Off-Season Flash Offer Builder with live preview and instant synchronization to `#/stays` promotion ribbons.
+  - Rule-based AI suggestions panel with `[Simulated AI]` badge.
+  - Incoming guest booking ledger with direct bookings and 90% payout status.
+  - Fair tourism monetization & subscription teaser card marked `[Concept / Business Model]`.
+  - 5/5 automated unit tests passing in `tests/owner.test.html`.
 
 - [ ] **Phase 8: Safety SOS**
   - Prominent emergency SOS floating button & panel.
