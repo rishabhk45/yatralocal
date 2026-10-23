@@ -79,10 +79,13 @@ Track progress across all 14 project phases.
   - **Consistency & Disclaimers**: Verified all simulated modules carry `[Demo / Simulated]` or `[Concept / Business Model]`; preserved `[Add verified statistic + source]` placeholders; confirmed sample data disclaimer in footer.
   - **Automated Tests**: 5/5 automated unit tests passing in `tests/a11y.test.html` and 100% pass in `tests/a11y_dom_audit.html`.
 
-- [ ] **Phase 10: Deploy, README & demo script**
-  - Deployment configuration for static hosting.
-  - Step-by-step judge/demo presentation script.
-  - Thorough testing instructions and offline fallback validation.
+- [x] **Phase 10: Deploy, README & demo script**
+  - Authored comprehensive `README.md` with problem statement ("Tale of Two Manalis"), solution architecture, high-res screenshots, simulated vs. real feature matrix, known limitations, future roadmap, and fair tourism revenue model.
+  - Added "Impact Measurement" section mapping local bookings, off-season occupancy, Saral completion, and SOS response time tracking to prototype mechanisms.
+  - Added clear placeholder markers for Live Demo URL, GitHub URL, team contact email, and `[Add verified tourism statistics + source URLs]`.
+  - Added static hosting configuration (`_redirects` for Netlify/GitHub Pages) and metadata tags in `index.html` (Open Graph, Twitter Card, theme-color `#0D5C5B`, and SVG favicon).
+  - Authored `/docs/DEMO_SCRIPT.md`: 3-minute timed pitch script (0:00 Problem → 0:30 Solution → 1:00 Live Plan & Stays → 1:45 Saral Mode → 2:15 Owner Hub → 2:35 SOS → 2:50 Impact/Ask) with 8 judge Q&As and demo-day checklist.
+  - Prepared publication git commands.
 
 - [ ] **Phase 11: Real map integration**
   - Interactive map integration (Leaflet/OpenStreetMap or Google Maps Platform proxy via `/api/map`).

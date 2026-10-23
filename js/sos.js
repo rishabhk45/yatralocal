@@ -132,22 +132,68 @@ class SosEngine {
     if (this.isActive) return;
 
     const isSaral = document.documentElement.classList.contains('saral');
+    const settings = store.getSosSettings();
+    const contacts = settings.emergencyContacts || [];
+    const medicalNotes = settings.medicalNotes || '';
+
     const content = `
-      <div class="flow" style="text-align: center; padding: var(--space-3) 0;">
-        <div style="font-size: 3rem; margin-bottom: var(--space-2);">🚨</div>
-        <h3 style="color: var(--color-danger); margin-bottom: var(--space-2);">Activate Safety SOS?</h3>
-        <p style="color: var(--color-text-main); font-size: ${isSaral ? '1.3rem' : 'var(--font-size-base)'};">
-          This will begin a 5-second countdown to notify your emergency contacts with your live location.
+      <div class="flow" style="text-align: left; padding: var(--space-2) 0;">
+        <div style="text-align: center;">
+          <div style="font-size: 3rem; margin-bottom: var(--space-1);">🚨</div>
+          <h3 style="color: var(--color-danger); margin-bottom: var(--space-2); font-size: ${isSaral ? '1.8rem' : '1.4rem'};">Activate Safety SOS?</h3>
+          <p style="color: var(--color-text-main); font-size: ${isSaral ? '1.25rem' : 'var(--font-size-base)'}; margin-bottom: var(--space-3);">
+            This will share your <strong>live GPS location</strong> with your registered emergency contacts in 5 seconds.
+          </p>
+        </div>
+
+        <!-- Registered Contacts Summary Box -->
+        <div style="background-color: var(--color-bg); border: 2px solid ${contacts.length > 0 ? 'var(--color-primary)' : 'var(--color-danger)'}; border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); margin-bottom: var(--space-3);">
+          <div class="flex-between" style="align-items: center; margin-bottom: var(--space-2);">
+            <strong style="color: var(--color-text-main); font-size: 0.95rem;">👨‍👩‍👧 Registered Emergency Contacts (${contacts.length}):</strong>
+            <a href="#/sos" onclick="window.YatraApp.closeModal()" style="font-size: var(--font-size-xs); color: var(--color-primary); font-weight: 700; text-decoration: underline;">
+              ✏️ Manage / Edit
+            </a>
+          </div>
+
+          ${contacts.length > 0 ? `
+            <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px;">
+              ${contacts.map((c) => `
+                <li style="display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; background: #FFFFFF; padding: 6px 10px; border-radius: 6px; border: 1px solid var(--color-border);">
+                  <div>
+                    <strong>${c.name}</strong> <span style="color: var(--color-text-muted); font-size: 0.8rem;">(${c.relation})</span>
+                  </div>
+                  <span style="font-family: monospace; font-weight: 700; color: var(--color-primary);">${c.phone}</span>
+                </li>
+              `).join('')}
+            </ul>
+          ` : `
+            <div style="color: var(--color-danger); font-size: 0.85rem; font-weight: 600;">
+              ⚠️ No custom contacts saved yet! Alert will only dial National Emergency (112).
+              <div style="margin-top: 4px;">
+                <a href="#/sos" onclick="window.YatraApp.closeModal()" class="btn btn-outline btn-sm" style="color: var(--color-danger); border-color: var(--color-danger);">
+                  + Add Contacts Now
+                </a>
+              </div>
+            </div>
+          `}
+
+          ${medicalNotes ? `
+            <div style="margin-top: var(--space-2); padding-top: var(--space-2); border-top: 1px dashed var(--color-border); font-size: var(--font-size-xs); color: #78350F; background: #FEF3C7; padding: 6px 8px; border-radius: 4px;">
+              <strong>🩺 Medical Alert:</strong> ${medicalNotes}
+            </div>
+          ` : ''}
+        </div>
+
+        <p style="font-size: var(--font-size-xs); color: var(--color-text-muted); text-align: center; margin: 0 0 var(--space-4) 0;">
+          💡 Tip: You can also press and hold the floating red SOS button for 2 seconds.
         </p>
-        <p style="font-size: var(--font-size-xs); color: var(--color-text-muted);">
-          Tip: You can also press and hold the red SOS button for 2 seconds.
-        </p>
-        <div style="display: flex; gap: var(--space-3); justify-content: center; margin-top: var(--space-4);">
+
+        <div style="display: flex; gap: var(--space-3); justify-content: center;">
           <button type="button" class="btn btn-outline" id="btn-cancel-sos-confirm" onclick="window.YatraApp.closeModal()">
             Cancel
           </button>
-          <button type="button" class="btn btn-primary" id="btn-start-sos-confirm" style="background-color: var(--color-danger); border-color: var(--color-danger); font-weight: 700;">
-            Activate SOS Now
+          <button type="button" class="btn btn-primary" id="btn-start-sos-confirm" style="background-color: var(--color-danger); border-color: var(--color-danger); font-weight: 700; font-size: 1.1rem; padding: 12px 24px;">
+            🚨 Activate SOS Now
           </button>
         </div>
       </div>
@@ -155,7 +201,7 @@ class SosEngine {
 
     if (window.YatraApp && window.YatraApp.openModal) {
       window.YatraApp.openModal({
-        title: 'Emergency Confirmation',
+        title: 'Emergency Safety SOS',
         content
       });
 
@@ -212,6 +258,9 @@ class SosEngine {
   _renderCountdownOverlay() {
     this._removeOverlay();
 
+    const settings = store.getSosSettings();
+    const contacts = settings.emergencyContacts || [];
+
     const overlay = document.createElement('div');
     overlay.id = 'sos-fullscreen-overlay';
     overlay.className = 'sos-overlay countdown-state';
@@ -220,16 +269,35 @@ class SosEngine {
     overlay.setAttribute('aria-label', 'Emergency SOS Countdown');
 
     overlay.innerHTML = `
-      <div class="sos-card countdown-box flow" style="text-align: center;">
+      <div class="sos-card countdown-box flow" style="text-align: center; max-width: 580px; width: 90%;">
         <div class="sos-countdown-circle">
           <span id="sos-countdown-val">${this.countdownSeconds}</span>
         </div>
         <h2 style="color: #FFFFFF; font-size: 2rem; margin: var(--space-2) 0;">EMERGENCY SOS ACTIVATING</h2>
-        <p style="color: #FECACA; font-size: var(--font-size-lg); max-width: 480px; margin: 0 auto;">
-          Sharing live GPS location and sending emergency alerts to registered contacts in <strong id="sos-countdown-text">5 seconds</strong>.
+        <p style="color: #FECACA; font-size: var(--font-size-base); max-width: 480px; margin: 0 auto;">
+          Broadcasting live GPS coordinates & dispatching SMS alerts in <strong id="sos-countdown-text">5 seconds</strong>.
         </p>
 
-        <div style="margin-top: var(--space-6);">
+        <!-- Showing Contacts Being Alerted -->
+        <div style="background: rgba(0, 0, 0, 0.35); border-radius: 8px; padding: 10px 14px; margin: 16px auto; text-align: left; max-width: 440px; border: 1px solid rgba(255,255,255,0.2);">
+          <div style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: #FECACA; font-weight: 700; margin-bottom: 6px;">
+            🚨 Alerting Contacts:
+          </div>
+          ${contacts.length > 0 ? `
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              ${contacts.map((c) => `
+                <div style="font-size: 0.9rem; color: #FFFFFF; display: flex; justify-content: space-between;">
+                  <span><strong>${c.name}</strong> (${c.relation})</span>
+                  <span style="font-family: monospace; color: #FED7AA;">${c.phone}</span>
+                </div>
+              `).join('')}
+            </div>
+          ` : `
+            <div style="font-size: 0.85rem; color: #FECACA;">Default Indian Tourist Police (1363) & 112</div>
+          `}
+        </div>
+
+        <div style="margin-top: var(--space-4);">
           <button type="button" class="btn btn-lg sos-cancel-btn" id="btn-sos-cancel-countdown" style="background-color: #FFFFFF; color: #991B1B; font-weight: 800; border: 3px solid #F87171; min-height: 64px; font-size: 1.25rem;">
             ✋ CANCEL — I AM SAFE
           </button>

@@ -768,30 +768,43 @@ function openSaralHelpModal(step, lang) {
 }
 
 function openCallFamilyModal(wizardData) {
+  const sosSettings = (store.getSosSettings && store.getSosSettings()) || {};
+  const contacts = sosSettings.emergencyContacts || [];
+  const primary = contacts[0] || {
+    name: 'Rohit Sharma',
+    relation: 'Son',
+    phone: '+91 98765 43210'
+  };
+
   const content = `
     <div class="flow" style="font-size: 1.2rem;">
       <div style="background-color: #FEF3C7; padding: var(--space-4); border-radius: 12px; border: 2px solid #F59E0B;">
         <p style="margin: 0; color: #92400E; font-weight: 700;">
-          👨‍👩‍👧 Family Companion Assistance (Demo)
+          👨‍👩‍👧 Family Companion Assistance
         </p>
         <p style="margin: 6px 0 0; color: #78350F; font-size: 1.05rem;">
-          Connect directly with a family member who can review or complete this booking on your behalf.
+          Connect directly with your registered emergency contact who can review or help complete this booking on your behalf.
         </p>
       </div>
 
       <div class="card" style="padding: var(--space-4); border: 2px solid #D1D5DB;">
-        <div style="font-weight: 700; color: #0B4F4A;">Designated Companion:</div>
-        <div style="font-size: 1.35rem; font-weight: 800; color: #111827; margin: 4px 0;">Rohit Sharma (Son)</div>
-        <div style="font-size: 1rem; color: #6B7280;">📱 +91 98765 43210 • Bengaluru</div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-weight: 700; color: #0B4F4A;">Designated Companion:</span>
+          <a href="#/sos" onclick="window.YatraApp.closeModal()" style="font-size: 0.9rem; color: #0B4F4A; font-weight: 700; text-decoration: underline;">
+            ✏️ Change in SOS
+          </a>
+        </div>
+        <div style="font-size: 1.35rem; font-weight: 800; color: #111827; margin: 4px 0;">${primary.name} (${primary.relation})</div>
+        <div style="font-size: 1.1rem; color: #15803D; font-weight: 700;">📱 ${primary.phone}</div>
       </div>
 
       <div class="flow" style="margin-top: var(--space-4);">
-        <button type="button" class="saral-btn btn-primary" style="width: 100%;" onclick="window.YatraApp.showToast('📞 Calling Rohit Sharma (+91 98765 43210)... [Demo Call Connected]'); window.YatraApp.closeModal();">
-          📞 Simulate Direct Phone Call
-        </button>
-        <button type="button" class="saral-btn btn-secondary" style="width: 100%;" onclick="window.YatraApp.showToast('💬 WhatsApp itinerary link dispatched to Rohit (+91 98765 43210)'); window.YatraApp.closeModal();">
-          💬 Send Trip Details via WhatsApp
-        </button>
+        <a href="tel:${primary.phone.replace(/[^0-9+]/g, '')}" class="saral-btn btn-primary" style="width: 100%; text-decoration: none; text-align: center;" onclick="window.YatraApp.showToast('📞 Dialing ${primary.name} (${primary.phone})...'); window.YatraApp.closeModal();">
+          📞 Call ${primary.name} Now
+        </a>
+        <a href="https://api.whatsapp.com/send?phone=${primary.phone.replace(/[^0-9]/g, '')}&text=${encodeURIComponent('Namaste! I am planning a trip on YatraLocal and need your assistance.')}" target="_blank" rel="noopener noreferrer" class="saral-btn btn-secondary" style="width: 100%; text-decoration: none; text-align: center;" onclick="window.YatraApp.closeModal();">
+          💬 Send WhatsApp Message
+        </a>
         <button type="button" class="saral-btn btn-ghost" style="width: 100%;" onclick="window.YatraApp.closeModal()">
           Close
         </button>

@@ -605,9 +605,9 @@ export function renderBookingView() {
                   </p>
                 </div>
               </div>
-              <button type="button" class="btn btn-danger btn-sm" onclick="window.YatraApp.showToast('🚨 SOS Emergency Contact Setup saved for ' + ('${formData.emergencyContactPhone}' || 'Family'))">
-                Set up SOS Contacts ➔
-              </button>
+              <a href="#/sos" class="btn btn-danger btn-sm" style="text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                Manage SOS Contacts ➔
+              </a>
             </div>
           </div>
 
@@ -728,6 +728,45 @@ export function renderBookingView() {
         platformFee,
         ...formData
       });
+
+      // Auto-sync emergency contacts to SOS settings
+      try {
+        const sosSettings = store.getSosSettings();
+        const existingContacts = [...(sosSettings.emergencyContacts || [])];
+        const newContacts = [];
+
+        if (formData.emergencyContactPhone && formData.emergencyContactPhone.trim()) {
+          const exists = existingContacts.some((c) => c.phone.includes(formData.emergencyContactPhone.trim()));
+          if (!exists) {
+            newContacts.push({
+              id: `c_${Date.now()}`,
+              name: 'Emergency Guardian',
+              relation: 'Emergency Contact',
+              phone: formData.emergencyContactPhone.trim()
+            });
+          }
+        }
+
+        if (formData.bookingType === 'family' && formData.bookerPhone && formData.bookerPhone.trim()) {
+          const exists = existingContacts.some((c) => c.phone.includes(formData.bookerPhone.trim()));
+          if (!exists) {
+            newContacts.push({
+              id: `c_${Date.now() + 1}`,
+              name: formData.bookerName || 'Family Booker',
+              relation: formData.bookerRelation || 'Companion',
+              phone: formData.bookerPhone.trim()
+            });
+          }
+        }
+
+        if (newContacts.length > 0) {
+          store.updateSosSettings({
+            emergencyContacts: [...newContacts, ...existingContacts].slice(0, 3)
+          });
+        }
+      } catch (e) {
+        console.warn('Could not auto-sync SOS contact from booking form:', e);
+      }
 
       currentStep = 5;
       renderCurrentStep();
