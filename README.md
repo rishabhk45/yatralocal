@@ -271,33 +271,40 @@ npx serve -l 4173 .
 
 ---
 
-### 🚨 Emergency SOS SMS & Live Family Tracking Setup (Phase 13)
+### 🚨 Real Emergency SOS (SMS + WhatsApp) & Live Family Tracking (Phase 18)
 
-YatraLocal provides real SMS alert delivery via Twilio with zero-backend fallback, plus a 6-hour read-only family tracking beacon page (`/track.html?id=TOKEN`).
+YatraLocal provides real automated alert delivery via Twilio to emergency contacts, with honest diagnostic reporting, alongside a 6-hour read-only family tracking beacon page (`/track.html?id=TOKEN`) and instant zero-backend deep-link fallbacks.
 
-#### 1. Twilio Configuration (Optional for Real SMS)
-To enable real SMS delivery to your phone and emergency contacts:
+#### 1. Twilio Configuration (SMS & WhatsApp Delivery)
+Configure in Netlify (Site Settings > Environment Variables) or local `.env`:
 ```env
 TWILIO_ACCOUNT_SID=ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-TWILIO_AUTH_TOKEN=your_twilio_auth_token
-TWILIO_FROM=+1234567890
+TWILIO_AUTH_TOKEN=your_twilio_auth_token_here
+TWILIO_SMS_FROM=+1234567890
+TWILIO_WHATSAPP_FROM=whatsapp:+14155238886
 ```
 
-#### 2. Real Delivery vs. Zero-Backend Fallback Comparison
+#### 2. WhatsApp Sandbox & Indian DLT Regulations (Crucial Context)
+* **India TRAI / DLT Rules**: Sending SMS via Twilio to Indian (+91) phone numbers on unverified trial accounts is strictly regulated by TRAI and may be blocked without pre-approved DLT message templates.
+* **Twilio WhatsApp Sandbox (Recommended for Testing)**: To receive instant alerts without carrier restrictions:
+  1. Have the contact or yourself send the message: `join <your-sandbox-keyword>` to `+1 415 523 8886` on WhatsApp.
+  2. In YatraLocal SOS Settings, choose **🟢 WhatsApp (Twilio Sandbox)** as the delivery channel.
+  3. Every SOS trigger sends coordinates and maps link straight to their WhatsApp!
+
+#### 3. Real Delivery vs. Zero-Backend Fallback Comparison
 | Feature | With Twilio Configured | Zero-Backend Fallback (No Keys) |
 | :--- | :--- | :--- |
-| **SMS Delivery** | Automatic backend dispatch via Twilio REST API to all saved contacts. | Opens native prefilled `sms:` links with one-tap dispatch from phone. |
-| **WhatsApp Delivery** | Optional Twilio WhatsApp sandbox integration. | Opens prefilled `https://wa.me/` direct messaging links. |
-| **Native Sharing** | Direct SMS + Web Share link. | Uses `navigator.share` system sheet to dispatch to family contacts. |
-| **Live Family Map** | Live beacon page at `/track.html?id=TOKEN` updating every 15s. | Local storage cached tracking page + Google Maps link. |
-| **Emergency Dialers** | Direct `tel:112`, `100`, `108`, `1363` hotlines. | Direct `tel:112`, `100`, `108`, `1363` hotlines. |
-| **Privacy Guarantee** | Location expires in 6 hours; phone numbers never exposed. | Zero data transmitted off-device. |
+| **SMS Delivery** | Serverless Twilio REST API dispatch to up to 3 contacts. | Direct prefilled `sms:<number>?body=...` one-tap native mobile dispatch. |
+| **WhatsApp Delivery** | Automated Twilio WhatsApp Sandbox messaging. | Direct prefilled `https://wa.me/<number>?text=...` link. |
+| **Live Family Map** | 6-hour expiring beacon at `/track.html?id=TOKEN` (throttled 15s GPS watch). | Cached coordinate pin on Google Maps / OpenStreetMap. |
+| **High Accuracy GPS** | HTML5 `getCurrentPosition` (`enableHighAccuracy: true`, 10s timeout). | Displays clear reason if permission is denied, offline, or timed out. |
+| **Emergency Hotlines** | Direct one-tap `tel:112`, `100`, `108`, `1091`, `1363` links. | Direct one-tap `tel:112`, `100`, `108`, `1091`, `1363` links. |
+| **Privacy & Security** | Phone numbers masked (`+91 98*** **210`); tokens expire in 6 hours. | 100% on-device; zero remote data transmission. |
 
-#### 3. SOS Test Plan
-1. **Verification Test**: Navigate to `#/sos` and tap **🧪 Send Test Alert to Myself (TEST)**. If Twilio keys exist, an SMS arrives with a live tracking link. If unconfigured, the tracking preview opens immediately.
-2. **Practice Emergency Drill**: Tap **Trigger Practice SOS (5s Countdown)** in `#/sos`. Watch the countdown ring, test cancellation within 5s, or let it complete to view live coordinates, family tracking link, and prefilled WhatsApp/SMS options.
-3. **Offline Resilience**: Turn off Wi-Fi or set Network to Offline in DevTools. Activate SOS; coordinates are queued in memory and automatically flushed when connectivity is restored.
-4. **Mark Safe**: Tap **✓ I'm Safe — Stop Sharing** to halt `watchPosition` tracking and update the family tracking page to green "Traveller Marked SAFE" state.
+#### 4. SOS Test Plan & Diagnostics
+1. **Send Test Alert (Myself)**: Go to `#/sos`, enter your phone, select SMS or WhatsApp, and click **🧪 Send Test Alert (TEST)**. The server responds with real status (Sent SID, trial unverified code `21608`, or unconfigured diagnostic) plus a clickable 6-hour family tracking preview link.
+2. **Practice Emergency Drill**: Tap **Trigger Practice SOS (5s Countdown)** in `#/sos`. Test the 2-second progress ring or 5-second cancel overlay, or let it expire to inspect the live coordinates and direct phone fallback actions.
+3. **Mark Safe**: Tap **✓ I'm Safe — Stop Sharing** to stop watchPosition and transition the family beacon to green "Traveller Marked SAFE".
 
 ---
 
