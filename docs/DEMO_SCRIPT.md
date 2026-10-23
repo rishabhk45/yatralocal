@@ -35,18 +35,22 @@
 
 ---
 
-### 1:00 – 1:45 | Live Demo: Crowd-Smart Trip Planning & Stays
+### 1:00 – 1:45 | Live Demo: Real LLM Planner, Interactive Map & Stays
 *(Click "Plan my trip ➔" routing to `#/plan`)*
 
 > *"Here in our trip planner, let's select **Manali**. Notice the crowd indicator badge. Let's budget ₹8,000 for 3 days, select a peaceful cultural mood, and click **Generate Itinerary**.*
 > 
 > *(Transition to `#/itinerary`)*
 > 
-> *Within a second, our engine generates a balanced 3-day plan. Notice what it does: instead of sending our traveller to the packed Mall Road, it recommends **Naggar Castle & Roerich Art Gallery**, with an explicit crowd-avoidance tip. Every day includes local tips, walking distance levels, and an offbeat alternative.*
+> *Our serverless backend calls **Google Gemini API** (`gemini-2.5-flash`), constrained to authentic local candidates. Notice the badge: **'✨ AI-Generated (Gemini)'**.*
+> 
+> *Right below is our **interactive Leaflet map with OpenStreetMap tiles**—zero API keys required. Notice the numbered pins: 1.1, 1.2, 1.3 color-coded per day. When I toggle **Crowd-Aware Layer**, tourist chokepoints highlight in red, and offbeat hamlets in green.*
+> 
+> *Watch this: on the **'Ask YatraLocal' assistant**, I'll type *'Make day 2 more relaxed'* or tap this chip. In seconds, Gemini adjusts the plan, stays strictly within catalog IDs, and recomputes all costs deterministically in code—zero price hallucinations!*
 > 
 > *(Click "Choose local stay & guide ➔" routing to `#/stays`)*
 > 
-> *In our stays discovery, we deliberately rank small independent family homes above corporate hotels. Look right here: **Burwa Apple Woods Homestay**, hosted by Uncle Ramesh. It has an active 35% off-peak offer. When we select Uncle Ramesh and our verified local guide, our sticky booking bar updates in real time."*
+> *In stays discovery, we switch between List and Map view. Notice the **Haversine distance calculation**: '📏 2.1 km from Day 1 start' computed live for every homestay. Look at **Burwa Apple Woods Homestay**, hosted by Uncle Ramesh with a 35% off-peak offer. When we select Uncle Ramesh and our verified local guide, our sticky booking bar updates in real time."*
 
 ---
 
@@ -76,16 +80,18 @@
 
 ---
 
-### 2:35 – 2:50 | Safety SOS: On-Device Emergency Beacon
+### 2:35 – 2:50 | Safety SOS: Real SMS Alerts & Family Tracking Beacon
 *(Click or hold the floating red SOS button to trigger countdown)*
 
 > *"Safety is non-negotiable. On every single page, travelers have an emergency **Safety SOS** trigger.*
 > 
-> *To prevent accidental pocket taps, it requires a 2-second press-and-hold with a visual progress ring, followed by a 5-second countdown with an audible cancel option.*
+> *To prevent accidental taps, it requires a 2-second press-and-hold with an SVG progress ring, followed by a 5-second countdown with an audible cancel voice prompt.*
 > 
-> *When activated, it captures live GPS coordinates, generates instant WhatsApp and SMS dispatch payloads with Google Maps links, attaches medical notes, and provides 1-touch dialers to India's **112 National Emergency Helpline**, Police 100, and Tourist 1363.*
+> *When activated, our serverless backend dispatches **real SMS alerts via Twilio** to registered emergency contacts, complete with medical notes and a unique **Live Family Tracking link** (`/track.html?id=TOKEN`).*
 > 
-> *Most importantly: all location and contact data is processed **100% on-device** for traveler privacy."*
+> *Family members can open this link to see the traveller's live GPS coordinates moving on the Leaflet map, updated every 15 seconds. For total privacy, tokens expire in 6 hours and zero phone numbers are exposed.*
+> 
+> *And if the phone is offline or in a zero-network valley, our **zero-backend fallback** automatically opens prefilled native SMS, WhatsApp links, and 1-touch dialers to India's **112 National Emergency Hotline**."*
 
 ---
 
@@ -96,7 +102,7 @@
 > - *Small homestay owners like Uncle Ramesh fill empty rooms and keep 90% of revenue.*
 > - *Elderly pilgrims gain digital independence through Saral Mode.*
 > 
-> *We have achieved a **100/100 Lighthouse Accessibility score**, zero build-tool bloat, and pure offline resilience. With your support, we can onboard verified hosts across Himachal, Uttarakhand, and Kerala.*
+> *We have achieved a **100/100 Lighthouse Accessibility score**, real Gemini AI planning, OpenStreetMap integration, and Twilio emergency delivery. With your support, we can onboard verified hosts across Himachal, Uttarakhand, and Kerala.*
 > 
 > *Thank you. We are ready for your questions!"*
 
@@ -106,11 +112,13 @@
 
 ### Q1: Is the AI itinerary generator running a real LLM model right now?
 **Honest Answer**:  
-*"In this 24-hour hackathon prototype, the itinerary generator uses a deterministic, rule-based algorithm behind an asynchronous `planProvider` interface. It scores and filters activities by budget, travel mood, crowd metrics, and walking elevation. We purposefully built it this way so the prototype runs with 100% offline resilience and zero API latency. As planned in Phase 12 of our roadmap, this interface connects directly to Gemini 1.5 Flash structured JSON outputs without requiring frontend refactoring."*
+*"Yes! YatraLocal features a production-ready serverless function (`/netlify/functions/plan.js`) connected to **Google Gemini API** (`gemini-2.5-flash`). Crucially, we enforce strict zero-hallucination guardrails: the model is restricted to our verified catalog candidate IDs, and all budget totals are computed purely in deterministic code. When running offline or if API keys are unconfigured, our client seamlessly falls back to our rule-based engine and transparently labels the badge 'Simulated AI (offline fallback)'."*
 
-### Q2: How does your emergency SOS work without sending data to a server?
+### Q2: How does your emergency SOS work in both connected and offline scenarios?
 **Honest Answer**:  
-*"YatraLocal prioritizes privacy and resilience in remote mountain regions where server connectivity is unreliable. The client uses the browser's native `navigator.geolocation` API to capture coordinates and constructs standardized deep links (`https://maps.google.com/?q=lat,lng`, `sms:?body=...`, and WhatsApp URL schemes). The traveler's device initiates direct carrier calls to 112 or WhatsApp messages to their guardians. In Phase 13 of our roadmap, enterprise deployments will integrate certified carrier SMS gateways and State ERSS 112 APIs."*
+*"We implement a dual-tier emergency architecture:  
+1. **Connected Mode**: Our serverless endpoint (`/netlify/functions/sos.js`) dispatches real SMS alerts to guardians via the Twilio REST API and spins up a temporary 6-hour family tracking link (`/track.html?id=TOKEN`) with live 15-second GPS beacon updates.  
+2. **Zero-Backend / Offline Fallback**: If offline or if Twilio is unconfigured, the app formats prefilled `sms:` and `https://wa.me/` direct deep links, and invokes `navigator.share`. Direct `tel:112`, `100`, and `108` links dial emergency hotlines instantly from any phone."*
 
 ### Q3: How do you prevent fraud or fake listings among local homestays and guides?
 **Honest Answer**:  

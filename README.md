@@ -127,6 +127,14 @@ YatraLocal was built from the ground up for strict WCAG 2.1 AA compliance:
 
 ## 🛠️ Tech Stack & Architecture
 
+> ### 📌 Finalized Architecture Decisions (Resolving "Backend and AI provider not specified")
+> In the preliminary concept slide, the backend and AI provider were marked as "not specified". We have finalized, verified, and shipped the following production stack:
+> 1. **Serverless Backend**: **Netlify Functions** (`/netlify/functions/plan.js`, `/netlify/functions/sos.js`) and **Vercel Functions** (`/api/plan.js`, `/api/sos.js`) powered by modern Node.js. Zero server maintenance, instant edge scalability, and strict in-memory rate limiting.
+> 2. **AI Provider**: **Google Gemini API** (`gemini-2.5-flash`), featuring candidate-constrained prompt schemas, zero price hallucination guardrails, conversational "Ask YatraLocal" itinerary refinements, and deterministic local engine fallback.
+> 3. **Interactive Maps**: **Leaflet 1.9.4 + OpenStreetMap tiles** loaded via CDN with SHA-384 Subresource Integrity (SRI) hashes. Day-colored polylines, crowd-aware layer toggles, and Haversine distance calculations without API keys or tracking telemetry.
+> 4. **Emergency Dispatch & Telephony**: **Twilio REST API** (zero npm dependencies) for automated SMS alerts, paired with a 6-hour family live tracking beacon (`/track.html?id=TOKEN`) and zero-backend native deep links (`sms:`, `https://wa.me/`, `navigator.share`).
+> 5. **Frontend Client**: Pure Semantic HTML5, CSS custom properties (Design Tokens), and Vanilla JavaScript (ES Modules) with **zero UI build steps** and a verified **100/100 Lighthouse Accessibility score**.
+
 - **Frontend**: Pure Semantic HTML5, CSS Variables (Design Tokens), Vanilla JavaScript (ES Modules).
 - **Zero Build Step**: No Webpack, Vite, npm build, or runtime UI dependencies.
 - **Routing**: Lightweight hash router (`#/plan`, `#/itinerary`, `#/stays`, `#/booking`, `#/owner`, `#/saral`, `#/sos`).
@@ -135,19 +143,32 @@ YatraLocal was built from the ground up for strict WCAG 2.1 AA compliance:
 ```
 YATRALOCAL/
 ├── index.html                 # App shell, skip-to-content, header, SOS FAB
+├── track.html                 # Read-only 6-hour family emergency live tracking page
 ├── _redirects                 # Static hosting redirect rules
+├── .env.example               # Template for Gemini and Twilio API keys
+├── netlify/
+│   └── functions/
+│       ├── plan.js            # Serverless Gemini LLM planner with candidate constraints
+│       └── sos.js             # Serverless Twilio SMS dispatch & beacon session store
+├── api/
+│   ├── plan.js                # Vercel-compatible LLM planner adapter
+│   └── sos.js                 # Vercel-compatible SOS tracking adapter
 ├── css/
 │   ├── style.css              # Main stylesheet aggregator
 │   ├── tokens.css             # WCAG AA colors, spacing, typography tokens
 │   ├── base.css               # Reset, skip link, focus-visible, reduced-motion
-│   ├── components.css         # Cards, steppers, buttons, modal, toast, SOS overlay
+│   ├── components.css         # Cards, steppers, buttons, modal, toast, SOS overlay, Ask card
 │   └── saral.css              # 22px+ font, 64px+ touch targets for Saral Mode
 ├── js/
 │   ├── app.js                 # App entrypoint and lifecycle coordinator
 │   ├── router.js              # Hash client router with H1 focus management
 │   ├── store.js               # Reactive state store with localStorage sync
 │   ├── itinerary.js           # Deterministic rule-based itinerary generator
+│   ├── llmProvider.js         # Gemini planner provider with timeout and fallback
+│   ├── map.js                 # Leaflet map engine, Haversine formula, directions
 │   ├── speech.js              # Web Speech API assistant (English & Hindi)
+│   ├── sos.js                 # Safety SOS engine (2s hold, GPS beacon, Twilio, SMS)
+│   └── i18n.js                # Bilingual dictionary loader and DOM translator
 │   ├── sos.js                 # Safety SOS engine (2s hold, GPS beacon, tel links)
 │   └── i18n.js                # Bilingual dictionary loader and DOM translator
 ├── pages/
