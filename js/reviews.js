@@ -393,6 +393,23 @@ class ReviewsManager {
       highlights
     };
   }
+
+  /**
+   * Synchronously compute metrics for a target from cached seed and local reviews
+   */
+  getMetricsForTarget(targetId) {
+    const cleanId = String(targetId || '').toLowerCase();
+    const seed = (this.seedReviews || []).filter(r => String(r.targetId).toLowerCase() === cleanId);
+    const local = this.getLocalReviews().filter(r => String(r.targetId).toLowerCase() === cleanId);
+    const all = [...local, ...seed];
+    const metrics = this.calculateMetrics(all);
+
+    return {
+      ...metrics,
+      totalReviews: metrics.count,
+      averageRating: metrics.count > 0 ? metrics.averageFormatted : '4.8'
+    };
+  }
 }
 
 export const createReviewCardDOM = renderReviewCard;
