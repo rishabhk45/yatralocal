@@ -8,7 +8,11 @@
     "description": "Snow-capped peaks and cedar forests. While Old Manali Mall Road is crowded, villages like Naggar and Burwa offer tranquil homestays.",
     "suggestedBudgetMin": 5000,
     "suggestedDays": 4,
-    "offbeatAlternatives": ["Naggar Castle Hamlet", "Burwa Village", "Sojha"],
+    "offbeatAlternatives": [
+      "Naggar Castle Hamlet",
+      "Burwa Village",
+      "Sojha"
+    ],
     "crowdPair": {
       "popular": "Mall Road & Hadimba Temple Queue",
       "offbeat": "Burwa Cedar Grove Walk & Naggar Heritage Wood Art"
@@ -17,7 +21,11 @@
       {
         "id": "manali-1",
         "name": "Burwa Apple Orchard Stroll & Local Jam Tasting",
-        "categories": ["Relaxed", "Nature", "Family"],
+        "categories": [
+          "Relaxed",
+          "Nature",
+          "Family"
+        ],
         "durationHours": 2.5,
         "cost": 250,
         "crowdLevel": "low",
@@ -25,12 +33,18 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "Burwa Hamlet",
-        "description": "Walk through family-tended apple orchards with scenic mountain views and fresh apricot juice."
+        "description": "Walk through family-tended apple orchards with scenic mountain views and fresh apricot juice.",
+        "lat": 32.2742,
+        "lng": 77.1648
       },
       {
         "id": "manali-2",
         "name": "Naggar Castle Heritage Walk & Roerich Art Gallery",
-        "categories": ["Cultural", "Relaxed", "Foodie"],
+        "categories": [
+          "Cultural",
+          "Relaxed",
+          "Foodie"
+        ],
         "durationHours": 3,
         "cost": 300,
         "crowdLevel": "low",
@@ -38,12 +52,17 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "Naggar Heritage Village",
-        "description": "Wood-and-stone Himalayan architecture with quiet viewpoints and traditional Siddu food stalls."
+        "description": "Wood-and-stone Himalayan architecture with quiet viewpoints and traditional Siddu food stalls.",
+        "lat": 32.1465,
+        "lng": 77.1706
       },
       {
         "id": "manali-3",
         "name": "Jogini Waterfall Forest Trail",
-        "categories": ["Adventure", "Nature"],
+        "categories": [
+          "Adventure",
+          "Nature"
+        ],
         "durationHours": 3.5,
         "cost": 100,
         "crowdLevel": "medium",
@@ -51,12 +70,17 @@
         "seniorFriendly": false,
         "walkingLevel": "moderate",
         "area": "Vashisht Upper Trail",
-        "description": "Pleasant cedar forest trek from Vashisht leading to cascading natural springs."
+        "description": "Pleasant cedar forest trek from Vashisht leading to cascading natural springs.",
+        "lat": 32.2685,
+        "lng": 77.1952
       },
       {
         "id": "manali-4",
         "name": "Vashisht Sage Temple & Natural Sulphur Bath",
-        "categories": ["Spiritual", "Cultural"],
+        "categories": [
+          "Spiritual",
+          "Cultural"
+        ],
         "durationHours": 1.5,
         "cost": 50,
         "crowdLevel": "medium",
@@ -64,12 +88,17 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "Vashisht Village",
-        "description": "4,000-year-old wooden temple dedicated to Sage Vashisht with warm therapeutic spring baths."
+        "description": "4,000-year-old wooden temple dedicated to Sage Vashisht with warm therapeutic spring baths.",
+        "lat": 32.2612,
+        "lng": 77.1915
       },
       {
         "id": "manali-5",
         "name": "Hampta Valley High Alpine Pine Picnic",
-        "categories": ["Adventure", "Nature"],
+        "categories": [
+          "Adventure",
+          "Nature"
+        ],
         "durationHours": 4,
         "cost": 650,
         "crowdLevel": "low",
@@ -77,12 +106,18 @@
         "seniorFriendly": false,
         "walkingLevel": "high/strenuous",
         "area": "Sethi / Hampta Foothills",
-        "description": "Cross river meadows and pine canopies with zero city traffic or horns."
+        "description": "Cross river meadows and pine canopies with zero city traffic or horns.",
+        "lat": 32.234,
+        "lng": 77.237
       },
       {
         "id": "manali-6",
         "name": "Traditional Himachali Dham Feast at Village Kitchen",
-        "categories": ["Foodie", "Cultural", "Family"],
+        "categories": [
+          "Foodie",
+          "Cultural",
+          "Family"
+        ],
         "durationHours": 1.5,
         "cost": 400,
         "crowdLevel": "low",
@@ -90,12 +125,17 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "Haripur Crafts Village",
-        "description": "Festive botanical vegetarian feast served on dried leaf pattals by local village cooks."
+        "description": "Festive botanical vegetarian feast served on dried leaf pattals by local village cooks.",
+        "lat": 32.1642,
+        "lng": 77.1764
       },
       {
         "id": "manali-7",
         "name": "Hadimba Temple Forest Sanctuary",
-        "categories": ["Spiritual", "Cultural"],
+        "categories": [
+          "Spiritual",
+          "Cultural"
+        ],
         "durationHours": 2,
         "cost": 50,
         "crowdLevel": "high",
@@ -103,12 +143,17 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "Dhungri Park",
-        "description": "Pagoda-style 16th century wooden shrine nestled inside towering deodar trees."
+        "description": "Pagoda-style 16th century wooden shrine nestled inside towering deodar trees.",
+        "lat": 32.2483,
+        "lng": 77.1802
       },
       {
         "id": "manali-8",
         "name": "Traditional Kullu Handloom Shawl Weaving Workshop",
-        "categories": ["Cultural", "Family"],
+        "categories": [
+          "Cultural",
+          "Family"
+        ],
         "durationHours": 2,
         "cost": 200,
         "crowdLevel": "low",
@@ -116,9 +161,15 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "Kullu Valley Cooperative",
-        "description": "Witness multigenerational geometric geometric woolen weaving and try your hands on the spindle."
+        "description": "Witness multigenerational geometric geometric woolen weaving and try your hands on the spindle.",
+        "lat": 31.9578,
+        "lng": 77.1095
       }
-    ]
+    ],
+    "center": {
+      "lat": 32.2432,
+      "lng": 77.1892
+    }
   },
   {
     "id": "jaipur",
@@ -129,7 +180,11 @@
     "description": "The historic Pink City. Step away from Hawa Mahal queues to explore artisan block-printing villages and heritage dharamsalas.",
     "suggestedBudgetMin": 6000,
     "suggestedDays": 3,
-    "offbeatAlternatives": ["Amer Old Town Haveli Quarter", "Bagru Artisan Enclave", "Sanganer"],
+    "offbeatAlternatives": [
+      "Amer Old Town Haveli Quarter",
+      "Bagru Artisan Enclave",
+      "Sanganer"
+    ],
     "crowdPair": {
       "popular": "Hawa Mahal & City Palace Main Ticketing",
       "offbeat": "Panna Meena Kund Stepwell & Bagru Hand-Block Dyeing Village"
@@ -138,7 +193,10 @@
       {
         "id": "jaipur-1",
         "name": "Panna Meena Ka Kund Stepwell & Quiet Amber Lanes",
-        "categories": ["Cultural", "Relaxed"],
+        "categories": [
+          "Cultural",
+          "Relaxed"
+        ],
         "durationHours": 2,
         "cost": 100,
         "crowdLevel": "low",
@@ -146,12 +204,18 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "Amer Old Town",
-        "description": "16th-century symmetrical geometric stepwell tucked away from the main Amer Fort tourist rush."
+        "description": "16th-century symmetrical geometric stepwell tucked away from the main Amer Fort tourist rush.",
+        "lat": 26.9856,
+        "lng": 75.8507
       },
       {
         "id": "jaipur-2",
         "name": "Bagru Natural Dyeing & Wooden Block Print Workshop",
-        "categories": ["Cultural", "Family", "Foodie"],
+        "categories": [
+          "Cultural",
+          "Family",
+          "Foodie"
+        ],
         "durationHours": 3.5,
         "cost": 450,
         "crowdLevel": "low",
@@ -159,12 +223,17 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "Bagru Artisan Colony",
-        "description": "Learn 300-year-old Chippa family vegetable-dye printing and create your own handmade scarf."
+        "description": "Learn 300-year-old Chippa family vegetable-dye printing and create your own handmade scarf.",
+        "lat": 26.8142,
+        "lng": 75.5412
       },
       {
         "id": "jaipur-3",
         "name": "Sunset Tea at Nahargarh Fort Ridge",
-        "categories": ["Relaxed", "Nature"],
+        "categories": [
+          "Relaxed",
+          "Nature"
+        ],
         "durationHours": 2.5,
         "cost": 200,
         "crowdLevel": "medium",
@@ -172,12 +241,17 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "Aravalli Ridge",
-        "description": "Panoramic golden-hour view overlooking the glowing pink terracotta city."
+        "description": "Panoramic golden-hour view overlooking the glowing pink terracotta city.",
+        "lat": 26.9378,
+        "lng": 75.8156
       },
       {
         "id": "jaipur-4",
         "name": "Govind Dev Ji Temple Dawn Aarti & Bhajan",
-        "categories": ["Spiritual", "Cultural"],
+        "categories": [
+          "Spiritual",
+          "Cultural"
+        ],
         "durationHours": 1.5,
         "cost": 0,
         "crowdLevel": "medium",
@@ -185,12 +259,17 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "City Palace Enclosure",
-        "description": "Deeply moving sunrise devotional songs with thousands of local devotees without commercial tickets."
+        "description": "Deeply moving sunrise devotional songs with thousands of local devotees without commercial tickets.",
+        "lat": 26.9282,
+        "lng": 75.8239
       },
       {
         "id": "jaipur-5",
         "name": "Galta Ji (Monkey Temple) Sun Pavilion Stroll",
-        "categories": ["Spiritual", "Adventure"],
+        "categories": [
+          "Spiritual",
+          "Adventure"
+        ],
         "durationHours": 2.5,
         "cost": 150,
         "crowdLevel": "low",
@@ -198,12 +277,18 @@
         "seniorFriendly": false,
         "walkingLevel": "moderate",
         "area": "Eastern Valley Pass",
-        "description": "Ancient freshwater springs, pink sandstone pavilions, and tranquil hill views."
+        "description": "Ancient freshwater springs, pink sandstone pavilions, and tranquil hill views.",
+        "lat": 26.9163,
+        "lng": 75.8578
       },
       {
         "id": "jaipur-6",
         "name": "Old City Heritage Haveli & Sweet Meat Walk",
-        "categories": ["Foodie", "Cultural", "Family"],
+        "categories": [
+          "Foodie",
+          "Cultural",
+          "Family"
+        ],
         "durationHours": 2,
         "cost": 300,
         "crowdLevel": "medium",
@@ -211,12 +296,17 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "Johari Bazaar Chowk",
-        "description": "Taste authentic Pyaaz Kachori and Ghewar from 80-year-old family halwais."
+        "description": "Taste authentic Pyaaz Kachori and Ghewar from 80-year-old family halwais.",
+        "lat": 26.9205,
+        "lng": 75.8262
       },
       {
         "id": "jaipur-7",
         "name": "Jaigarh Fort & Underground Water Reservoir",
-        "categories": ["Cultural", "Adventure"],
+        "categories": [
+          "Cultural",
+          "Adventure"
+        ],
         "durationHours": 3,
         "cost": 200,
         "crowdLevel": "low",
@@ -224,12 +314,17 @@
         "seniorFriendly": false,
         "walkingLevel": "moderate",
         "area": "Cheel Ka Teela",
-        "description": "Massive military citadel boasting ancient rainwater-harvesting canals and medieval cannon foundry."
+        "description": "Massive military citadel boasting ancient rainwater-harvesting canals and medieval cannon foundry.",
+        "lat": 26.9851,
+        "lng": 75.8509
       },
       {
         "id": "jaipur-8",
         "name": "Smriti Van Quiet Biodiversity Forest Walk",
-        "categories": ["Nature", "Relaxed"],
+        "categories": [
+          "Nature",
+          "Relaxed"
+        ],
         "durationHours": 2,
         "cost": 50,
         "crowdLevel": "low",
@@ -237,9 +332,15 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "JL Marg Greens",
-        "description": "Peaceful city forest with chirping peacocks and medicinal trees far from urban bustle."
+        "description": "Peaceful city forest with chirping peacocks and medicinal trees far from urban bustle.",
+        "lat": 26.877,
+        "lng": 75.8115
       }
-    ]
+    ],
+    "center": {
+      "lat": 26.9124,
+      "lng": 75.7873
+    }
   },
   {
     "id": "varanasi",
@@ -250,7 +351,11 @@
     "description": "Timeless spiritual cradle on the holy Ganga. Experience serene dawn boat rides and quiet weaver mohallas away from temple bottlenecks.",
     "suggestedBudgetMin": 4000,
     "suggestedDays": 3,
-    "offbeatAlternatives": ["Chet Singh Ghat", "Ramnagar Rural Riverfront", "Sarnath Quiet Enclave"],
+    "offbeatAlternatives": [
+      "Chet Singh Ghat",
+      "Ramnagar Rural Riverfront",
+      "Sarnath Quiet Enclave"
+    ],
     "crowdPair": {
       "popular": "Dashashwamedh Evening Ganga Aarti Crowd",
       "offbeat": "Assi Dawn Subah-e-Banaras & Quiet Chet Singh Fortress Ghat"
@@ -259,7 +364,11 @@
       {
         "id": "varanasi-1",
         "name": "Subah-e-Banaras: Dawn Classical Sitar & Ganga Aarti",
-        "categories": ["Spiritual", "Relaxed", "Cultural"],
+        "categories": [
+          "Spiritual",
+          "Relaxed",
+          "Cultural"
+        ],
         "durationHours": 2,
         "cost": 0,
         "crowdLevel": "low",
@@ -267,12 +376,18 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "Assi Ghat",
-        "description": "Mellow morning Vedic chants, Indian classical music, and sunrise yoga at the quiet southern ghats."
+        "description": "Mellow morning Vedic chants, Indian classical music, and sunrise yoga at the quiet southern ghats.",
+        "lat": 25.2974,
+        "lng": 83.0064
       },
       {
         "id": "varanasi-2",
         "name": "Quiet Hand-Rowed Wooden Boat to Chet Singh Fort",
-        "categories": ["Spiritual", "Relaxed", "Nature"],
+        "categories": [
+          "Spiritual",
+          "Relaxed",
+          "Nature"
+        ],
         "durationHours": 2,
         "cost": 400,
         "crowdLevel": "low",
@@ -280,12 +395,17 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "Shivala Ghat Front",
-        "description": "Glide gently on clean morning river currents without noisy motorized boat fumes."
+        "description": "Glide gently on clean morning river currents without noisy motorized boat fumes.",
+        "lat": 25.2925,
+        "lng": 83.0039
       },
       {
         "id": "varanasi-3",
         "name": "Madanpura Heritage Silk Weavers Quarter",
-        "categories": ["Cultural", "Family"],
+        "categories": [
+          "Cultural",
+          "Family"
+        ],
         "durationHours": 2.5,
         "cost": 150,
         "crowdLevel": "low",
@@ -293,12 +413,18 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "Madanpura Mohalla",
-        "description": "Meet Ansari master weavers crafting pure Banarasi zari sarees on centuries-old pit-looms."
+        "description": "Meet Ansari master weavers crafting pure Banarasi zari sarees on centuries-old pit-looms.",
+        "lat": 25.3056,
+        "lng": 83.0048
       },
       {
         "id": "varanasi-4",
         "name": "Sarnath Deer Park & Dhamek Stupa Enclosure",
-        "categories": ["Spiritual", "Cultural", "Relaxed"],
+        "categories": [
+          "Spiritual",
+          "Cultural",
+          "Relaxed"
+        ],
         "durationHours": 3,
         "cost": 250,
         "crowdLevel": "low",
@@ -306,12 +432,17 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "Sarnath",
-        "description": "Tranquil lawns where Buddha delivered his first sermon; wheelchair and senior-accessible."
+        "description": "Tranquil lawns where Buddha delivered his first sermon; wheelchair and senior-accessible.",
+        "lat": 25.3811,
+        "lng": 83.0242
       },
       {
         "id": "varanasi-5",
         "name": "Dashashwamedh Ghat Main Evening Aarti",
-        "categories": ["Spiritual", "Cultural"],
+        "categories": [
+          "Spiritual",
+          "Cultural"
+        ],
         "durationHours": 2,
         "cost": 100,
         "crowdLevel": "high",
@@ -319,12 +450,17 @@
         "seniorFriendly": false,
         "walkingLevel": "moderate",
         "area": "Central Ghats",
-        "description": "Spectacular brass lamp ceremony, vibrant and musical, but heavily crowded on peak evenings."
+        "description": "Spectacular brass lamp ceremony, vibrant and musical, but heavily crowded on peak evenings.",
+        "lat": 25.3076,
+        "lng": 83.0107
       },
       {
         "id": "varanasi-6",
         "name": "Ramnagar Fort & Famous Lassi Tasting Across the River",
-        "categories": ["Foodie", "Cultural"],
+        "categories": [
+          "Foodie",
+          "Cultural"
+        ],
         "durationHours": 2.5,
         "cost": 200,
         "crowdLevel": "low",
@@ -332,12 +468,18 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "Ramnagar Riverfront",
-        "description": "18th-century sandstone fortress museum followed by creamy malai lassi served in earthen kulhad."
+        "description": "18th-century sandstone fortress museum followed by creamy malai lassi served in earthen kulhad.",
+        "lat": 25.2678,
+        "lng": 83.0245
       },
       {
         "id": "varanasi-7",
         "name": "Kashi Heritage Thali in Heritage Haveli Courtyard",
-        "categories": ["Foodie", "Family", "Relaxed"],
+        "categories": [
+          "Foodie",
+          "Family",
+          "Relaxed"
+        ],
         "durationHours": 1.5,
         "cost": 450,
         "crowdLevel": "low",
@@ -345,12 +487,17 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "Bengal Tola",
-        "description": "Sattvic Ayurvedic seasonal vegetarian recipes curated for digestion and vitality."
+        "description": "Sattvic Ayurvedic seasonal vegetarian recipes curated for digestion and vitality.",
+        "lat": 25.3022,
+        "lng": 83.0068
       },
       {
         "id": "varanasi-8",
         "name": "Tulsi Ghat Akhaada & Wrestling Practice Observation",
-        "categories": ["Cultural", "Adventure"],
+        "categories": [
+          "Cultural",
+          "Adventure"
+        ],
         "durationHours": 1.5,
         "cost": 50,
         "crowdLevel": "low",
@@ -358,9 +505,15 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "Tulsi Ghat",
-        "description": "Centuries-old traditional clay wrestling grounds where ascetics and athletes train at dawn."
+        "description": "Centuries-old traditional clay wrestling grounds where ascetics and athletes train at dawn.",
+        "lat": 25.2951,
+        "lng": 83.0055
       }
-    ]
+    ],
+    "center": {
+      "lat": 25.3176,
+      "lng": 82.9739
+    }
   },
   {
     "id": "rishikesh",
@@ -371,7 +524,11 @@
     "description": "Yoga capital nestled in the Shivaliks. Skip congested bridge lanes for upstream eco-ashrams and slow river beaches.",
     "suggestedBudgetMin": 4500,
     "suggestedDays": 3,
-    "offbeatAlternatives": ["Tapovan Quiet Ridge", "Phool Chatti Ashram Trail", "Shivpuri Hamlet"],
+    "offbeatAlternatives": [
+      "Tapovan Quiet Ridge",
+      "Phool Chatti Ashram Trail",
+      "Shivpuri Hamlet"
+    ],
     "crowdPair": {
       "popular": "Ram Jhula Traffic & Commercial River Rafting Camp",
       "offbeat": "Phool Chatti River Meditation & Quiet Vashishta Gufa Cave"
@@ -380,7 +537,10 @@
       {
         "id": "rishikesh-1",
         "name": "Vashishta Gufa Ancient Meditation Cave",
-        "categories": ["Spiritual", "Relaxed"],
+        "categories": [
+          "Spiritual",
+          "Relaxed"
+        ],
         "durationHours": 2,
         "cost": 50,
         "crowdLevel": "low",
@@ -388,12 +548,18 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "Upstream Ganga Bank",
-        "description": "Ancient secluded riverside cave filled with profound silence and cool Himalayan breeze."
+        "description": "Ancient secluded riverside cave filled with profound silence and cool Himalayan breeze.",
+        "lat": 30.1432,
+        "lng": 78.4326
       },
       {
         "id": "rishikesh-2",
         "name": "Phool Chatti Gentle Herbal Garden Walk",
-        "categories": ["Nature", "Relaxed", "Spiritual"],
+        "categories": [
+          "Nature",
+          "Relaxed",
+          "Spiritual"
+        ],
         "durationHours": 2,
         "cost": 100,
         "crowdLevel": "low",
@@ -401,12 +567,16 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "Phool Chatti Valley",
-        "description": "Where the tributary streams meet the Ganga; peaceful herbal garden with zero vehicle traffic."
+        "description": "Where the tributary streams meet the Ganga; peaceful herbal garden with zero vehicle traffic.",
+        "lat": 30.1254,
+        "lng": 78.3695
       },
       {
         "id": "rishikesh-3",
         "name": "White Water River Rafting Adventure",
-        "categories": ["Adventure"],
+        "categories": [
+          "Adventure"
+        ],
         "durationHours": 3.5,
         "cost": 850,
         "crowdLevel": "high",
@@ -414,12 +584,18 @@
         "seniorFriendly": false,
         "walkingLevel": "high/strenuous",
         "area": "Shivpuri to NIM Beach",
-        "description": "Grade III rapids through scenic Himalayan canyons; exciting but unsuitable for seniors."
+        "description": "Grade III rapids through scenic Himalayan canyons; exciting but unsuitable for seniors.",
+        "lat": 30.1388,
+        "lng": 78.3842
       },
       {
         "id": "rishikesh-4",
         "name": "Beatles Ashram (Chaurasi Kutia) Art & Heritage",
-        "categories": ["Cultural", "Nature", "Relaxed"],
+        "categories": [
+          "Cultural",
+          "Nature",
+          "Relaxed"
+        ],
         "durationHours": 2.5,
         "cost": 150,
         "crowdLevel": "medium",
@@ -427,12 +603,17 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "Swarg Ashram Forest",
-        "description": "Stone meditation domes surrounded by Rajaji tiger reserve wilderness and colorful graffiti."
+        "description": "Stone meditation domes surrounded by Rajaji tiger reserve wilderness and colorful graffiti.",
+        "lat": 30.1147,
+        "lng": 78.3134
       },
       {
         "id": "rishikesh-5",
         "name": "Parmarth Niketan Sunset Ganga Aarti",
-        "categories": ["Spiritual", "Family"],
+        "categories": [
+          "Spiritual",
+          "Family"
+        ],
         "durationHours": 1.5,
         "cost": 0,
         "crowdLevel": "medium",
@@ -440,12 +621,17 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "Parmarth Ghat",
-        "description": "Soulful riverside bhajans and floating flower diyas with orderly seating arrangements."
+        "description": "Soulful riverside bhajans and floating flower diyas with orderly seating arrangements.",
+        "lat": 30.1189,
+        "lng": 78.3128
       },
       {
         "id": "rishikesh-6",
         "name": "Ayurvedic Herbal Tea & Sattvic Khichdi Session",
-        "categories": ["Foodie", "Relaxed"],
+        "categories": [
+          "Foodie",
+          "Relaxed"
+        ],
         "durationHours": 1.5,
         "cost": 250,
         "crowdLevel": "low",
@@ -453,12 +639,17 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "Tapovan Upper Ridge",
-        "description": "Taste mountain honey, tulsi infusions, and digestible millet khichdi made with garden herbs."
+        "description": "Taste mountain honey, tulsi infusions, and digestible millet khichdi made with garden herbs.",
+        "lat": 30.1325,
+        "lng": 78.3241
       },
       {
         "id": "rishikesh-7",
         "name": "Neer Garh Natural Waterfall Forest Walk",
-        "categories": ["Adventure", "Nature"],
+        "categories": [
+          "Adventure",
+          "Nature"
+        ],
         "durationHours": 3,
         "cost": 100,
         "crowdLevel": "medium",
@@ -466,12 +657,17 @@
         "seniorFriendly": false,
         "walkingLevel": "moderate",
         "area": "Neer Valley",
-        "description": "Tiered natural turquoise pools ideal for cool wading and butterfly watching."
+        "description": "Tiered natural turquoise pools ideal for cool wading and butterfly watching.",
+        "lat": 30.1486,
+        "lng": 78.3475
       },
       {
         "id": "rishikesh-8",
         "name": "Sound Healing & Tibetan Singing Bowl Therapy",
-        "categories": ["Relaxed", "Spiritual"],
+        "categories": [
+          "Relaxed",
+          "Spiritual"
+        ],
         "durationHours": 1.5,
         "cost": 400,
         "crowdLevel": "low",
@@ -479,9 +675,15 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "Tapovan Quiet Studio",
-        "description": "Deep resonance vibrational acoustic session to release fatigue and restore calm."
+        "description": "Deep resonance vibrational acoustic session to release fatigue and restore calm.",
+        "lat": 30.1342,
+        "lng": 78.3228
       }
-    ]
+    ],
+    "center": {
+      "lat": 30.0869,
+      "lng": 78.2676
+    }
   },
   {
     "id": "hampi",
@@ -492,7 +694,11 @@
     "description": "Boulder-strewn UNESCO world heritage site. Vast landscape where you can cycle or stroll peacefully with local artisan guides.",
     "suggestedBudgetMin": 5000,
     "suggestedDays": 3,
-    "offbeatAlternatives": ["Anegundi Historic Village", "Sanapur Lake Hamlet", "Daroji Scrublands"],
+    "offbeatAlternatives": [
+      "Anegundi Historic Village",
+      "Sanapur Lake Hamlet",
+      "Daroji Scrublands"
+    ],
     "crowdPair": {
       "popular": "Virupaksha Temple Main Bazaar Parking",
       "offbeat": "Anegundi Banana Fiber Craft Village & Sanapur Boulder Sunset"
@@ -501,7 +707,11 @@
       {
         "id": "hampi-1",
         "name": "Anegundi Rural Village & Banana-Fiber Craft Collective",
-        "categories": ["Cultural", "Family", "Relaxed"],
+        "categories": [
+          "Cultural",
+          "Family",
+          "Relaxed"
+        ],
         "durationHours": 2.5,
         "cost": 150,
         "crowdLevel": "low",
@@ -509,12 +719,17 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "Anegundi Rural Island",
-        "description": "Historic Kishkindha village where women craft eco-friendly bags and baskets from organic banana fiber."
+        "description": "Historic Kishkindha village where women craft eco-friendly bags and baskets from organic banana fiber.",
+        "lat": 15.3524,
+        "lng": 76.4912
       },
       {
         "id": "hampi-2",
         "name": "Sanapur Lake Coracle Ride & Granite Cliffs",
-        "categories": ["Nature", "Relaxed"],
+        "categories": [
+          "Nature",
+          "Relaxed"
+        ],
         "durationHours": 2,
         "cost": 350,
         "crowdLevel": "low",
@@ -522,12 +737,17 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "Sanapur Reservoir",
-        "description": "Float gently in round woven reed coracles through surreal red granite canyons."
+        "description": "Float gently in round woven reed coracles through surreal red granite canyons.",
+        "lat": 15.3489,
+        "lng": 76.4468
       },
       {
         "id": "hampi-3",
         "name": "Vittala Temple Stone Chariot & Musical Pillars",
-        "categories": ["Cultural", "Spiritual"],
+        "categories": [
+          "Cultural",
+          "Spiritual"
+        ],
         "durationHours": 2.5,
         "cost": 100,
         "crowdLevel": "medium",
@@ -535,12 +755,18 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "Royal Sacred Enclosure",
-        "description": "World-famous monolithic stone chariot with electric golf cart assistance for seniors."
+        "description": "World-famous monolithic stone chariot with electric golf cart assistance for seniors.",
+        "lat": 15.3364,
+        "lng": 76.4764
       },
       {
         "id": "hampi-4",
         "name": "Hemakuta Hill Sunset over Monolithic Ganesha",
-        "categories": ["Spiritual", "Relaxed", "Cultural"],
+        "categories": [
+          "Spiritual",
+          "Relaxed",
+          "Cultural"
+        ],
         "durationHours": 2,
         "cost": 0,
         "crowdLevel": "low",
@@ -548,12 +774,17 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "Hemakuta Ridge",
-        "description": "Gentle sloping granite hill sprinkled with early pre-Vijayanagara shrines and golden sunset glow."
+        "description": "Gentle sloping granite hill sprinkled with early pre-Vijayanagara shrines and golden sunset glow.",
+        "lat": 15.3325,
+        "lng": 76.4608
       },
       {
         "id": "hampi-5",
         "name": "Anjanadri Hill Sunrise Monkey Temple Climb",
-        "categories": ["Spiritual", "Adventure"],
+        "categories": [
+          "Spiritual",
+          "Adventure"
+        ],
         "durationHours": 3,
         "cost": 50,
         "crowdLevel": "medium",
@@ -561,12 +792,18 @@
         "seniorFriendly": false,
         "walkingLevel": "high/strenuous",
         "area": "Gangavathi Taluk",
-        "description": "575 stone steps leading to the legendary birthplace of Lord Hanuman; breathtaking vistas."
+        "description": "575 stone steps leading to the legendary birthplace of Lord Hanuman; breathtaking vistas.",
+        "lat": 15.3548,
+        "lng": 76.4719
       },
       {
         "id": "hampi-6",
         "name": "Traditional North Karnataka Jolada Roti Meal",
-        "categories": ["Foodie", "Family", "Cultural"],
+        "categories": [
+          "Foodie",
+          "Family",
+          "Cultural"
+        ],
         "durationHours": 1.5,
         "cost": 200,
         "crowdLevel": "low",
@@ -574,12 +811,17 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "Kamalapur Village",
-        "description": "Wood-fired sorghum rotis served with stuffed brinjal ennegayi, shenga chutney, and fresh buttermilk."
+        "description": "Wood-fired sorghum rotis served with stuffed brinjal ennegayi, shenga chutney, and fresh buttermilk.",
+        "lat": 15.3189,
+        "lng": 76.4842
       },
       {
         "id": "hampi-7",
         "name": "Tungabhadra River Coracle Crossing & Riverside Ruin Path",
-        "categories": ["Adventure", "Nature"],
+        "categories": [
+          "Adventure",
+          "Nature"
+        ],
         "durationHours": 2,
         "cost": 150,
         "crowdLevel": "low",
@@ -587,12 +829,17 @@
         "seniorFriendly": false,
         "walkingLevel": "moderate",
         "area": "Chakratirtha",
-        "description": "Scramble through peaceful rock trails where ancient boulder carvings line the roaring river."
+        "description": "Scramble through peaceful rock trails where ancient boulder carvings line the roaring river.",
+        "lat": 15.3341,
+        "lng": 76.4645
       },
       {
         "id": "hampi-8",
         "name": "Daroji Sloth Bear Sanctuary Quiet Safari",
-        "categories": ["Nature", "Family"],
+        "categories": [
+          "Nature",
+          "Family"
+        ],
         "durationHours": 3,
         "cost": 300,
         "crowdLevel": "low",
@@ -600,9 +847,15 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "Daroji Scrubland",
-        "description": "Watch wild Indian sloth bears climbing rocky outcrops from a sheltered watchtower."
+        "description": "Watch wild Indian sloth bears climbing rocky outcrops from a sheltered watchtower.",
+        "lat": 15.2536,
+        "lng": 76.5392
       }
-    ]
+    ],
+    "center": {
+      "lat": 15.335,
+      "lng": 76.46
+    }
   },
   {
     "id": "munnar",
@@ -613,7 +866,11 @@
     "description": "Rolling emerald tea plantations and mist. Escape congested viewpoint parking for family-run plantation stays in Marayoor.",
     "suggestedBudgetMin": 7000,
     "suggestedDays": 4,
-    "offbeatAlternatives": ["Marayoor Sandalwood Forest", "Vattavada Farm Village", "Chinnakanal Tea Ridge"],
+    "offbeatAlternatives": [
+      "Marayoor Sandalwood Forest",
+      "Vattavada Farm Village",
+      "Chinnakanal Tea Ridge"
+    ],
     "crowdPair": {
       "popular": "Echo Point Tour Bus Parking Jam",
       "offbeat": "Marayoor Natural Sandalwood Grove & Jaggery Farm Tasting"
@@ -622,7 +879,11 @@
       {
         "id": "munnar-1",
         "name": "Marayoor Organic Jaggery Making & Sandalwood Walk",
-        "categories": ["Cultural", "Foodie", "Relaxed"],
+        "categories": [
+          "Cultural",
+          "Foodie",
+          "Relaxed"
+        ],
         "durationHours": 3,
         "cost": 250,
         "crowdLevel": "low",
@@ -630,12 +891,18 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "Marayoor Valley",
-        "description": "Watch traditional sugarcane boiling into famous Marayoor Sharkara jaggery in serene forest glades."
+        "description": "Watch traditional sugarcane boiling into famous Marayoor Sharkara jaggery in serene forest glades.",
+        "lat": 10.2764,
+        "lng": 77.1685
       },
       {
         "id": "munnar-2",
         "name": "Family Spice Plantation Stroll & Cardamom Picking",
-        "categories": ["Nature", "Family", "Foodie"],
+        "categories": [
+          "Nature",
+          "Family",
+          "Foodie"
+        ],
         "durationHours": 2,
         "cost": 200,
         "crowdLevel": "low",
@@ -643,12 +910,17 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "Chithirapuram",
-        "description": "Smell fresh cinnamon bark, vanilla pods, and green cardamom under shade of jackfruit trees."
+        "description": "Smell fresh cinnamon bark, vanilla pods, and green cardamom under shade of jackfruit trees.",
+        "lat": 10.0245,
+        "lng": 77.0512
       },
       {
         "id": "munnar-3",
         "name": "Top Station Cloud Ridge Viewpoint",
-        "categories": ["Nature", "Adventure"],
+        "categories": [
+          "Nature",
+          "Adventure"
+        ],
         "durationHours": 3,
         "cost": 150,
         "crowdLevel": "high",
@@ -656,12 +928,18 @@
         "seniorFriendly": false,
         "walkingLevel": "moderate",
         "area": "Kerala-Tamil Nadu Border",
-        "description": "Highest point in Munnar overlooking deep Tamil Nadu plains; breathtaking but busy during mid-day."
+        "description": "Highest point in Munnar overlooking deep Tamil Nadu plains; breathtaking but busy during mid-day.",
+        "lat": 10.1248,
+        "lng": 77.2456
       },
       {
         "id": "munnar-4",
         "name": "Tea Leaf Plucking Experience & Factory Museum",
-        "categories": ["Cultural", "Relaxed", "Family"],
+        "categories": [
+          "Cultural",
+          "Relaxed",
+          "Family"
+        ],
         "durationHours": 2.5,
         "cost": 200,
         "crowdLevel": "medium",
@@ -669,12 +947,17 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "Nullatanni Estate",
-        "description": "Learn Orthodox CTC tea processing and sample brisk high-altitude orthodox black tea."
+        "description": "Learn Orthodox CTC tea processing and sample brisk high-altitude orthodox black tea.",
+        "lat": 10.0886,
+        "lng": 77.0624
       },
       {
         "id": "munnar-5",
         "name": "Vattavada Terrace Vegetable Farm Walk",
-        "categories": ["Nature", "Relaxed"],
+        "categories": [
+          "Nature",
+          "Relaxed"
+        ],
         "durationHours": 3,
         "cost": 100,
         "crowdLevel": "low",
@@ -682,12 +965,18 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "Vattavada Village",
-        "description": "Cool terraced fields of strawberries, garlic, and tree tomatoes tucked away behind eucalyptus forests."
+        "description": "Cool terraced fields of strawberries, garlic, and tree tomatoes tucked away behind eucalyptus forests.",
+        "lat": 10.1842,
+        "lng": 77.2514
       },
       {
         "id": "munnar-6",
         "name": "Traditional Kerala Sadhya on Fresh Banana Leaf",
-        "categories": ["Foodie", "Cultural", "Family"],
+        "categories": [
+          "Foodie",
+          "Cultural",
+          "Family"
+        ],
         "durationHours": 1.5,
         "cost": 300,
         "crowdLevel": "low",
@@ -695,12 +984,17 @@
         "seniorFriendly": true,
         "walkingLevel": "flat/minimal",
         "area": "Anachal Village",
-        "description": "Authentic feast of avial, sambar, thoran, and hot red rice served with crunchy pappadams."
+        "description": "Authentic feast of avial, sambar, thoran, and hot red rice served with crunchy pappadams.",
+        "lat": 10.0094,
+        "lng": 77.0348
       },
       {
         "id": "munnar-7",
         "name": "Lakkom Waterfalls Natural Forest Bathing",
-        "categories": ["Nature", "Adventure"],
+        "categories": [
+          "Nature",
+          "Adventure"
+        ],
         "durationHours": 2.5,
         "cost": 100,
         "crowdLevel": "medium",
@@ -708,12 +1002,17 @@
         "seniorFriendly": false,
         "walkingLevel": "moderate",
         "area": "Eravikulam Boundary",
-        "description": "Silky mountain cascade fringed with thick bamboo thickets."
+        "description": "Silky mountain cascade fringed with thick bamboo thickets.",
+        "lat": 10.1824,
+        "lng": 77.1189
       },
       {
         "id": "munnar-8",
         "name": "Chinnar Wildlife Sanctuary Tree House Watch",
-        "categories": ["Adventure", "Nature"],
+        "categories": [
+          "Adventure",
+          "Nature"
+        ],
         "durationHours": 3.5,
         "cost": 400,
         "crowdLevel": "low",
@@ -721,8 +1020,14 @@
         "seniorFriendly": false,
         "walkingLevel": "moderate",
         "area": "Rain Shadow Region",
-        "description": "Dry deciduous scrub home to the endangered Grizzled Giant Squirrel and star tortoises."
+        "description": "Dry deciduous scrub home to the endangered Grizzled Giant Squirrel and star tortoises.",
+        "lat": 10.3125,
+        "lng": 77.1852
       }
-    ]
+    ],
+    "center": {
+      "lat": 10.0889,
+      "lng": 77.0595
+    }
   }
 ]

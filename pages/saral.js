@@ -17,6 +17,7 @@
 
 import { store } from '../js/store.js';
 import { speechAssistant } from '../js/speech.js';
+import { YatraMap, getDirectionsUrl } from '../js/map.js';
 
 export function renderSaralView() {
   const container = document.createElement('div');
@@ -678,6 +679,31 @@ function renderResultsHTML(container, wizardData, stay, guide, lang) {
       </div>
     </section>
 
+    <!-- Saral Mode Interactive Map Section -->
+    <section class="card flow" style="border: 3px solid #0B4F4A; padding: var(--space-5); margin-bottom: var(--space-8);">
+      <div class="flex-between" style="flex-wrap: wrap; gap: var(--space-3); align-items: center;">
+        <div>
+          <h3 style="margin: 0; font-size: 1.5rem; color: #0B4F4A;">🗺️ ${lang === 'HI' ? 'नक्शे पर देखें' : 'Simple Travel Map'}</h3>
+          <p style="margin: 4px 0 0; font-size: 1.05rem; color: #4B5563;">
+            ${lang === 'HI' ? 'बड़े बटनों और स्पष्ट दिशा-निर्देशों के साथ' : 'Large easy-to-read markers and walking locations'}
+          </p>
+        </div>
+        <button type="button" id="btn-saral-toggle-map" class="saral-btn btn-primary" style="background-color: #0B4F4A; border-color: #042F2C; font-size: 1.15rem; padding: 12px 24px; min-height: 56px;">
+          🗺️ ${lang === 'HI' ? 'नक्शा खोलें / बंद करें' : 'Show on Map'}
+        </button>
+      </div>
+
+      <div id="saral-map-container-wrap" style="display: none; margin-top: var(--space-4);">
+        <div id="saral-map" class="yatra-map-container" style="height: 380px;" role="region" aria-label="Simple interactive travel map"></div>
+        <div style="background: #F8FAFC; padding: 10px 14px; border-radius: 8px; margin-top: 8px; font-size: 0.95rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px;">
+          <span>🏡 ${stayName} • 🎓 ${guideName}</span>
+          <a href="${stay?.lat ? getDirectionsUrl(stay.lat, stay.lng, stayName) : '#'}" target="_blank" rel="noopener" class="btn btn-outline btn-sm" style="font-size: 0.9rem; font-weight: 700;">
+            🚗 Open Driving Directions ↗
+          </a>
+        </div>
+      </div>
+    </section>
+
     <!-- Big Action Buttons Footer -->
     <div class="flex-between" style="flex-wrap: wrap; gap: var(--space-4); padding-top: var(--space-6); border-top: 3px solid #E5E7EB;">
       <a href="#/saral" class="saral-btn btn-ghost" style="min-width: 220px;">
@@ -701,6 +727,39 @@ function renderResultsHTML(container, wizardData, stay, guide, lang) {
         if (arrow) arrow.textContent = isHidden ? '▲' : '▼';
       }
     });
+  });
+
+  // Saral Mode Map Toggle and Initialization
+  const btnToggleMap = container.querySelector('#btn-saral-toggle-map');
+  const mapWrap = container.querySelector('#saral-map-container-wrap');
+  let saralMapInstance = null;
+
+  btnToggleMap?.addEventListener('click', () => {
+    if (!mapWrap) return;
+    const isHidden = mapWrap.style.display === 'none';
+    mapWrap.style.display = isHidden ? 'block' : 'none';
+
+    if (isHidden) {
+      if (!saralMapInstance) {
+        const saralMapEl = container.querySelector('#saral-map');
+        const defaultLat = stay?.lat || 25.3176;
+        const defaultLng = stay?.lng || 82.9739;
+        saralMapInstance = new YatraMap(saralMapEl, {
+          center: [defaultLat, defaultLng],
+          zoom: 13,
+          isSaral: true
+        });
+        saralMapInstance.init();
+
+        const mapItems = [];
+        if (stay) mapItems.push(stay);
+        if (guide) mapItems.push(guide);
+
+        saralMapInstance.renderStaysAndGuides(mapItems);
+      } else {
+        saralMapInstance.invalidateSize();
+      }
+    }
   });
 
   // Read results aloud

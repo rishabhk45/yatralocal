@@ -87,10 +87,15 @@ Track progress across all 14 project phases.
   - Authored `/docs/DEMO_SCRIPT.md`: 3-minute timed pitch script (0:00 Problem → 0:30 Solution → 1:00 Live Plan & Stays → 1:45 Saral Mode → 2:15 Owner Hub → 2:35 SOS → 2:50 Impact/Ask) with 8 judge Q&As and demo-day checklist.
   - Prepared publication git commands.
 
-- [ ] **Phase 11: Real map integration**
-  - Interactive map integration (Leaflet/OpenStreetMap or Google Maps Platform proxy via `/api/map`).
-  - Pinning destinations, homestays, and crowd indicators.
-  - Graceful fallback to static map cards when offline or unconfigured.
+- [x] **Phase 11: Real interactive map integration**
+  - **Leaflet & OpenStreetMap**: Integrated Leaflet 1.9.4 from unpkg CDN pinned with verified SHA-384 Subresource Integrity (SRI) hashes in `index.html` (CSS: `sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H`, JS: `sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH`), requiring zero external API keys.
+  - **Geographic Data Coverage**: Populated real, verified GPS lat/lng coordinates for all 48 activities across 6 destinations (Manali, Jaipur, Varanasi, Rishikesh, Hampi, Munnar) in `data/destinations.json`, and all 20 hosts (12 homestays + 8 guides) in `data/hosts.json`.
+  - **Itinerary Map (`#/itinerary`)**: Interactive map with day-colored markers (`DAY_PALETTE`), numbered stops (`day.stop`), polyline paths connecting day stops, custom popups (activity title, time, cost, crowd badge, and keyless directions deep link), day filter buttons ("All Days", "Day 1", etc.), "Fit All" auto-bounding button, and a "Crowd-aware" layer toggle shading high-crowd hotspots red (`#C5221F`) and offbeat alternatives green (`#1E6F5C`).
+  - **Stays Map (`#/stays`)**: Seamless List / Map view toggle, custom icon markers for verified homestays (🏡) and certified guides (🎓), click-to-detail modal interaction, and dynamic Haversine distance calculator displaying "📏 X.X km from Day 1 start" on both stay cards and map popups.
+  - **Keyless External Directions**: One-touch deep links to Google Maps (`https://www.google.com/maps/dir/?api=1&destination=lat,lng`) and OpenStreetMap (`https://www.openstreetmap.org/directions?route=;lat,lng`) with zero API key dependencies.
+  - **Saral Mode Map**: Accessible, high-contrast map with large 44px markers and a prominent "Show on map" big toggle button.
+  - **Resilience & Attribution**: Prominent OpenStreetMap attribution bar (`© OpenStreetMap contributors`); graceful offline fallback list rendering distances and direct coordinates if CDN or tiles fail.
+  - **Automated Verification**: 6/6 test assertions passing in `tests/map-node-verify.js` and `tests/map.test.html`. Captured visual verification screenshots across desktop (1280px) and mobile (360px).
 
 - [ ] **Phase 12: Real AI integration**
   - Serverless endpoint `/api/ai` connecting to Gemini API with safe proxying.

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>YatraLocal - Map Engine & Coordinates Test Suite</title>
+  <!-- Pinned Leaflet 1.9.4 with SRI hashes -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H" crossorigin="">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH" crossorigin=""></script>
+  <style>
+    body { font-family: system-ui, sans-serif; padding: 24px; background: #FAF7F2; color: #1A252C; }
+    h1 { color: #0D5C5B; }
+    .test-box { background: white; border: 1px solid #E2D9CC; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+    .pass { color: #1B7955; font-weight: 700; }
+    .fail { color: #C5221F; font-weight: 700; }
+    #test-map-container { width: 100%; height: 260px; border-radius: 8px; margin: 12px 0; border: 1px solid #D8CFC0; }
+  </style>
+</head>
+<body>
+  <h1>🗺️ YatraLocal Map Engine & Geo-Coordinates Test Suite</h1>
+  <p>Verifying Haversine distance calculation, directions deep linking, dataset coordinate coverage (48 activities, 20 hosts), and Leaflet integration.</p>
+  
+  <div id="test-map-container"></div>
+  <div id="results">Running tests...</div>
+
+  <script type="module">
+    import { calculateDistanceKm, getDirectionsUrl, YatraMap } from '../js/map.js';
+
+    async function runTests() {
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '';
+
+      let passedCount = 0;
+      let totalTests = 0;
+
+      function assert(title, condition, detail = '') {
+        totalTests++;
+        const el = document.createElement('div');
+        el.className = 'test-box';
+        if (condition) {
+          passedCount++;
+          console.log(`[PASS] ${title}`);
+          el.innerHTML = `<span class="pass">✓ PASS:</span> <strong>${title}</strong> ${detail ? `<br><small>${detail}</small>` : ''}`;
+        } else {
+          console.error(`[FAIL] ${title}: ${detail}`);
+          el.innerHTML = `<span class="fail">✗ FAIL:</span> <strong>${title}</strong><br><small style="color: #C5221F;">${detail}</small>`;
+        }
+        resultsDiv.appendChild(el);
+      }
+
+      console.log('--- STARTING MAP & COORDINATES TESTS ---');
+
+      // Test 1: Haversine distance accuracy
+      // Known distance: Hadimba Temple (32.2483, 77.1804) to Vashisht Springs (32.2618, 77.1884) is approx 1.68 km
+      const d = calculateDistanceKm(32.2483, 77.1804, 32.2618, 77.1884);
+      assert(
+        'Haversine distance calculation',
+        d !== null && d >= 1.4 && d <= 1.9,
+        `Distance between Hadimba & Vashisht computed as ${d} km (expected ~1.68 km)`
+      );
+
+      // Test 2: Google & OpenStreetMap Directions deep links without API keys
+      const gUrl = getDirectionsUrl(32.2483, 77.1804, 'Hadimba Temple', 'google');
+      const osmUrl = getDirectionsUrl(32.2483, 77.1804, 'Hadimba Temple', 'osm');
+      assert(
+        'Keyless Directions deep links',
+        gUrl.includes('google.com/maps/dir/?api=1&destination=32.2483,77.1804') &&
+        osmUrl.includes('openstreetmap.org/directions?engine=fossgis_osrm_car&route=%3B32.2483%2C77.1804'),
+        `Google link: ${gUrl} | OSM link: ${osmUrl}`
+      );
+
+      // Test 3: Complete coordinate coverage across destinations.json (48 activities across 6 destinations)
+      const destResp = await fetch('../data/destinations.json');
+      const destinationsData = await destResp.json();
+      let totalActivities = 0;
+      let validActivities = 0;
+      let missingCoords = [];
+
+      destinationsData.forEach(dest => {
+        if (!dest.center || typeof dest.center.lat !== 'number' || typeof dest.center.lng !== 'number') {
+          missingCoords.push(`${dest.id} center`);
+        }
+        (dest.activities || []).forEach(act => {
+          totalActivities++;
+          if (act.lat && act.lng && typeof act.lat === 'number' && typeof act.lng === 'number' && !isNaN(act.lat) && !isNaN(act.lng)) {
+            validActivities++;
+          } else {
+            missingCoords.push(`${dest.id}: ${act.title || act.name || act.id}`);
+          }
+        });
+      });
+
+      assert(
+        'Activity coordinate coverage in destinations.json',
+        totalActivities === 48 && validActivities === 48 && missingCoords.length === 0,
+        `Found ${validActivities}/${totalActivities} valid coordinates across ${destinationsData.length} destinations. Missing: ${missingCoords.join(', ') || 'none'}`
+      );
+
+      // Test 4: Host coordinate coverage in hosts.json (12 stays + 8 guides = 20 hosts)
+      const hostResp = await fetch('../data/hosts.json');
+      const hostsJson = await hostResp.json();
+      const allHosts = [...(hostsJson.stays || []), ...(hostsJson.guides || [])];
+      let totalHosts = 0;
+      let validHosts = 0;
+      let missingHosts = [];
+
+      allHosts.forEach(h => {
+        totalHosts++;
+        if (h.lat && h.lng && typeof h.lat === 'number' && typeof h.lng === 'number' && !isNaN(h.lat) && !isNaN(h.lng)) {
+          validHosts++;
+        } else {
+          missingHosts.push(`${h.name} (${h.destination})`);
+        }
+      });
+
+      assert(
+        'Host coordinate coverage in hosts.json',
+        totalHosts === 20 && validHosts === 20 && missingHosts.length === 0,
+        `Found ${validHosts}/${totalHosts} valid coordinates. Missing: ${missingHosts.join(', ') || 'none'}`
+      );
+
+      // Test 5: Leaflet global object & OpenStreetMap tile layer initialized
+      assert(
+        'Leaflet library (window.L) availability',
+        typeof window.L !== 'undefined' && typeof window.L.map === 'function',
+        `L version: ${window.L ? window.L.version : 'missing'}`
+      );
+
+      // Test 6: YatraMap class can mount, plot itinerary stops, and render polylines
+      const container = document.getElementById('test-map-container');
+      const testMap = new YatraMap('test-map-container', { center: [32.2432, 77.1892], zoom: 13 });
+      const sampleDays = [
+        {
+          day: 1,
+          theme: 'Heritage & Forests',
+          activities: [
+            { id: 'act-1', title: 'Hadimba Temple', time: '09:00 AM', lat: 32.2483, lng: 77.1804, cost: 50, crowdRisk: 'High' },
+            { id: 'act-2', title: 'Old Manali Walk', time: '12:30 PM', lat: 32.2530, lng: 77.1750, cost: 0, crowdRisk: 'Low' }
+          ]
+        }
+      ];
+      testMap.renderItinerary(sampleDays, { activeDay: 0, crowdAware: true });
+
+      const hasMarkers = testMap.markersLayer && testMap.markersLayer.getLayers().length === 2;
+      const hasRoute = testMap.routesLayer && testMap.routesLayer.getLayers().length >= 1;
+
+      assert(
+        'YatraMap itinerary markers and route rendering',
+        hasMarkers && hasRoute,
+        `Rendered ${testMap.markersLayer ? testMap.markersLayer.getLayers().length : 0} markers and polyline paths`
+      );
+
+      // Final summary
+      const summaryEl = document.createElement('div');
+      summaryEl.id = 'test-summary';
+      summaryEl.style.marginTop = '20px';
+      summaryEl.style.padding = '16px';
+      summaryEl.style.borderRadius = '8px';
+      summaryEl.style.fontWeight = 'bold';
+      summaryEl.style.background = passedCount === totalTests ? '#E6F4EA' : '#FCE8E6';
+      summaryEl.style.color = passedCount === totalTests ? '#137333' : '#C5221F';
+      summaryEl.textContent = `All Tests Completed: ${passedCount}/${totalTests} Passed (${passedCount === totalTests ? 'SUCCESS' : 'FAILURE'})`;
+      resultsDiv.prepend(summaryEl);
+    }
+
+    window.addEventListener('load', runTests);
+  </script>
+</body>
+</html>

@@ -6,6 +6,7 @@
 
 import { store } from '../js/store.js';
 import { planProvider } from '../js/itinerary.js';
+import { YatraMap } from '../js/map.js';
 
 export function renderItineraryView() {
   const container = document.createElement('div');
@@ -169,6 +170,43 @@ function buildItineraryHTML(data) {
         <div style="background-color: var(--color-bg); padding: var(--space-3); border-radius: var(--radius-md);">
           <strong>🚶 Pacing:</strong> ${whyPlan.accessibilityNotice}
         </div>
+      </div>
+    </section>
+
+    <!-- Interactive Route Map & Crowd Awareness Layer -->
+    <section class="yatra-map-wrapper" aria-label="Interactive Route Map">
+      <div class="yatra-map-toolbar">
+        <div class="flex gap-2" style="align-items: center; flex-wrap: wrap;">
+          <strong style="color: var(--color-primary); font-size: var(--font-size-sm);">🗺️ Route & Crowd Map</strong>
+          <div class="flex gap-1" id="map-day-filter-buttons">
+            <button type="button" class="btn btn-outline btn-sm btn-map-day-filter active" data-day="all" style="padding: 4px 10px; font-size: 0.75rem;">
+              All Days
+            </button>
+            ${days.map((d, i) => `
+              <button type="button" class="btn btn-outline btn-sm btn-map-day-filter" data-day="${d.day || i + 1}" style="padding: 4px 10px; font-size: 0.75rem;">
+                Day ${d.day || i + 1}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="flex gap-2" style="align-items: center;">
+          <label class="flex gap-2" style="align-items: center; cursor: pointer; font-size: 0.8rem; font-weight: 600; margin: 0; background: var(--color-bg-surface); padding: 4px 8px; border-radius: var(--radius-sm); border: 1px solid var(--color-border);">
+            <input type="checkbox" id="chk-crowd-layer" style="cursor: pointer;" />
+            <span>🚦 Crowd-Aware Layer</span>
+          </label>
+          <button type="button" class="btn btn-ghost btn-sm" id="btn-map-fit-all" style="padding: 4px 8px; font-size: 0.75rem;">
+            ⛶ Fit All
+          </button>
+        </div>
+      </div>
+
+      <!-- Leaflet Map Container -->
+      <div id="itinerary-map" class="yatra-map-container" role="region" aria-label="Day route map with numbered markers"></div>
+      
+      <div style="background: var(--color-bg); padding: 6px 12px; font-size: 0.75rem; color: var(--color-text-muted); display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--color-border); flex-wrap: wrap; gap: 4px;">
+        <span>ℹ️ Numbered pins represent sequential stops (e.g. 1.1 = Day 1, Stop 1). Dashed lines show day route.</span>
+        <span>Green = Low Crowd • Red = Popular Chokepoint</span>
       </div>
     </section>
 
@@ -396,4 +434,65 @@ function bindItineraryInteractions(container, itineraryData) {
       }
     });
   });
+
+  // Initialize and Render Leaflet Map
+  const mapElement = container.querySelector('#itinerary-map');
+  if (mapElement) {
+    const isSaral = document.documentElement.classList.contains('saral');
+    const firstAct = itineraryData.days?.[0]?.activities?.[0];
+    const initialCenter = (firstAct && firstAct.lat) ? [firstAct.lat, firstAct.lng] : [32.2432, 77.1892];
+
+    const yatraMap = new YatraMap(mapElement, {
+      center: initialCenter,
+      zoom: 12,
+      isSaral
+    });
+
+    const success = yatraMap.init();
+
+    if (success) {
+      let currentActiveDay = null; // null means all days
+      let isCrowdMode = false;
+
+      const refreshMap = () => {
+        yatraMap.renderItinerary(itineraryData.days, currentActiveDay, isCrowdMode);
+      };
+
+      // Initial render
+      refreshMap();
+
+      // Day Filter Buttons
+      const dayFilterBtns = container.querySelectorAll('.btn-map-day-filter');
+      dayFilterBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          dayFilterBtns.forEach(b => b.classList.remove('active', 'btn-primary'));
+          btn.classList.add('active', 'btn-primary');
+
+          const dayVal = btn.dataset.day;
+          currentActiveDay = dayVal === 'all' ? null : parseInt(dayVal, 10);
+          refreshMap();
+        });
+      });
+
+      // Crowd Layer Toggle
+      const crowdToggle = container.querySelector('#chk-crowd-layer');
+      if (crowdToggle) {
+        crowdToggle.addEventListener('change', (e) => {
+          isCrowdMode = e.target.checked;
+          refreshMap();
+          if (isCrowdMode) {
+            window.YatraApp.showToast('🚦 Crowd-aware mode: Green = Offbeat/Low crowd, Red = High crowd');
+          }
+        });
+      }
+
+      // Fit All Button
+      const fitAllBtn = container.querySelector('#btn-map-fit-all');
+      if (fitAllBtn) {
+        fitAllBtn.addEventListener('click', () => {
+          yatraMap.fitAll();
+        });
+      }
+    }
+  }
 }

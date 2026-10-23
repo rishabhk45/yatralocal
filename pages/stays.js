@@ -6,6 +6,7 @@
  */
 
 import { store } from '../js/store.js';
+import { YatraMap, calculateDistanceKm } from '../js/map.js';
 
 export function renderStaysView() {
   const container = document.createElement('div');
@@ -82,14 +83,26 @@ export function renderStaysView() {
       </div>
     </div>
 
-    <!-- Tab Bar: Stays vs Guides -->
-    <div class="tab-list" role="tablist" style="margin-bottom: var(--space-6);">
-      <button type="button" class="tab-button active" id="tab-btn-stays" role="tab" aria-selected="true" aria-controls="tab-panel-stays">
-        🏡 Local Homestays & Stays (<span id="stays-count">--</span>)
-      </button>
-      <button type="button" class="tab-button" id="tab-btn-guides" role="tab" aria-selected="false" aria-controls="tab-panel-guides">
-        🪪 Verified Local Guides (<span id="guides-count">--</span>)
-      </button>
+    <!-- Tab Bar: Stays vs Guides & View Switcher -->
+    <div class="flex-between" style="flex-wrap: wrap; gap: var(--space-3); margin-bottom: var(--space-6); align-items: center;">
+      <div class="tab-list" role="tablist" style="margin-bottom: 0;">
+        <button type="button" class="tab-button active" id="tab-btn-stays" role="tab" aria-selected="true" aria-controls="tab-panel-stays">
+          🏡 Local Homestays & Stays (<span id="stays-count">--</span>)
+        </button>
+        <button type="button" class="tab-button" id="tab-btn-guides" role="tab" aria-selected="false" aria-controls="tab-panel-guides">
+          🪪 Verified Local Guides (<span id="guides-count">--</span>)
+        </button>
+      </div>
+
+      <!-- View Switcher (List vs Map) -->
+      <div class="flex gap-2" style="background: var(--color-bg); padding: 4px; border-radius: var(--radius-md); border: 1.5px solid var(--color-border);" role="group" aria-label="View layout toggle">
+        <button type="button" id="btn-view-list" class="btn btn-sm btn-primary" style="padding: 6px 14px; font-size: 0.85rem;" aria-pressed="true">
+          📋 List View
+        </button>
+        <button type="button" id="btn-view-map" class="btn btn-sm btn-ghost" style="padding: 6px 14px; font-size: 0.85rem;" aria-pressed="false">
+          🗺️ Map View
+        </button>
+      </div>
     </div>
 
     <!-- Filter & Sort Controls Bar -->
@@ -138,6 +151,26 @@ export function renderStaysView() {
       <div class="skeleton skeleton-rect" style="height: 180px;"></div>
       <div class="skeleton skeleton-rect" style="height: 180px;"></div>
     </div>
+
+    <!-- Map View Panel (Hidden initially) -->
+    <section id="stays-map-panel" class="yatra-map-wrapper" style="display: none;" aria-label="Interactive Map of Local Stays and Guides">
+      <div class="yatra-map-toolbar">
+        <div class="flex gap-2" style="align-items: center; flex-wrap: wrap;">
+          <strong style="color: var(--color-primary); font-size: var(--font-size-sm);" id="stays-map-title">
+            🗺️ Local Stays & Guides Map
+          </strong>
+          <span class="badge badge-verified">Direct Host Payouts</span>
+        </div>
+        <button type="button" class="btn btn-ghost btn-sm" id="btn-stays-map-fit-all" style="padding: 4px 8px; font-size: 0.75rem;">
+          ⛶ Fit All
+        </button>
+      </div>
+      <div id="stays-map" class="yatra-map-container" role="region" aria-label="Interactive map showing verified homestays and guides"></div>
+      <div style="background: var(--color-bg); padding: 8px 14px; font-size: 0.75rem; color: var(--color-text-muted); display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--color-border); flex-wrap: wrap; gap: 4px;">
+        <span>🏡 = Homestay • 🎓 = Local Guide • Click any pin to view details and calculate walking distance</span>
+        <span>© OpenStreetMap contributors</span>
+      </div>
+    </section>
 
     <!-- Active Listings Grid -->
     <div id="listings-grid" class="grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--space-6); display: none;"></div>
@@ -213,6 +246,7 @@ export function renderStaysView() {
  */
 function setupStaysAndGuidesApp(container, hostsData, targetDest, days, travellers, budget) {
   let activeTab = 'stays'; // 'stays' | 'guides'
+  let activeView = 'list'; // 'list' | 'map'
   const allStays = (hostsData.stays || []).filter((s) => s.destination === targetDest);
   const allGuides = (hostsData.guides || []).filter((g) => g.destination === targetDest);
 
@@ -220,12 +254,20 @@ function setupStaysAndGuidesApp(container, hostsData, targetDest, days, travelle
   const staysPool = allStays.length > 0 ? allStays : hostsData.stays;
   const guidesPool = allGuides.length > 0 ? allGuides : hostsData.guides;
 
+  // Retrieve Day 1 first activity coordinate from store if available
+  const itinerary = store.getState().itinerary;
+  const firstAct = itinerary?.days?.[0]?.activities?.[0];
+  const anchorCoord = (firstAct && firstAct.lat) ? [firstAct.lat, firstAct.lng] : null;
+
   // Update tab counts
   container.querySelector('#stays-count').textContent = staysPool.length;
   container.querySelector('#guides-count').textContent = guidesPool.length;
 
   const tabBtnStays = container.querySelector('#tab-btn-stays');
   const tabBtnGuides = container.querySelector('#tab-btn-guides');
+  const btnViewList = container.querySelector('#btn-view-list');
+  const btnViewMap = container.querySelector('#btn-view-map');
+  const mapPanel = container.querySelector('#stays-map-panel');
   const priceSlider = container.querySelector('#filter-price');
   const priceDisplay = container.querySelector('#price-display');
   const sortSelect = container.querySelector('#filter-sort');
@@ -238,6 +280,55 @@ function setupStaysAndGuidesApp(container, hostsData, targetDest, days, travelle
   const gridEl = container.querySelector('#listings-grid');
   const emptyEl = container.querySelector('#listings-empty-state');
   const stickyBar = container.querySelector('#sticky-selection-bar');
+
+  // Interactive Leaflet Map for Stays
+  let yatraStaysMap = null;
+  const mapContainer = container.querySelector('#stays-map');
+  if (mapContainer) {
+    const isSaral = document.documentElement.classList.contains('saral');
+    const defaultCenter = anchorCoord || [32.2432, 77.1892];
+    yatraStaysMap = new YatraMap(mapContainer, {
+      center: defaultCenter,
+      zoom: 12,
+      isSaral
+    });
+    yatraStaysMap.init();
+
+    // Fit all button
+    container.querySelector('#btn-stays-map-fit-all')?.addEventListener('click', () => {
+      yatraStaysMap.fitAll();
+    });
+  }
+
+  // View toggle: List vs Map
+  btnViewList?.addEventListener('click', () => {
+    activeView = 'list';
+    btnViewList.classList.add('btn-primary');
+    btnViewList.classList.remove('btn-ghost');
+    btnViewList.setAttribute('aria-pressed', 'true');
+    btnViewMap.classList.remove('btn-primary');
+    btnViewMap.classList.add('btn-ghost');
+    btnViewMap.setAttribute('aria-pressed', 'false');
+
+    mapPanel.style.display = 'none';
+    renderFilteredListings();
+  });
+
+  btnViewMap?.addEventListener('click', () => {
+    activeView = 'map';
+    btnViewMap.classList.add('btn-primary');
+    btnViewMap.classList.remove('btn-ghost');
+    btnViewMap.setAttribute('aria-pressed', 'true');
+    btnViewList.classList.remove('btn-primary');
+    btnViewList.classList.add('btn-ghost');
+    btnViewList.setAttribute('aria-pressed', 'false');
+
+    mapPanel.style.display = 'block';
+    if (yatraStaysMap) {
+      yatraStaysMap.invalidateSize();
+    }
+    renderFilteredListings();
+  });
 
   // Tab switching
   tabBtnStays.addEventListener('click', () => {
@@ -332,8 +423,18 @@ function setupStaysAndGuidesApp(container, hostsData, targetDest, days, travelle
     } else {
       emptyEl.style.display = 'none';
       gridEl.style.display = 'grid';
-      gridEl.innerHTML = items.map((item) => buildHostCardHTML(item, activeTab)).join('');
+      gridEl.innerHTML = items.map((item) => buildHostCardHTML(item, activeTab, anchorCoord)).join('');
       bindCardInteractions(gridEl, items, activeTab);
+    }
+
+    // Update map if available
+    if (yatraStaysMap) {
+      yatraStaysMap.renderStaysAndGuides(items, {
+        anchorCoord,
+        onSelect: (selectedItem) => {
+          openHostDetailModal(selectedItem, selectedItem.type || activeTab);
+        }
+      });
     }
 
     updateStickyBottomBar();
@@ -409,7 +510,7 @@ function setupStaysAndGuidesApp(container, hostsData, targetDest, days, travelle
 /**
  * Generates card HTML for Stays and Guides
  */
-function buildHostCardHTML(item, type) {
+function buildHostCardHTML(item, type, anchorCoord = null) {
   const state = store.getState();
   const isStay = item.type === 'stay' || type === 'stay' || type === 'stays';
   const isSelected = isStay ? state.selectedStay?.id === item.id : state.selectedGuide?.id === item.id;
@@ -418,6 +519,19 @@ function buildHostCardHTML(item, type) {
   const activeDiscount = hostOffer?.discountPercent || item.offPeakDiscountPercent;
   const activePrice = hostOffer?.discountedPrice || (isStay ? item.pricePerNight : item.pricePerDay);
   const activeRoomsEmpty = hostOffer?.roomsOffered !== undefined ? hostOffer.roomsOffered : item.roomsAvailableOffSeason;
+
+  // Haversine distance calculation from Day 1 activity start
+  let distanceBadge = '';
+  if (anchorCoord && anchorCoord[0] && anchorCoord[1] && item.lat && item.lng) {
+    const distKm = calculateDistanceKm(anchorCoord[0], anchorCoord[1], item.lat, item.lng);
+    if (distKm != null) {
+      distanceBadge = `
+        <span class="badge" style="background: #E6F4F1; color: #0D5C5B; font-size: var(--font-size-xs);">
+          📏 ${distKm} km from Day 1 start
+        </span>
+      `;
+    }
+  }
 
   return `
     <article class="card card-interactive flow" data-id="${item.id}" style="border: 2px solid ${isSelected ? 'var(--color-primary)' : 'var(--color-border)'}; display: flex; flex-direction: column; justify-content: space-between;">
@@ -439,6 +553,7 @@ function buildHostCardHTML(item, type) {
           ${item.verified ? '<span class="badge badge-verified">✓ Verified Local</span>' : ''}
           ${item.supportsLocalFamily ? '<span class="badge badge-local">📍 Supports a Local Family</span>' : ''}
           ${item.seniorFriendly ? '<span class="badge badge-verified">♿ Senior Friendly</span>' : ''}
+          ${distanceBadge}
         </div>
 
         <!-- Title & Location -->

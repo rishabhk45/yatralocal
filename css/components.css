@@ -664,7 +664,88 @@
 }
 
 /* --------------------------------------------------------------------------
-   Responsive Data Tables (Converts to Cards on Mobile)
+   Interactive Map Elements (Leaflet + OpenStreetMap)
+   -------------------------------------------------------------------------- */
+.yatra-map-wrapper {
+  background: var(--color-bg-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--space-6);
+}
+
+.yatra-map-toolbar {
+  background: var(--color-bg);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1.5px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.yatra-map-container {
+  width: 100%;
+  height: 420px;
+  min-height: 320px;
+  position: relative;
+  z-index: 10;
+  background-color: #E5E7EB;
+}
+
+@media (max-width: 640px) {
+  .yatra-map-container {
+    height: 320px;
+  }
+}
+
+/* Custom Marker Styling */
+.yatra-div-icon {
+  background: transparent;
+  border: none;
+}
+
+.yatra-marker {
+  transition: transform 0.15s ease-out;
+}
+.yatra-marker:hover, .yatra-host-marker:hover {
+  transform: scale(1.15);
+}
+
+/* Map Popup Customization */
+.leaflet-popup-content-wrapper {
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-lg) !important;
+  padding: 6px !important;
+  background: #FFFFFF !important;
+}
+
+.leaflet-popup-content {
+  margin: 8px 10px !important;
+  line-height: 1.4 !important;
+}
+
+/* Saral Mode Map Customization */
+html.saral .yatra-map-container {
+  height: 480px;
+  border: 3px solid #0D5C5B;
+  border-radius: var(--radius-lg);
+}
+
+html.saral .yatra-map-toolbar {
+  font-size: 1.25rem;
+  padding: var(--space-4);
+}
+
+html.saral .yatra-marker, html.saral .yatra-host-marker {
+  font-size: 1.2rem !important;
+  font-weight: 800 !important;
+  border-width: 3.5px !important;
+}
+
+/* Responsive Data Tables (Converts to Cards on Mobile)
    -------------------------------------------------------------------------- */
 .owner-table-wrapper {
   overflow-x: auto;
