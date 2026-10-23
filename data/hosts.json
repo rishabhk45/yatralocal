@@ -1,0 +1,519 @@
+{
+  "stays": [
+    {
+      "id": "stay-manali-1",
+      "type": "stay",
+      "name": "Burwa Apple Woods Homestay",
+      "destination": "manali",
+      "area": "Burwa Village (6 km from Manali)",
+      "pricePerNight": 1400,
+      "originalPrice": 2150,
+      "rating": 4.9,
+      "reviewsCount": 84,
+      "verified": true,
+      "languages": ["Hindi", "English", "Pahari"],
+      "amenities": ["Ground Floor Rooms", "Orchard Garden", "Home Cooked Meals", "Solar Hot Water", "Heater on Request"],
+      "seniorFriendly": true,
+      "familyFriendly": true,
+      "roomsTotal": 8,
+      "roomsAvailableOffSeason": 6,
+      "photoPlaceholder": {
+        "icon": "🏡",
+        "bgGradient": "linear-gradient(135deg, #1E6F5C, #2E8B57)"
+      },
+      "hostStory": "The Thakur family has tended this generational apple orchard for over 45 years. Uncle Ramesh and his daughter Sunita prepare authentic Siddu and apricot jams for guests while sharing peaceful village walks away from crowded Mall Road.",
+      "offPeakDiscountPercent": 35,
+      "supportsLocalFamily": true,
+      "reviews": [
+        { "author": "Amit K. (Delhi)", "rating": 5, "comment": "Pure bliss. 6 rooms were vacant so we had the whole orchard view to ourselves. Sunita's homemade apricot pancakes are unforgettable." },
+        { "author": "Meera & Parents", "rating": 5, "comment": "Ideal for my elderly parents. Zero stairs to the dining area and warm personal care." }
+      ]
+    },
+    {
+      "id": "stay-manali-2",
+      "type": "stay",
+      "name": "Naggar Heritage Stone Cottage",
+      "destination": "manali",
+      "area": "Naggar Castle Lane",
+      "pricePerNight": 1650,
+      "originalPrice": 2200,
+      "rating": 4.8,
+      "reviewsCount": 62,
+      "verified": true,
+      "languages": ["Hindi", "English"],
+      "amenities": ["Wood Stove Kitchen", "Balcony Mountain View", "Traditional Kath-Kuni Woodwork", "Wi-Fi"],
+      "seniorFriendly": true,
+      "familyFriendly": true,
+      "roomsTotal": 5,
+      "roomsAvailableOffSeason": 4,
+      "photoPlaceholder": {
+        "icon": "🌲",
+        "bgGradient": "linear-gradient(135deg, #0F4C5C, #1E6F5C)"
+      },
+      "hostStory": "Built in traditional timber and mountain stone, hosted by artisan woodcarver Devinder and his family. Enjoy slow evenings listening to folk tales around the bukhari hearth.",
+      "offPeakDiscountPercent": 25,
+      "supportsLocalFamily": true,
+      "reviews": [
+        { "author": "Sneha P.", "rating": 5, "comment": "So quiet and relaxing. Only 20 mins from town but completely peaceful." }
+      ]
+    },
+    {
+      "id": "stay-jaipur-1",
+      "type": "stay",
+      "name": "Amer Sunburst Heritage Haveli",
+      "destination": "jaipur",
+      "area": "Amer Old Town (Near Panna Meena Kund)",
+      "pricePerNight": 1800,
+      "originalPrice": 2500,
+      "rating": 4.9,
+      "reviewsCount": 112,
+      "verified": true,
+      "languages": ["Hindi", "English", "Rajasthani"],
+      "amenities": ["Courtyard Dining", "Ground Floor Suites", "Ayurvedic Herbal Tea", "Filtered RO Water", "Cultural Music Evenings"],
+      "seniorFriendly": true,
+      "familyFriendly": true,
+      "roomsTotal": 7,
+      "roomsAvailableOffSeason": 5,
+      "photoPlaceholder": {
+        "icon": "🏰",
+        "bgGradient": "linear-gradient(135deg, #C85A17, #E36414)"
+      },
+      "hostStory": "Restored 120-year-old family courtyard haveli run by Mohan Singh and his wife Radha. Radha cooks heritage Marwari thalis using fresh garden produce.",
+      "offPeakDiscountPercent": 28,
+      "supportsLocalFamily": true,
+      "reviews": [
+        { "author": "Vikas R.", "rating": 5, "comment": "Far from the noisy city center, yet waking up to the Amber hills was magical." }
+      ]
+    },
+    {
+      "id": "stay-jaipur-2",
+      "type": "stay",
+      "name": "Chippa Block Print Family Farmstay",
+      "destination": "jaipur",
+      "area": "Bagru Village Boundary",
+      "pricePerNight": 1250,
+      "originalPrice": 1600,
+      "rating": 4.7,
+      "reviewsCount": 49,
+      "verified": true,
+      "languages": ["Hindi", "English"],
+      "amenities": ["Organic Farm Vegetables", "Dyeing Workshop Access", "Quiet Verandah", "Pet Friendly"],
+      "seniorFriendly": false,
+      "familyFriendly": true,
+      "roomsTotal": 4,
+      "roomsAvailableOffSeason": 3,
+      "photoPlaceholder": {
+        "icon": "🎨",
+        "bgGradient": "linear-gradient(135deg, #B45309, #D97706)"
+      },
+      "hostStory": "Hosted by 5th-generation hand-block printers. Learn natural dye extraction from pomegranate skins and indigo while enjoying fresh Bajra rotis.",
+      "offPeakDiscountPercent": 20,
+      "supportsLocalFamily": true,
+      "reviews": [
+        { "author": "David & Chloe", "rating": 5, "comment": "Hands down the most authentic artisan homestay experience in Rajasthan." }
+      ]
+    },
+    {
+      "id": "stay-varanasi-1",
+      "type": "stay",
+      "name": "Kashi Shivala Riverfront Haveli",
+      "destination": "varanasi",
+      "area": "Shivala Ghat (Quiet South Sector)",
+      "pricePerNight": 1350,
+      "originalPrice": 1900,
+      "rating": 4.8,
+      "reviewsCount": 97,
+      "verified": true,
+      "languages": ["Hindi", "English", "Bhojpuri"],
+      "amenities": ["Riverview Terrace", "Sattvic Food (No Onion/Garlic option)", "Ground Floor Lift", "Morning Sitar Practice"],
+      "seniorFriendly": true,
+      "familyFriendly": true,
+      "roomsTotal": 9,
+      "roomsAvailableOffSeason": 6,
+      "photoPlaceholder": {
+        "icon": "🪔",
+        "bgGradient": "linear-gradient(135deg, #9333EA, #0D5C5B)"
+      },
+      "hostStory": "Pandit Harishchandra Mishra's family welcomes pilgrims seeking peace. Located at quiet Shivala Ghat, away from the loud motorized boat traffic of central ghats.",
+      "offPeakDiscountPercent": 30,
+      "supportsLocalFamily": true,
+      "reviews": [
+        { "author": "Smt. Shailaja Iyer", "rating": 5, "comment": "My mother loved the gentle morning chants and easy access to calm sunrise boating." }
+      ]
+    },
+    {
+      "id": "stay-varanasi-2",
+      "type": "stay",
+      "name": "Sarnath Bodhi Grove Guesthouse",
+      "destination": "varanasi",
+      "area": "Sarnath Sacred Greens",
+      "pricePerNight": 1100,
+      "originalPrice": 1450,
+      "rating": 4.7,
+      "reviewsCount": 54,
+      "verified": true,
+      "languages": ["Hindi", "English"],
+      "amenities": ["Meditation Garden", "Wheelchair Ramps", "Doctor On Call", "Herbal Green Tea"],
+      "seniorFriendly": true,
+      "familyFriendly": true,
+      "roomsTotal": 6,
+      "roomsAvailableOffSeason": 4,
+      "photoPlaceholder": {
+        "icon": "🌸",
+        "bgGradient": "linear-gradient(135deg, #10B981, #047857)"
+      },
+      "hostStory": "Peaceful garden retreat run by retired teacher Banwari Lal. Perfect for mindful travelers, pilgrims, and seniors wanting quiet sleep.",
+      "offPeakDiscountPercent": 24,
+      "supportsLocalFamily": true,
+      "reviews": [
+        { "author": "Karan M.", "rating": 5, "comment": "Varanasi can be overwhelming, but retreating here each afternoon saved our trip." }
+      ]
+    },
+    {
+      "id": "stay-rishikesh-1",
+      "type": "stay",
+      "name": "Tapovan Whispering Pines Eco-Stay",
+      "destination": "rishikesh",
+      "area": "Upper Tapovan Ridge",
+      "pricePerNight": 1500,
+      "originalPrice": 2100,
+      "rating": 4.9,
+      "reviewsCount": 89,
+      "verified": true,
+      "languages": ["Hindi", "English"],
+      "amenities": ["Yoga Shala", "Ayurvedic Kitchen", "Mountain Stream Path", "Continuous Hot Water"],
+      "seniorFriendly": true,
+      "familyFriendly": true,
+      "roomsTotal": 8,
+      "roomsAvailableOffSeason": 5,
+      "photoPlaceholder": {
+        "icon": "🧘",
+        "bgGradient": "linear-gradient(135deg, #0284C7, #0D5C5B)"
+      },
+      "hostStory": "Managed by yogi Anand and his brothers. Set against cedar-forested ridges with clear Himalayan spring air and pure vegetarian meals.",
+      "offPeakDiscountPercent": 28,
+      "supportsLocalFamily": true,
+      "reviews": [
+        { "author": "Pooja V.", "rating": 5, "comment": "Zero horns, just birds and stream water. Best yoga holiday ever." }
+      ]
+    },
+    {
+      "id": "stay-rishikesh-2",
+      "type": "stay",
+      "name": "Phool Chatti Valley Riverside Homestay",
+      "destination": "rishikesh",
+      "area": "Phool Chatti Valley (5 km Upstream)",
+      "pricePerNight": 1200,
+      "originalPrice": 1600,
+      "rating": 4.8,
+      "reviewsCount": 73,
+      "verified": true,
+      "languages": ["Hindi", "English", "Garhwali"],
+      "amenities": ["Private River Pebble Beach", "Campfire Gathering", "Organic Milk & Ghee", "Wi-Fi"],
+      "seniorFriendly": false,
+      "familyFriendly": true,
+      "roomsTotal": 5,
+      "roomsAvailableOffSeason": 3,
+      "photoPlaceholder": {
+        "icon": "🌊",
+        "bgGradient": "linear-gradient(135deg, #0EA5E9, #0284C7)"
+      },
+      "hostStory": "Village home right where mountain water meets the Ganga. Hosted by the Rawat family who serve fresh Mandua rotis and pahadi dal.",
+      "offPeakDiscountPercent": 25,
+      "supportsLocalFamily": true,
+      "reviews": [
+        { "author": "Naveen S.", "rating": 5, "comment": "Direct private river access with zero commercial rafting noise." }
+      ]
+    },
+    {
+      "id": "stay-hampi-1",
+      "type": "stay",
+      "name": "Anegundi Kishkindha Heritage Homestay",
+      "destination": "hampi",
+      "area": "Anegundi Village (Across River)",
+      "pricePerNight": 1300,
+      "originalPrice": 1850,
+      "rating": 4.9,
+      "reviewsCount": 105,
+      "verified": true,
+      "languages": ["Kannada", "Hindi", "English"],
+      "amenities": ["Traditional Red Oxide Floors", "Banana Fiber Workshop Tour", "Home-Cooked Thali", "Bicycle Rentals"],
+      "seniorFriendly": true,
+      "familyFriendly": true,
+      "roomsTotal": 6,
+      "roomsAvailableOffSeason": 4,
+      "photoPlaceholder": {
+        "icon": "🌴",
+        "bgGradient": "linear-gradient(135deg, #F59E0B, #B45309)"
+      },
+      "hostStory": "Manjunath and Lakshmi host travellers in their ancestral tile-roofed home in historic Anegundi. Experience the calmer side of the Tungabhadra.",
+      "offPeakDiscountPercent": 30,
+      "supportsLocalFamily": true,
+      "reviews": [
+        { "author": "Lakshmi Narayanan", "rating": 5, "comment": "The Jolada roti and shenga chutney made by Lakshmi Amma were world-class." }
+      ]
+    },
+    {
+      "id": "stay-hampi-2",
+      "type": "stay",
+      "name": "Sanapur Boulder View Farm Cottages",
+      "destination": "hampi",
+      "area": "Sanapur Lake Hamlet",
+      "pricePerNight": 1150,
+      "originalPrice": 1500,
+      "rating": 4.6,
+      "reviewsCount": 42,
+      "verified": true,
+      "languages": ["Kannada", "English"],
+      "amenities": ["Granite Boulder Surroundings", "Hammocks in Coconut Groves", "Coracle Booking Support"],
+      "seniorFriendly": false,
+      "familyFriendly": true,
+      "roomsTotal": 4,
+      "roomsAvailableOffSeason": 3,
+      "photoPlaceholder": {
+        "icon": "🪨",
+        "bgGradient": "linear-gradient(135deg, #78350F, #D97706)"
+      },
+      "hostStory": "Eco-friendly cottages situated amidst dramatic boulder landscapes and paddy fields, hosted by local farmer Raghavendra.",
+      "offPeakDiscountPercent": 23,
+      "supportsLocalFamily": true,
+      "reviews": [
+        { "author": "Rohan & Friends", "rating": 5, "comment": "Incredible stargazing and total silence at night." }
+      ]
+    },
+    {
+      "id": "stay-munnar-1",
+      "type": "stay",
+      "name": "Marayoor Sandalwood Mist Homestay",
+      "destination": "munnar",
+      "area": "Marayoor Valley (38 km from Munnar)",
+      "pricePerNight": 1550,
+      "originalPrice": 2200,
+      "rating": 4.9,
+      "reviewsCount": 78,
+      "verified": true,
+      "languages": ["Malayalam", "Tamil", "English", "Hindi"],
+      "amenities": ["Organic Jaggery Farm View", "Ground Floor Verandah", "Authentic Kerala Sadhya", "Herbal Garden"],
+      "seniorFriendly": true,
+      "familyFriendly": true,
+      "roomsTotal": 7,
+      "roomsAvailableOffSeason": 5,
+      "photoPlaceholder": {
+        "icon": "🍃",
+        "bgGradient": "linear-gradient(135deg, #059669, #047857)"
+      },
+      "hostStory": "The Kurup family hosts guests on their organic sugarcane and spice plantation. Experience the rare natural sandalwood microclimate.",
+      "offPeakDiscountPercent": 30,
+      "supportsLocalFamily": true,
+      "reviews": [
+        { "author": "Dr. Kurian V.", "rating": 5, "comment": "Away from the Munnar traffic gridlock. Outstanding hospitality and fresh air." }
+      ]
+    },
+    {
+      "id": "stay-munnar-2",
+      "type": "stay",
+      "name": "Chithirapuram Cardamom Cottage",
+      "destination": "munnar",
+      "area": "Chithirapuram Village",
+      "pricePerNight": 1700,
+      "originalPrice": 2300,
+      "rating": 4.8,
+      "reviewsCount": 65,
+      "verified": true,
+      "languages": ["Malayalam", "English"],
+      "amenities": ["Spice Plantation Walk", "Tea Garden Balcony", "Hot Water Geysers", "Quiet Mountain Air"],
+      "seniorFriendly": true,
+      "familyFriendly": true,
+      "roomsTotal": 6,
+      "roomsAvailableOffSeason": 4,
+      "photoPlaceholder": {
+        "icon": "☕",
+        "bgGradient": "linear-gradient(135deg, #15803D, #166534)"
+      },
+      "hostStory": "Cozy hill cottage amidst pepper vines and cardamom plants managed by George and Mini. Quiet mornings with birdsong.",
+      "offPeakDiscountPercent": 26,
+      "supportsLocalFamily": true,
+      "reviews": [
+        { "author": "Anjali N.", "rating": 5, "comment": "Warm hosts who arranged transport and guided us through local tea paths." }
+      ]
+    }
+  ],
+  "guides": [
+    {
+      "id": "guide-manali-1",
+      "type": "guide",
+      "name": "Kewal Sharma",
+      "destination": "manali",
+      "area": "Naggar & Burwa Valley",
+      "pricePerDay": 1200,
+      "rating": 4.9,
+      "reviewsCount": 68,
+      "verified": true,
+      "languages": ["Hindi", "English", "Pahari"],
+      "specialties": ["Village Heritage", "Apple Orchard Botany", "Senior-Friendly Walks"],
+      "seniorFriendly": true,
+      "yearsExperience": 14,
+      "licenseNumber": "HP-TOU-7821",
+      "offPeakDiscountPercent": 20,
+      "photoPlaceholder": {
+        "icon": "🏔️",
+        "bgGradient": "linear-gradient(135deg, #0F4C5C, #1E6F5C)"
+      },
+      "bioStory": "Born in Naggar, Kewal has been guiding small families for 14 years. He walks at a gentle, comfortable pace and knows every hidden wooden temple."
+    },
+    {
+      "id": "guide-manali-2",
+      "type": "guide",
+      "name": "Tenzin Norbu",
+      "destination": "manali",
+      "area": "Solang & Upper Beas Trails",
+      "pricePerDay": 1400,
+      "rating": 4.8,
+      "reviewsCount": 42,
+      "verified": true,
+      "languages": ["Hindi", "English", "Tibetan"],
+      "specialties": ["High Altitude Flora", "Monastery History", "Photography"],
+      "seniorFriendly": false,
+      "yearsExperience": 9,
+      "licenseNumber": "HP-TOU-9104",
+      "offPeakDiscountPercent": 15,
+      "photoPlaceholder": {
+        "icon": "🥾",
+        "bgGradient": "linear-gradient(135deg, #0284C7, #0F4C5C)"
+      },
+      "bioStory": "Specialist in quiet mountain paths away from tourist vehicles, sharing Himalayan Buddhist folklore and photography perspectives."
+    },
+    {
+      "id": "guide-jaipur-1",
+      "type": "guide",
+      "name": "Rameshwar Dayal",
+      "destination": "jaipur",
+      "area": "Amer Old Town & Crafts",
+      "pricePerDay": 1100,
+      "rating": 5.0,
+      "reviewsCount": 94,
+      "verified": true,
+      "languages": ["Hindi", "English", "Rajasthani"],
+      "specialties": ["Stepwell Architecture", "Artisan Cooperatives", "Senior Gentle Pacing"],
+      "seniorFriendly": true,
+      "yearsExperience": 22,
+      "licenseNumber": "RJ-GOV-4412",
+      "offPeakDiscountPercent": 25,
+      "photoPlaceholder": {
+        "icon": "🕌",
+        "bgGradient": "linear-gradient(135deg, #C85A17, #B45309)"
+      },
+      "bioStory": "Government-certified guide with 22 years of storytelling experience. Specialized in stepwells, folk legends, and slow-paced temple walks with resting spots."
+    },
+    {
+      "id": "guide-varanasi-1",
+      "type": "guide",
+      "name": "Acharya Satish Pandey",
+      "destination": "varanasi",
+      "area": "Southern Ghats & Sarnath",
+      "pricePerDay": 1000,
+      "rating": 4.9,
+      "reviewsCount": 118,
+      "verified": true,
+      "languages": ["Hindi", "English", "Sanskrit"],
+      "specialties": ["Vedic Philosophy", "Dawn Boat Navigation", "Pilgrim Assistance"],
+      "seniorFriendly": true,
+      "yearsExperience": 18,
+      "licenseNumber": "UP-TOU-3321",
+      "offPeakDiscountPercent": 20,
+      "photoPlaceholder": {
+        "icon": "🕉️",
+        "bgGradient": "linear-gradient(135deg, #7C3AED, #0D5C5B)"
+      },
+      "bioStory": "Sanskrit scholar and lifelong Varanasi resident. He arranges quiet hand-rowed wooden boats and assists elderly pilgrims with serene temple darshans."
+    },
+    {
+      "id": "guide-rishikesh-1",
+      "type": "guide",
+      "name": "Gita Rawat",
+      "destination": "rishikesh",
+      "area": "Tapovan & Upstream Trails",
+      "pricePerDay": 1150,
+      "rating": 4.9,
+      "reviewsCount": 56,
+      "verified": true,
+      "languages": ["Hindi", "English", "Garhwali"],
+      "specialties": ["Herbal Medicine", "Meditation Caves", "Women-Led Tours"],
+      "seniorFriendly": true,
+      "yearsExperience": 11,
+      "licenseNumber": "UK-TOU-6021",
+      "offPeakDiscountPercent": 20,
+      "photoPlaceholder": {
+        "icon": "🌿",
+        "bgGradient": "linear-gradient(135deg, #10B981, #0D5C5B)"
+      },
+      "bioStory": "Certified naturalist passionate about Himalayan medicinal herbs, sacred grove ecology, and welcoming solo women & elder travelers."
+    },
+    {
+      "id": "guide-hampi-1",
+      "type": "guide",
+      "name": "Chandrashekhar 'Shekhar' K.",
+      "destination": "hampi",
+      "area": "Anegundi & Vijayanagara Citadel",
+      "pricePerDay": 1300,
+      "rating": 5.0,
+      "reviewsCount": 142,
+      "verified": true,
+      "languages": ["Kannada", "English", "Hindi", "Telugu"],
+      "specialties": ["Vijayanagara History", "Boulder Geology", "Anegundi Village Crafts"],
+      "seniorFriendly": true,
+      "yearsExperience": 19,
+      "licenseNumber": "KA-ARC-1204",
+      "offPeakDiscountPercent": 20,
+      "photoPlaceholder": {
+        "icon": "🏺",
+        "bgGradient": "linear-gradient(135deg, #D97706, #78350F)"
+      },
+      "bioStory": "Archaeology post-graduate born in Anegundi. Guides visitors through hidden inscriptions and arranges battery-operated cart transport for senior guests."
+    },
+    {
+      "id": "guide-munnar-1",
+      "type": "guide",
+      "name": "Biju Varghese",
+      "destination": "munnar",
+      "area": "Marayoor & Chinnar Reserve",
+      "pricePerDay": 1250,
+      "rating": 4.8,
+      "reviewsCount": 81,
+      "verified": true,
+      "languages": ["Malayalam", "Tamil", "English", "Hindi"],
+      "specialties": ["Tea Plantation Ecology", "Spice Harvesting", "Tribal Dolmens"],
+      "seniorFriendly": true,
+      "yearsExperience": 16,
+      "licenseNumber": "KL-TOU-8451",
+      "offPeakDiscountPercent": 20,
+      "photoPlaceholder": {
+        "icon": "🌱",
+        "bgGradient": "linear-gradient(135deg, #16A34A, #15803D)"
+      },
+      "bioStory": "Botanist and local guide with extensive knowledge of Marayoor's Neolithic dolmens, organic jaggery making, and low-gradient walking paths."
+    },
+    {
+      "id": "guide-jaipur-2",
+      "type": "guide",
+      "name": "Irfan Chippa",
+      "destination": "jaipur",
+      "area": "Bagru & Sanganer Artisan Belt",
+      "pricePerDay": 1050,
+      "rating": 4.8,
+      "reviewsCount": 38,
+      "verified": true,
+      "languages": ["Hindi", "English", "Urdu"],
+      "specialties": ["Textile Heritage", "Natural Indigo Vats", "Local Street Food"],
+      "seniorFriendly": true,
+      "yearsExperience": 8,
+      "licenseNumber": "RJ-TEX-5591",
+      "offPeakDiscountPercent": 15,
+      "photoPlaceholder": {
+        "icon": "🧵",
+        "bgGradient": "linear-gradient(135deg, #E36414, #B45309)"
+      },
+      "bioStory": "Craft advocate connecting visitors with generational block carvers and vegetable dyers without middleman commissions."
+    }
+  ]
+}

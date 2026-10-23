@@ -8,6 +8,7 @@ import { store } from './store.js';
 import { renderLandingView } from '../pages/landing.js';
 import { renderPlanView } from '../pages/plan.js';
 import { renderItineraryView } from '../pages/itinerary.js';
+import { renderStaysView } from '../pages/stays.js';
 import { renderStyleGuide } from '../pages/style-guide.js';
 
 function renderStubView(title, description, nextLink, nextLabel) {
@@ -83,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
   router.register('#/', renderLandingView);
   router.register('#/plan', renderPlanView);
   router.register('#/itinerary', renderItineraryView);
-  router.register('#/stays', renderStubView('Local Stays & Guides', 'Family homestays and government-verified guides.', '#/booking', 'View Bookings'));
+  router.register('#/stays', renderStaysView);
   router.register('#/booking', renderStubView('Bookings & Family Assistance', 'Simulated booking details and family-assisted confirmation.', '#/', 'Home'));
   router.register('#/owner', renderStubView('Hotel Owner Dashboard', 'Occupancy tracker and off-season demand booster.', '#/', 'Home'));
   router.register('#/saral', renderStubView('Saral Mode Portal', 'Elder-friendly high-contrast UI with voice assistance.', '#/', 'Home'));

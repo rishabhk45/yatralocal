@@ -21,7 +21,7 @@ Track progress across all 14 project phases.
   - Crowd-avoidance recommendations (off-peak hours, hidden gems).
   - Cost breakdowns, filterable days, and interactive activity schedule.
 
-- [ ] **Phase 4: Stays & guides**
+- [x] **Phase 4: Stays & guides**
   - Verified local homestay and boutique hotel directory with off-season discount tags.
   - Verified local guides directory with spoken languages, badges, and specialties.
   - Filter by budget, location, amenities, and senior-friendliness.
