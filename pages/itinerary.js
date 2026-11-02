@@ -81,7 +81,12 @@ export function renderItineraryView() {
         } catch (genErr) {
           console.warn('[ItineraryView] LLM plan provider error, using fallback generator:', genErr);
           const { generateItinerary } = await import('../js/itinerary.js');
-          itineraryData = generateItinerary(prefs, []);
+          let catalog = [];
+          try {
+            const res = await fetch('data/destinations.json');
+            if (res.ok) catalog = await res.json();
+          } catch (_) {}
+          itineraryData = generateItinerary(prefs, catalog);
         }
       }
       store.setState({ itinerary: itineraryData });

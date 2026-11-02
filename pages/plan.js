@@ -492,9 +492,24 @@ function bindPlanFormInteractions(container, currentPrefs = {}) {
 
     // Route to itinerary view
     setTimeout(() => {
-      window.location.hash = '#/itinerary';
-    }, 250);
+      if (window.YatraApp && window.YatraApp.router) {
+        window.YatraApp.router.navigate('#/itinerary');
+      } else {
+        window.location.hash = '#/itinerary';
+      }
+    }, 150);
   });
+
+  const submitBtnDirect = container.querySelector('#btn-submit-plan');
+  if (submitBtnDirect && form) {
+    submitBtnDirect.addEventListener('click', (e) => {
+      if (typeof form.requestSubmit === 'function') {
+        form.requestSubmit();
+      } else {
+        form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+      }
+    });
+  }
 }
 
 function escapeHTML(str) {

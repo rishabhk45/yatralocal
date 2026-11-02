@@ -26,6 +26,17 @@ export function sanitizeClientInput(str, maxLength = 200) {
 
 // Fetch destination activities catalog
 async function fetchDestinationsCatalog() {
+  if (typeof window === 'undefined') {
+    try {
+      const fs = await import('fs');
+      const path = await import('path');
+      const resolved = path.resolve(process.cwd(), 'data/destinations.json');
+      if (fs.existsSync(resolved)) {
+        return JSON.parse(fs.readFileSync(resolved, 'utf8'));
+      }
+    } catch (_) {}
+  }
+
   const candidates = ['data/destinations.json', '../data/destinations.json', '/data/destinations.json'];
   for (const url of candidates) {
     try {
@@ -153,6 +164,11 @@ async function callServerlessPlanApi(payload, timeoutMs = 6000) {
       clearTimeout(timer);
 
       if (response.ok) {
+        const contentType = response.headers?.get?.('content-type') || '';
+        if (contentType && !contentType.includes('application/json')) {
+          // Received HTML (e.g. SPA index.html fallback for missing serverless endpoint)
+          return null;
+        }
         return await response.json();
       }
 

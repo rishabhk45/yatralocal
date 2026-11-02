@@ -50,7 +50,61 @@ export function generateItinerary(preferences, destinationsData) {
   }
 
   if (!dest) {
-    dest = destinationsData[0];
+    dest = (destinationsData && destinationsData[0]) || {
+      id: 'manali',
+      name: 'Manali',
+      state: 'Himachal Pradesh',
+      crowdBadge: 'Peaceful in Hamlets',
+      lat: 32.2432,
+      lng: 77.1892,
+      activities: [
+        {
+          id: 'manali-1',
+          name: 'Burwa Apple Orchard Stroll & Local Jam Tasting',
+          categories: ['Relaxed', 'Nature'],
+          durationHours: 2.5,
+          cost: 250,
+          crowdLevel: 'low',
+          isHiddenGem: true,
+          seniorFriendly: true,
+          walkingLevel: 'flat/minimal',
+          area: 'Burwa Hamlet',
+          description: 'Walk through family-tended apple orchards with scenic mountain views.',
+          lat: 32.2742,
+          lng: 77.1648
+        },
+        {
+          id: 'manali-2',
+          name: 'Naggar Castle Heritage Walk & Roerich Art Gallery',
+          categories: ['Cultural', 'Relaxed'],
+          durationHours: 3,
+          cost: 300,
+          crowdLevel: 'low',
+          isHiddenGem: true,
+          seniorFriendly: true,
+          walkingLevel: 'flat/minimal',
+          area: 'Naggar Heritage Village',
+          description: 'Wood-and-stone Himalayan architecture with quiet viewpoints.',
+          lat: 32.1465,
+          lng: 77.1706
+        },
+        {
+          id: 'manali-3',
+          name: 'Jogini Waterfall Forest Trail',
+          categories: ['Adventure', 'Nature'],
+          durationHours: 3.5,
+          cost: 100,
+          crowdLevel: 'medium',
+          isHiddenGem: false,
+          seniorFriendly: false,
+          walkingLevel: 'moderate',
+          area: 'Vashisht Upper Trail',
+          description: 'Pleasant cedar forest trek from Vashisht leading to natural springs.',
+          lat: 32.2685,
+          lng: 77.1952
+        }
+      ]
+    };
   }
 
   const allActivities = [...(dest.activities || [])];

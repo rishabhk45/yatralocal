@@ -23,7 +23,11 @@ class Router {
   }
 
   navigate(path) {
-    window.location.hash = path;
+    if (window.location.hash === path) {
+      this._handleRouteChange();
+    } else {
+      window.location.hash = path;
+    }
   }
 
   getQueryParams() {
