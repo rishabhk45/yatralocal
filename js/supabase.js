@@ -24,6 +24,20 @@ export async function getSupabase() {
     return createLocalFallbackClient();
   }
 
+  // 2. Quick connectivity probe so we never hang when project is paused, offline, or DNS unresolvable
+  try {
+    const probeCtrl = new AbortController();
+    const probeTimer = setTimeout(() => probeCtrl.abort(), 1200);
+    const probe = await fetch(SUPABASE_CONFIG.url, { method: 'HEAD', signal: probeCtrl.signal }).catch(() => null);
+    clearTimeout(probeTimer);
+    if (!probe) {
+      console.info('[YatraLocal] Supabase project unreachable; engaging local fallback client.');
+      return createLocalFallbackClient();
+    }
+  } catch (_) {
+    return createLocalFallbackClient();
+  }
+
   try {
     let createClient;
     if (typeof window !== 'undefined' && window.supabase && window.supabase.createClient) {

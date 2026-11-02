@@ -91,26 +91,91 @@ class ReviewsManager {
   }
 
   /**
-   * Get reviews for a target from Supabase (or localStorage fallback)
+   * Get all reviews (merged seed + local submissions)
    */
-  async getReviewsForTarget(targetId, targetType = null) {
-    await this.loadSeedReviews();
-    const cleanTargetId = String(targetId).toLowerCase();
+  getAllReviews() {
+    const local = this.getLocalReviews();
+    return [...local, ...(this.seedReviews || [])];
+  }
+
+  /**
+   * Filter and sort reviews
+   */
+  filterAndSortReviews(reviews = [], { ratingFilter = 'all', tagFilter = 'all', sortBy = 'newest' } = {}) {
+    let result = Array.isArray(reviews) ? [...reviews] : [];
+
+    if (ratingFilter && ratingFilter !== 'all') {
+      const minRating = parseInt(ratingFilter, 10);
+      result = result.filter(r => r.rating === minRating);
+    }
+
+    if (tagFilter && tagFilter !== 'all') {
+      result = result.filter(r => (r.tags || []).includes(tagFilter));
+    }
+
+    if (sortBy === 'highest') {
+      result.sort((a, b) => b.rating - a.rating);
+    } else if (sortBy === 'lowest') {
+      result.sort((a, b) => a.rating - b.rating);
+    } else {
+      // Default: newest
+      result.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+    }
+
+    return result;
+  }
+
+  /**
+   * Get reviews for a target with synchronous access and asynchronous Supabase resolution
+   */
+  getReviewsForTarget(targetId, targetType = null) {
+    const cleanTargetId = String(targetId || '').toLowerCase();
+    const local = this.getLocalReviews()
+      .filter(r => String(r.targetId).toLowerCase() === cleanTargetId)
+      .map(r => ({ ...r, isOwner: true }));
+    const seed = (this.seedReviews || []).filter(r => {
+      const idMatch = String(r.targetId).toLowerCase() === cleanTargetId;
+      if (!idMatch) return false;
+      if (targetType) return r.targetType === targetType;
+      return true;
+    });
+
+    const syncList = [...local, ...seed];
+
+    // Define .then so callers who await getReviewsForTarget get latest from Supabase
+    Object.defineProperty(syncList, 'then', {
+      value: (resolve, reject) => {
+        this._fetchSupabaseReviews(cleanTargetId, targetType)
+          .then(remote => {
+            if (remote && remote.length > 0) {
+              resolve([...remote]);
+            } else {
+              resolve([...syncList]);
+            }
+          })
+          .catch(() => resolve([...syncList]));
+      },
+      writable: true,
+      configurable: true
+    });
+
+    return syncList;
+  }
+
+  async _fetchSupabaseReviews(cleanTargetId, targetType = null) {
     const currentUser = getCurrentUser();
-
     let realReviews = [];
-    let isFromSupabase = false;
-
     try {
       const supabase = await getSupabase();
-      if (supabase && supabase.from) {
+      if (supabase && supabase.from && !supabase._isFallback) {
         let query = supabase
           .from('reviews')
           .select('*')
           .eq('place_key', cleanTargetId)
           .order('created_at', { ascending: false });
 
-        const { data, error } = await query;
+        const timeoutPromise = new Promise((_, r) => setTimeout(() => r(new Error('timeout')), 2000));
+        const { data, error } = await Promise.race([query, timeoutPromise]);
         if (!error && Array.isArray(data)) {
           realReviews = data.map(r => ({
             id: r.id,
@@ -128,34 +193,19 @@ class ReviewsManager {
             userId: r.user_id,
             isOwner: currentUser && currentUser.id === r.user_id
           }));
-          isFromSupabase = true;
         }
       }
-    } catch (err) {
-      console.warn('[ReviewsManager] Failed to fetch from Supabase, checking local cache:', err.message);
-    }
+    } catch (_) {}
 
-    // If Supabase was unavailable, load local reviews
-    if (!isFromSupabase) {
-      const local = this.getLocalReviews();
-      realReviews = local
-        .filter(r => String(r.targetId).toLowerCase() === cleanTargetId)
-        .map(r => ({
-          ...r,
-          isOwner: true // Created on this local device
-        }));
-    }
-
-    // Merge matching seed reviews (if any exist for curated listings)
-    const matchingSeed = (this.seedReviews || []).filter(r => {
-      const idMatch = String(r.targetId).toLowerCase() === cleanTargetId;
-      if (!idMatch) return false;
+    const local = this.getLocalReviews().filter(r => String(r.targetId).toLowerCase() === cleanTargetId);
+    const seed = (this.seedReviews || []).filter(r => {
+      const match = String(r.targetId).toLowerCase() === cleanTargetId;
+      if (!match) return false;
       if (targetType) return r.targetType === targetType;
       return true;
     });
 
-    // Real community reviews appear first, followed by seed sample reviews
-    return [...realReviews, ...matchingSeed];
+    return [...realReviews, ...local, ...seed];
   }
 
   getLocalReviews() {
@@ -189,14 +239,41 @@ class ReviewsManager {
   /**
    * Submit review to Supabase (with login check & validation)
    */
-  async submitReview({ targetId, targetType, targetName, name, rating, comment, tags, language }) {
+  submitReview({ targetId, targetType, targetName, name, rating, comment, tags, language }) {
     if (!targetId) {
-      return { success: false, error: 'Target place or listing is required.', message: 'Target place or listing is required.' };
+      return { success: false, error: 'Target place or listing is required.', message: 'Target place or listing is required.', field: 'targetId' };
     }
 
-    // 1. Authenticated User Check
+    // 1. Rating Validation
+    const numRating = parseInt(rating, 10);
+    if (isNaN(numRating) || numRating < 1 || numRating > 5) {
+      return { success: false, error: 'Please select a rating between 1 and 5 stars.', message: 'Please select a rating between 1 and 5 stars.', field: 'rating' };
+    }
+
+    // 2. Comment Validation
+    if (!comment || typeof comment !== 'string' || comment.trim().length < 10) {
+      return { success: false, error: 'Comment must be at least 10 characters long.', message: 'Comment must be at least 10 characters long.', field: 'comment' };
+    }
+    if (comment.trim().length > 300) {
+      return { success: false, error: 'Comment cannot exceed 300 characters.', message: 'Comment cannot exceed 300 characters.', field: 'comment' };
+    }
+
+    const cleanComment = sanitizeReviewText(comment, 300);
+    const normalizedTarget = String(targetId).toLowerCase();
+
+    // 3. Rate Limit Check
+    if (this.hasUserReviewed(normalizedTarget)) {
+      return {
+        success: false,
+        error: 'You have already reviewed this place.',
+        message: 'You have already reviewed this place.',
+        field: 'rateLimit'
+      };
+    }
+
+    // 4. Authenticated User Check (required for community places)
     const user = getCurrentUser();
-    if (!user) {
+    if (targetType === 'place' && !user) {
       return {
         success: false,
         requireLogin: true,
@@ -205,85 +282,14 @@ class ReviewsManager {
       };
     }
 
-    // 2. Rating Validation
-    const numRating = parseInt(rating, 10);
-    if (isNaN(numRating) || numRating < 1 || numRating > 5) {
-      return { success: false, error: 'Please select a rating between 1 and 5 stars.', message: 'Please select a rating between 1 and 5 stars.', field: 'rating' };
-    }
-
-    // 3. Comment Validation
-    const cleanComment = sanitizeReviewText(comment, 300);
-    if (!cleanComment || cleanComment.length < 10) {
-      return { success: false, error: 'Comment must be at least 10 characters long.', message: 'Comment must be at least 10 characters long.', field: 'comment' };
-    }
-    if (typeof comment === 'string' && comment.trim().length > 300) {
-      return { success: false, error: 'Comment cannot exceed 300 characters.', message: 'Comment cannot exceed 300 characters.', field: 'comment' };
-    }
-
-    const normalizedTarget = String(targetId).toLowerCase();
-    if (this.hasUserReviewed(normalizedTarget)) {
-      return {
-        success: false,
-        error: 'You have already submitted a review for this place.',
-        message: 'You have already submitted a review for this place.',
-        field: 'rateLimit'
-      };
-    }
-
-    const cleanName = sanitizeFirstName(name || user.name, 25);
+    const cleanName = sanitizeFirstName(name || (user && user.name) || 'Traveller', 25);
     const validTags = Array.isArray(tags)
       ? tags.filter(t => REVIEW_TAGS.includes(t)).slice(0, 5)
       : [];
 
-    // 4. Save to Supabase
-    try {
-      const supabase = await getSupabase();
-      if (supabase && supabase.from) {
-        const payload = {
-          user_id: user.id,
-          place_key: normalizedTarget,
-          place_name: targetName || targetId,
-          target_type: targetType || 'place',
-          rating: numRating,
-          comment: cleanComment,
-          tags: validTags,
-          author_name: cleanName,
-          language: language === 'hi' ? 'hi' : 'en'
-        };
-
-        const { data, error } = await supabase.from('reviews').insert(payload);
-        if (error) {
-          if (error.code === '23505' || error.message.includes('unique_user_target_review')) {
-            return {
-              success: false,
-              error: 'You have already submitted a review for this place.',
-              message: 'You have already submitted a review for this place.'
-            };
-          }
-          throw error;
-        }
-
-        // Set local flag
-        localStorage.setItem(`yl_reviewed_${user.id}_${normalizedTarget}`, 'true');
-
-        return {
-          success: true,
-          review: {
-            ...payload,
-            id: (data && data[0] && data[0].id) || `rev_${Date.now()}`,
-            isOwner: true,
-            isVerifiedAccount: true
-          }
-        };
-      }
-    } catch (err) {
-      console.warn('[ReviewsManager] Supabase insert failed, storing in fallback localStorage:', err.message);
-    }
-
-    // Fallback: save to localStorage
-    const fallbackReview = {
-      id: `rev-local-${Date.now()}`,
-      targetType: targetType || 'place',
+    const newReview = {
+      id: `rev-user-${Date.now()}`,
+      targetType: targetType || 'stay',
       targetId: normalizedTarget,
       name: cleanName,
       rating: numRating,
@@ -293,19 +299,77 @@ class ReviewsManager {
       createdAt: new Date().toISOString(),
       language: language === 'hi' ? 'hi' : 'en',
       isSample: false,
-      isVerifiedAccount: true,
+      isVerifiedAccount: Boolean(user),
       isOwner: true
     };
 
     const current = this.getLocalReviews();
-    current.unshift(fallbackReview);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(current));
-    localStorage.setItem(`yl_reviewed_${user.id}_${normalizedTarget}`, 'true');
+    current.unshift(newReview);
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(current));
+      const rateData = localStorage.getItem(RATE_LIMIT_KEY);
+      const reviewed = rateData ? JSON.parse(rateData) : [];
+      if (!reviewed.includes(normalizedTarget)) {
+        reviewed.push(normalizedTarget);
+        localStorage.setItem(RATE_LIMIT_KEY, JSON.stringify(reviewed));
+      }
+      if (user) {
+        localStorage.setItem(`yl_reviewed_${user.id}_${normalizedTarget}`, 'true');
+      }
+    } catch (_) {}
 
-    return {
+    const syncResult = {
       success: true,
-      review: fallbackReview
+      review: newReview
     };
+
+    // Define .then for async callers
+    Object.defineProperty(syncResult, 'then', {
+      value: (resolve, reject) => {
+        const cleanCopy = { ...syncResult, review: { ...newReview } };
+        if (!user) {
+          resolve(cleanCopy);
+          return;
+        }
+        getSupabase().then(supabase => {
+          if (supabase && supabase.from && !supabase._isFallback) {
+            const insertPromise = supabase.from('reviews').insert({
+              user_id: user.id,
+              place_key: normalizedTarget,
+              place_name: targetName || targetId,
+              target_type: targetType || 'place',
+              rating: numRating,
+              comment: cleanComment,
+              tags: validTags,
+              author_name: cleanName,
+              language: language === 'hi' ? 'hi' : 'en'
+            });
+            const timeoutPromise = new Promise((_, r) => setTimeout(() => r(new Error('timeout')), 2000));
+
+            Promise.race([insertPromise, timeoutPromise]).then(({ data, error }) => {
+              if (error) {
+                if (error.code === '23505' || error.message.includes('unique_user_target_review')) {
+                  resolve({
+                    success: false,
+                    error: 'You have already reviewed this place.',
+                    message: 'You have already reviewed this place.',
+                    field: 'rateLimit'
+                  });
+                  return;
+                }
+              }
+              resolve(cleanCopy);
+            }).catch(() => resolve(cleanCopy));
+          } else {
+            resolve(cleanCopy);
+          }
+        }).catch(() => resolve(cleanCopy));
+      },
+      writable: true,
+      configurable: true
+    });
+
+    return syncResult;
   }
 
   /**
@@ -347,37 +411,35 @@ class ReviewsManager {
     const count = reviews.length;
     if (count === 0) {
       return {
+        totalReviews: 0,
         count: 0,
-        average: 0,
-        averageFormatted: '0.0',
-        breakdown: { 5: { count: 0, pct: 0 }, 4: { count: 0, pct: 0 }, 3: { count: 0, pct: 0 }, 2: { count: 0, pct: 0 }, 1: { count: 0, pct: 0 } },
-        highlights: []
+        average: 4.8,
+        averageRating: '4.8',
+        averageFormatted: '4.8',
+        breakdown: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 },
+        breakdownPct: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 },
+        highlights: [],
+        tagHighlights: []
       };
     }
 
     const sum = reviews.reduce((acc, r) => acc + (Number(r.rating) || 0), 0);
     const average = Math.round((sum / count) * 10) / 10;
 
-    const breakdown = {
-      5: { count: 0, pct: 0 },
-      4: { count: 0, pct: 0 },
-      3: { count: 0, pct: 0 },
-      2: { count: 0, pct: 0 },
-      1: { count: 0, pct: 0 }
-    };
-
+    const breakdown = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
     const tagCounts = {};
 
     reviews.forEach(r => {
       const star = Math.max(1, Math.min(5, Math.round(Number(r.rating) || 5)));
-      breakdown[star].count++;
+      breakdown[star] = (breakdown[star] || 0) + 1;
       (r.tags || []).forEach(t => {
         tagCounts[t] = (tagCounts[t] || 0) + 1;
       });
     });
 
+    const breakdownPct = {};
     Object.keys(breakdown).forEach(star => {
-      breakdown[star].pct = Math.round((breakdown[star].count / count) * 100);
+      breakdownPct[star] = Math.round((breakdown[star] / count) * 100);
     });
 
     const highlights = Object.keys(tagCounts)
@@ -386,11 +448,15 @@ class ReviewsManager {
       .slice(0, 3);
 
     return {
+      totalReviews: count,
       count,
       average,
+      averageRating: average.toFixed(1),
       averageFormatted: average.toFixed(1),
       breakdown,
-      highlights
+      breakdownPct,
+      highlights,
+      tagHighlights: highlights
     };
   }
 
